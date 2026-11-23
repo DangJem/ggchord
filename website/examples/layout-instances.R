@@ -36,6 +36,7 @@ ggchord(reference) +
   ) +
   geom_link_ribbon(aes(fill = pident), data = upper_hit) +
   geom_link_ribbon(aes(fill = pident), data = lower_hits) +
-  scale_seq_position(guide = guide_seq_axis(side = "negative")) +
+  scale_fill_pident() +
+  scale_seq_continuous(guide = guide_seq_axis(side = "negative")) +
   coord_collinear() +
   theme_ggchord_minimal()

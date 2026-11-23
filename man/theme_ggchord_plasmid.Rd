@@ -11,15 +11,14 @@ theme_ggchord_plasmid(base_size = 11, base_family = "", ...)
 
 \item{base_family}{Base font family.}
 
-\item{...}{Named ggplot2 theme elements, including ggchord sequence and
-track axis elements. Explicit settings override theme defaults.}
+\item{...}{Must be empty.}
 }
 \value{
 An ordinary ggplot2 theme.
 }
 \description{
 The warm ivory background and dark sequence axis distinguish annotations
-from major and minor ticks. Use \code{scale_seq_position(guide = "none")}
+from major and minor ticks. Use \code{scale_seq_continuous(guide = "none")}
 to omit the sequence guide.
 }
 \examples{

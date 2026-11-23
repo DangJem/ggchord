@@ -6,7 +6,7 @@ home_theme <- theme(
   panel.background = element_blank()
 )
 home_relationship <- function(view, names_layer) {
-  flagship_cases[[view]]$overview + names_layer + scale_seq_position(guide = "none") + home_theme
+  flagship_cases[[view]]$overview + names_layer + scale_seq_continuous(guide = "none") + home_theme
 }
 home_chord <- home_relationship("chord",
   flagship_cases$chord$sequence_labels(size = 3.75, offset = 12)) +

@@ -387,11 +387,10 @@ ggchord_row_gap <- function(plot, layout, seqs) {
     ids <- unique(vapply(tracks, function(layer) layer$ggchord_params$track_id, character(1)))
     reserved <- 0
     for (id in ids) {
-      band <- plot$ggchord$track_bands[[id]] %||% if (id == "default") track_band()
+      band <- plot$ggchord$track_bands[[id]]
       if (is.null(band)) next
-      width <- ggchord_track_dimension(band$width, seqs, "thickness")$mm
-      clear <- ggchord_track_dimension(band$gap, seqs, "gap")$mm
-      reserved <- reserved + width + clear
+      dimensions <- ggchord_track_band_dimensions(band, seqs, plot)
+      reserved <- reserved + dimensions$width$mm + dimensions$gap$mm
     }
     gap <- if (isTRUE(layout$auto_row_gap)) pmax(gap, reserved) else gap + reserved
   }

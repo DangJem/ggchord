@@ -442,7 +442,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   backbone <- if (circular) ggchord_circular_backbone_bounds(plot, seqRadius, normal_metric)
   position_scale <- plot$scales$get_scales("seq_position")
   if (is.null(position_scale) && !is.null(chord$display_instances$window_start))
-    position_scale <- scale_seq_position(name = NULL)
+    position_scale <- scale_seq_continuous(name = NULL)
   seq_guide <- position_scale$ggchord_axis_guide
   axis_theme <- ggchord_plot_settings(plot)$axis
   guide_theme <- seq_guide$theme
@@ -722,7 +722,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
         if (!(is.expression(labels) || is.function(labels))) return(sc$get_labels(breaks))
         if (is.function(labels)) labels <- labels(sc$get_transformation()$inverse(breaks))
         if (!is.null(labels) && length(labels) != length(breaks))
-          ggchord_stop("scale_seq_position(): labels must match the number of breaks")
+          ggchord_stop("scale_seq_continuous(): labels must match the number of breaks")
         labels
       }
       br <- sc$get_breaks()

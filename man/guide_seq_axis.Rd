@@ -27,7 +27,7 @@ sequence paths. Set to \code{FALSE} to keep the original positions.}
 \item{theme}{Optional local axis theme.}
 }
 \value{
-A guide for \code{\link[=scale_seq_position]{scale_seq_position()}}.
+A guide for \code{\link[=scale_seq_continuous]{scale_seq_continuous()}}.
 }
 \description{
 Configure a sequence position guide
@@ -41,7 +41,7 @@ seqs <- data.frame(
 )
 
 ggchord(data = seqs) + geom_seq() +
-  scale_seq_position(breaks = scales::breaks_width(200),
+  scale_seq_continuous(breaks = scales::breaks_width(200),
     guide = guide_seq_axis(sequences = "A", side = "negative",
       theme = theme(axis.text = element_text(size = 8)))) +
   coord_collinear()

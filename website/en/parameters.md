@@ -70,6 +70,6 @@ A backbone belongs to a reference. Using `+` and `-` as radius keys asks for acc
 | Place a fixed label | [label_layout_fixed()](../../man/label_layout_fixed.Rd) · `offset`, `along` | Specify perpendicular distance and displacement along the reference in mm. Use a named setting where the receiving layer supports it. |
 | Move features or separate lanes | [position_strand()](../../man/position_strand.Rd), [position_offset()](../../man/position_offset.Rd) and [position_feature_stack()](../../man/position_feature_stack.Rd) | Use strand-aware offsets, shared offsets or lane spacing. |
 | Set feature thickness | [geom_feature()](../../man/geom_feature.Rd) and [geom_gene()](../../man/geom_gene.Rd) · `thickness` | Use positive values in mm. Name values by reference or use an explicit instance setting. |
-| Size a quantitative band | [track_band()](../../man/track_band.Rd) · `thickness`, `gap` | Use a positive thickness and a nonnegative gap. Both are physical sizes. |
+| Size a quantitative band | [layout_track()](../../man/layout_track.Rd) · `thickness`, `gap` | Use a positive thickness and a nonnegative gap. Both are physical sizes. |
 
 For data-driven colours, use [aesthetic mappings and scales](styling.md). The [API reference](reference.md) gives the exact formals and defaults.

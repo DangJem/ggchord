@@ -107,6 +107,7 @@ library(ggplot2)
 p <- ggchord(seq_data_example) +
   geom_seq() +
   geom_link_ribbon(aes(fill = pident), data = ribbon_data_example) +
+  scale_fill_pident() +
   geom_seq_label() +
   coord_chord()
 

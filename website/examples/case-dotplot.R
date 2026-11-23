@@ -9,6 +9,7 @@ overview <- ggchord(sequences) +
   scale_linewidth_continuous(range = c(0.95, 2.0), name = "HSP length (bp)") +
   layout_dotplot(x_order = sequences$accver, y_order = sequences$accver,
     x_gap = observed$axis_gap, y_gap = observed$axis_gap) +
+  scale_colour_link_pident() +
   coord_dotplot() +
   theme_ggchord_publication() +
   theme(panel.grid = element_blank(), legend.position = "bottom",

@@ -21,7 +21,8 @@ ggchord(reference) +
     label_layout = label_layout_fixed(orientation = "horizontal", offset = 4)
   ) +
   geom_link_ribbon(aes(fill = pident), data = hit) +
+  scale_fill_pident() +
   layout_sequences(row_gap = 35) +
-  scale_seq_position(guide = guide_seq_axis(side = "negative")) +
+  scale_seq_continuous(guide = guide_seq_axis(side = "negative")) +
   coord_collinear() +
   theme_ggchord_minimal()

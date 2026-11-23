@@ -22,7 +22,8 @@ ggchord(reference) +
     label_layout = label_layout_fixed(orientation = "horizontal", offset = 4)
   ) +
   geom_link_ribbon(aes(fill = pident), data = hit) +
-  scale_seq_position(
+  scale_fill_pident() +
+  scale_seq_continuous(
     breaks = list("MT108731.1" = c(1, 20000, 40000, 64323),
                   "MT118296.1" = c(1, 10000, 20000, 32090)),
     guide = guide_seq_axis(side = "negative")

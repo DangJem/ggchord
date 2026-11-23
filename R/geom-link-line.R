@@ -31,7 +31,7 @@ ggchord_link_route <- function(route, dots, caller) {
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Source references are `qaccver` and `saccver`. Point links consume `qpos` and `spos`. Interval links and alignment segments consume closed interval endpoints on both references. Supply reliable `qstrand` and `sstrand` or explicit relative direction when the geometry requires it.
 #' @examples

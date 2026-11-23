@@ -70,6 +70,6 @@
 | 放置固定标签 | [label_layout_fixed()](../../man/label_layout_fixed.Rd) · `offset`、`along` | 垂直于参考的距离和沿参考的位移均以毫米计。在图层支持时可用具名值。 |
 | 移动特征或分道 | [position_strand()](../../man/position_strand.Rd)、[position_offset()](../../man/position_offset.Rd) 和 [position_feature_stack()](../../man/position_feature_stack.Rd) | 按链偏移、共用偏移或指定道间距。 |
 | 设置特征厚度 | [geom_feature()](../../man/geom_feature.Rd) 和 [geom_gene()](../../man/geom_gene.Rd) · `thickness` | 取以毫米计的正值。可按参考命名，也可显式指定实例。 |
-| 调整定量轨带尺寸 | [track_band()](../../man/track_band.Rd) · `thickness`、`gap` | 厚度取正值，间隙可为零。两者均为物理尺寸。 |
+| 调整定量轨带尺寸 | [layout_track()](../../man/layout_track.Rd) · `thickness`、`gap` | 厚度取正值，间隙可为零。两者均为物理尺寸。 |
 
 基于数据的颜色用[视觉映射与标度](styling.md)设置。[API 参考](reference.md)列出各函数的参数和默认值。

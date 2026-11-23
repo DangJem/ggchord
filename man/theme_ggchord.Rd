@@ -11,8 +11,7 @@ theme_ggchord(base_size = 11, base_family = "", ...)
 
 \item{base_family}{Base font family.}
 
-\item{...}{Named ggplot2 theme elements, including ggchord sequence and
-track axis elements. Explicit settings override theme defaults.}
+\item{...}{Must be empty.}
 }
 \value{
 A ggplot2 theme.
@@ -20,6 +19,10 @@ A ggplot2 theme.
 \description{
 A warm ivory (#FFFCF5), borderless panel and centred bold plot title keep the focus on
 the sequence geometry. Standard ggplot2 theme elements can override them.
+}
+\details{
+Add \code{theme()} to configure registered \verb{ggchord.*} elements or
+standard ggplot2 theme elements.
 }
 \examples{
 library(ggplot2)
@@ -38,7 +41,7 @@ genes <- data.frame(
 p_basic <- ggchord(seqs) + geom_seq() +
   geom_gene(data = genes) + coord_collinear()
 
-p_basic + theme_ggchord(base_size = 12,
-  legend.position = "bottom",
+p_basic + theme_ggchord(base_size = 12) +
+  theme(legend.position = "bottom",
   ggchord.axis.text = element_text(colour = "#40545A"))
 }

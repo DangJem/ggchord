@@ -10,10 +10,10 @@ intervals <- ribbon_data_example |>
 
 ggchord(reference) +
   geom_seq(show.legend = FALSE) +
-  track_band("coverage", thickness = 12) +
+  layout_track("coverage", thickness = 12) +
   geom_track_col(
     data = intervals, stat = "coverage", binwidth = 10000,
     track = "coverage", fill = "#327B83"
   ) +
-  scale_track_value("coverage", limits = c(0, 1), name = "Coverage") +
+  scale_y_continuous(limits = c(0, 1), name = "Coverage") +
   coord_collinear()

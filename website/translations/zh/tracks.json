@@ -1,5 +1,5 @@
 {
-  "source_sha256": "ac0fe05b7604d48153665dbeaf462039cabd8b7923ad30da85c4a51da110d4ab",
+  "source_sha256": "0a54662254b6a563af4454f9ad4ff56b0e63a7130c4f9593a944a324857c12d2",
   "blocks": {
     "0": {
       "source_sha256": "c1e76d829855cd4f9dd31ec3a13dd7dc7e288e07e5796bfd4bc70b809b0881db",
@@ -12,9 +12,9 @@
       "translation": "## 每个实测窗口画一根柱 {#domain}\n"
     },
     "3": {
-      "source_sha256": "679248c6ef13e8ea3bd5214d072f80ea96e7adb936177b2171d187426a24c4b3",
+      "source_sha256": "2e772cc9d591594272430e49fbb74cc4e7a02f0b7e05bbcdc790e5207387a41d",
       "status": "reviewed",
-      "translation": "用 `read_bedgraph()` 读取已安装的文件。前三个 100 bp 窗口的 GC 含量分别为 60%、57% 和 59%。声明一个名为 `gc` 的轨道带，从每个窗口的值画一根柱，并把百分比轴设为 0–100。第一根柱从第 1 bp 延伸至第 100 bp。\n"
+      "translation": "用 `read_bedgraph()` 读取已安装的文件。前三个 100 bp 窗口的 GC 含量分别为 60%、57% 和 59%。每个窗口的值画一根柱。图层自动创建轨带，用 `layout_track()` 设置厚度，用 `scale_y_continuous()` 把百分比轴设为 0–100。第一根柱从第 1 bp 延伸至第 100 bp。\n"
     },
     "6": {
       "source_sha256": "63ae02afa19d7434c480520b5887f4d386a9c99a51096035553273b8584ce9d7",
@@ -22,14 +22,14 @@
       "translation": "## 沿同一组窗口值叠加折线 {#shared-band}\n"
     },
     "7": {
-      "source_sha256": "e3744c248831fcfb8fc0375ad718bfdd20cec7e618915ee9552f97ecb6a1886e",
+      "source_sha256": "9ec6a0263d754f61bc3493d85b294baa500ba19d9832716a215c21166e34fd70",
       "status": "reviewed",
-      "translation": "计算各窗口的中点。保留柱图层，再加一层折线，以中点为横坐标、实测值为纵坐标。两层都指定同一轨道，因此折线会经过每根柱顶边的中点。\n"
+      "translation": "计算各窗口的中点。保留柱图层，再加一层折线，以中点为横坐标、实测值为纵坐标。用 `add_track()` 将两层放进同一轨带，共用 Y 标度。折线会经过每根柱顶边的中点。\n"
     },
     "9": {
-      "source_sha256": "b182e118634a214aacbaa1637ce9936220b7af44723e7cbfe5479f455ffe3d12",
+      "source_sha256": "a44f63cb010c761bf522e287664d297b3dc945f1a67cf317b0507281426583cd",
       "status": "reviewed",
-      "translation": "轨带的 `thickness` 预留 15 mm 的绘制空间，`scale_track_value()` 把测量值映射为这段空间中的高度。加厚轨带可让一个百分点的差异更易辨认，测量值仍保持原样。下一步可[从比对区间计算覆盖率](tracks-statistics.md)，或[查看 bedGraph 的原始字段](import-signals.md)。\n"
+      "translation": "轨带的 `thickness` 预留 15 mm 的绘制空间，`scale_y_continuous()` 把测量值映射为这段空间中的高度。加厚轨带可让一个百分点的差异更易辨认，测量值仍保持原样。下一步可[从比对区间计算覆盖率](tracks-statistics.md)，或[查看 bedGraph 的原始字段](import-signals.md)。\n"
     }
   }
 }

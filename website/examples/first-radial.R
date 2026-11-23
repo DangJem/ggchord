@@ -24,5 +24,6 @@ ggchord(reference) +
     anchor = "end", label_layout = label_layout_fixed(orientation = "feature", along = 9)
   ) +
   geom_link_ribbon(aes(fill = pident), data = hits) +
+  scale_fill_pident() +
   coord_radial_synteny(start_angle = 90, fit = "labels") +
   theme_ggchord_minimal()

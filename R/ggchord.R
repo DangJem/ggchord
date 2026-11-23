@@ -139,11 +139,75 @@ layer_id <- function(layer, id) {
   # Compose ordinary lists through the same per-component bookkeeping as +.
   if (identical(class(e2), "list")) return(Reduce(`+`, e2, init = e1))
 
+  scope <- e1$ggchord$active_scope
+  if (inherits(e2, "ggchord_track_layout")) {
+    id <- e2$id
+    if (is.null(id)) {
+      if (!identical(scope$selector, "tracks"))
+        ggchord_stop("layout_track(): add a track first or supply an id to declare its layout")
+      id <- scope$id
+      # A positional patch does not validate an otherwise undeclared named reference.
+      if (is.null(e1$ggchord$track_entries[[id]]$layout))
+        ggchord_stop("layout_track(): supply id = '", id, "' to declare the named track")
+    }
+    return(ggchord_reset_plot_cache(ggchord_patch_track_layout(e1, id, e2$patch)))
+  }
+
+  if (inherits(e2, "ggchord_add_track")) {
+    id <- e2$id
+    if (inherits(id, "ggchord_auto_id")) {
+      automatic <- ggchord_next_track_id(e1)
+      e1 <- automatic$plot
+      id <- automatic$id
+    }
+    if (length(e1$ggchord$track_entries[[id]]$members))
+      ggchord_stop("add_track(): track '", id, "' already has layers")
+    p <- ggchord_patch_track_layout(e1, id, e2$patch)
+    for (layer in e2$layers) {
+      declared <- layer$ggchord_params$track_id
+      if (!is.null(declared) && !identical(declared, id))
+        ggchord_stop("add_track(): member track '", declared, "' conflicts with track '", id, "'")
+      layer <- reconstruct_layer(layer, layer$data, mapping = layer$mapping)
+      layer$ggchord_params$track_id <- id
+      p <- p + layer
+    }
+    return(p)
+  }
+
   if (inherits(e2, "ggchord_scoped_scale")) {
+    if (is.null(e2$layers) && is.null(e2$tracks)) {
+      if (is.null(scope)) ggchord_stop("scale_for(): add a target first or supply layers or tracks")
+      e2[[scope$selector]] <- scope$id
+    }
     e1$ggchord$scoped_scales <- c(e1$ggchord$scoped_scales, list(e2))
-    e1$ggchord$ref <- new.env(parent = emptyenv())
-    e1$ggchord$layout <- NULL
-    return(e1)
+    return(ggchord_reset_plot_cache(e1))
+  }
+  if (inherits(e2, "ggchord_palette_preset")) {
+    e1$ggchord$palette_preset <- e2
+    return(ggchord_reset_plot_cache(e1))
+  }
+  if (inherits(e2, "Scale") && any(e2$aesthetics %in% c("x", "y"))) {
+    owner <- if (identical(scope$selector, "tracks") && "y" %in% e2$aesthetics) scope$id
+    e1$ggchord$position_scales <- c(e1$ggchord$position_scales,
+      list(list(scale = e2, track = owner)))
+    return(ggchord_reset_plot_cache(e1))
+  }
+
+  if (inherits(e2, "Layer")) {
+    occupied <- vapply(e1$layers, function(layer) layer$ggchord_layer_id %||% "", character(1))
+    e2 <- ggchord_assign_layer_id(e2, occupied, length(e1$layers) + 1L)
+    scope <- list(selector = "layers", id = e2$ggchord_layer_id)
+    if (identical(e2$ggchord_type, "track")) {
+      id <- e2$ggchord_params$track_id
+      if (is.null(id)) {
+        automatic <- ggchord_next_track_id(e1)
+        id <- automatic$id
+        e1 <- ggchord_patch_track_layout(automatic$plot, id, list())
+      }
+      e1 <- ggchord_register_track_member(e1, id, e2$ggchord_layer_id)
+      e2$ggchord_params$track_id <- id
+      scope <- list(selector = "tracks", id = id)
+    }
   }
 
   old_settings <- attr(e1$theme, "ggchord.settings")
@@ -167,34 +231,11 @@ layer_id <- function(layer, id) {
     new_settings <- new_settings %||% ggchord_plot_settings(e1)
     new_settings$axis$text.offset.explicit <- TRUE
   }
-  if (inherits(e2, "Scale")) {
-    aesthetic <- e2$aesthetics[1L]
-    existing <- if (!is.null(aesthetic)) e1$scales$get_scales(aesthetic) else NULL
-    if (!is.null(e2$ggchord_track_id) && !is.null(existing$ggchord_track_id) &&
-        (!identical(existing$ggchord_domain_policy, e2$ggchord_domain_policy) ||
-          !identical(existing$ggchord_facet_domain, e2$ggchord_facet_domain) ||
-          !identical(existing$ggchord_track_unit, e2$ggchord_track_unit)))
-      ggchord_stop("Conflicting value scales for track '", e2$ggchord_track_id, "'")
-    new_priority <- attr(e2, "ggchord_scale_priority") %||% 2L
-    old_priority <- if (is.null(existing)) -Inf else
-      attr(existing, "ggchord_scale_priority") %||% 2L
-    if (!is.null(existing) && new_priority < old_priority) return(e1)
-    # A user-supplied scale intentionally replaces the ggchord-managed default
-    # scale of the same aesthetic; muffle ggplot2's "already present" message.
-    p <- withCallingHandlers(
-      NextMethod(),
-      message = function(m) {
-        if (grepl("already present", conditionMessage(m)) &&
-            !is.null(findRestart("muffleMessage"))) {
-          invokeRestart("muffleMessage")
-        }
-      }
-    )
-  } else {
-    p <- NextMethod()
-  }
-  if (length(p$layers) > length(e1$layers))
+  p <- NextMethod()
+  if (length(p$layers) > length(e1$layers)) {
     p <- ggchord_register_annotation_sources(p, length(e1$layers))
+    p$ggchord$active_scope <- scope
+  }
   if (inherits(e2, "theme")) {
     incoming <- attr(e2, "ggchord.explicit_theme") %||% as.list(e2)
     p$ggchord$theme_explicit <- ggchord_merge_theme_constraints(
@@ -203,12 +244,16 @@ layer_id <- function(layer, id) {
       p$ggchord$native_theme <- if (is.null(e1$ggchord$native_theme)) e2 else e1$ggchord$native_theme + e2
     } else p$ggchord$native_theme <- NULL
   }
-  # ggplot2 copies plot metadata, but environments remain shared references.
-  # A new composition owns a new lazy cache; invalidating e1's environment
-  # would clear the base plot and let sibling plots reuse each other's layout.
-  p$ggchord$ref <- new.env(parent = emptyenv())
-  p$ggchord$layout <- NULL
   attr(p$theme, "ggchord.settings") <- new_settings %||% old_settings
   class(p) <- unique(c("ggchord", class(p)))
-  p
+  ggchord_reset_plot_cache(p)
+}
+
+# Composed plots own their lazy caches, including sibling plots.
+ggchord_reset_plot_cache <- function(plot) {
+  plot$ggchord$ref <- new.env(parent = emptyenv())
+  plot$ggchord$layout <- NULL
+  plot$ggchord$position_scales_prepared <- NULL
+  plot$ggchord$track_bands <- NULL
+  plot
 }

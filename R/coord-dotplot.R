@@ -202,7 +202,7 @@ ggchord_dotplot_geometry <- function(plot, for_drawing = FALSE) {
 }
 
 ggchord_prepare_dotplot <- function(plot) {
-  plot <- ggchord_register_layers(plot)
+  plot <- ggchord_prepare_position_scales(ggchord_register_layers(plot))
   plot$scales <- plot$scales$clone()
   layout <- ggchord_dotplot_geometry(plot, for_drawing = TRUE)
   for (i in seq_along(plot$layers)) {

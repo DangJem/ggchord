@@ -14,7 +14,7 @@
 #'
 #' Use the ordinary ggplot2 aesthetics and visual scales. [scale_for()]
 #' assigns a separate visual scale to explicitly named layers.
-#' [track_band()] declares a physical container, [scale_track_value()]
+#' [layout_track()] declares a physical container, [`scale_y_continuous()`][ggplot2::scale_y_continuous]
 #' controls its numerical height, and [guide_track_axis()] explains the
 #' resulting scale. [theme_ggchord()] controls appearance.
 #'

@@ -777,5 +777,14 @@
   },
   "reference/stat_ribbon_density.html": {
     "": "migration.html#api"
+  },
+  "reference/track_band.html": {
+    "": "reference/layout_track.html#api-layout_track"
+  },
+  "reference/scale_seq_position.html": {
+    "": "reference/scale_seq_continuous.html#api-scale_seq_continuous"
+  },
+  "reference/scale_track_value.html": {
+    "": "reference/scale_for.html#api-scale_for"
   }
 }

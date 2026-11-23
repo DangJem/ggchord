@@ -1,5 +1,5 @@
 {
-  "source_sha256": "a1edbc5a0559e5436240d81a41d052fe6341b671d85637012ac00b6775132878",
+  "source_sha256": "ee90389f0f535c936e167f6f5447873d49ff5e9365b631c8e7c1b0f9a3e3d982",
   "description": "按绘图问题或函数查阅 API。索引每行对应一篇主题文档，并列出该文档涵盖的函数。",
   "groups": {
     "construct": {
@@ -361,7 +361,7 @@
         }
       ],
       "value": "可添加到图的Facet对象。",
-      "details": "1. 本页记录原生 ggplot2 签名及其在 ggchord 图中的集成规则。\n\n2. 完整参考先于分面登记；分面仅确定成员，不能从本面板观察端点重新推断参考长度。缺少分面字段的参考或图层按正常分面规则重复。\n\n3. 六类 Coord 支持 scales=\"fixed\"；自由原生轴只对 Dotplot 有意义。路径类Coord的轨道值自由范围用 scale_track_value(domain=\"panel\")。\n\n4. Circular要求每面板恰有一个有效参考。用明确的参考分面字段（例如accver）满足此条件，不从基因数据碰巧出现的ID猜参考。\n\n5. Facet组织同一构图规则的数据子集；不同Coord/独立图的数据组合用ggchord_fusion。",
+      "details": "1. 本页记录原生 ggplot2 签名及其在 ggchord 图中的集成规则。\n\n2. 完整参考先于分面登记；分面仅确定成员，不能从本面板观察端点重新推断参考长度。缺少分面字段的参考或图层按正常分面规则重复。\n\n3. 六类 Coord 支持 scales=\"fixed\"；自由原生轴只对 Dotplot 有意义。路径类Coord的轨道值自由范围用 scale_y_continuous(domain=\"panel\")。\n\n4. Circular要求每面板恰有一个有效参考。用明确的参考分面字段（例如accver）满足此条件，不从基因数据碰巧出现的ID猜参考。\n\n5. Facet组织同一构图规则的数据子集；不同Coord/独立图的数据组合用ggchord_fusion。",
       "errors": "- Circular单面板内存在多于一条有效参考。",
       "roles": [],
       "example_setup": ""
@@ -424,7 +424,7 @@
         }
       ],
       "value": "可添加到ggchord图的原生FacetWrap对象。",
-      "details": "1. 本页记录原生 ggplot2 签名及其在 ggchord 图中的集成规则。\n\n2. 完整参考先于分面登记；分面仅确定成员，不能从本面板观察端点重新推断参考长度。缺少分面字段的参考或图层按正常分面规则重复。\n\n3. 六类 Coord 支持 scales=\"fixed\"；自由原生轴只对 Dotplot 开放，且必须使用 coord_dotplot(ratio=NULL)。路径类 Coord 的轨道值自由范围用 scale_track_value(domain=\"panel\")。这是待实现的集成合同。\n\n4. Circular要求每面板恰有一个有效参考。用明确的参考分面字段（例如accver）满足此条件，不从基因数据碰巧出现的ID猜参考。\n\n5. Facet组织同一构图规则的数据子集；不同Coord/独立图的数据组合用ggchord_fusion。",
+      "details": "1. 本页记录原生 ggplot2 签名及其在 ggchord 图中的集成规则。\n\n2. 完整参考先于分面登记；分面仅确定成员，不能从本面板观察端点重新推断参考长度。缺少分面字段的参考或图层按正常分面规则重复。\n\n3. 六类 Coord 支持 scales=\"fixed\"；自由原生轴只对 Dotplot 开放，且必须使用 coord_dotplot(ratio=NULL)。路径类 Coord 的轨道值自由范围用 scale_y_continuous(domain=\"panel\")。这是待实现的集成合同。\n\n4. Circular要求每面板恰有一个有效参考。用明确的参考分面字段（例如accver）满足此条件，不从基因数据碰巧出现的ID猜参考。\n\n5. Facet组织同一构图规则的数据子集；不同Coord/独立图的数据组合用ggchord_fusion。",
       "errors": "- 路径类Coord使用free/free_x/free_y。\n\n- 需要的分面字段无法在足够的层/参考中确定。\n\n- Circular面板参考不唯一。",
       "roles": [],
       "example_setup": ""
@@ -483,7 +483,7 @@
         }
       ],
       "value": "可添加到ggchord图的原生FacetGrid对象。",
-      "details": "1. 本页记录原生 ggplot2 签名及其在 ggchord 图中的集成规则。\n\n2. 完整参考先于分面登记；分面仅确定成员，不能从本面板观察端点重新推断参考长度。缺少分面字段的参考或图层按正常分面规则重复。\n\n3. 六类 Coord 支持 scales=\"fixed\"；自由原生轴只对 Dotplot 开放，且必须使用 coord_dotplot(ratio=NULL)。路径类 Coord 的轨道值自由范围用 scale_track_value(domain=\"panel\")。这是待实现的集成合同。\n\n4. Circular要求每面板恰有一个有效参考。用明确的参考分面字段（例如accver）满足此条件，不从基因数据碰巧出现的ID猜参考。\n\n5. Facet组织同一构图规则的数据子集；不同Coord/独立图的数据组合用ggchord_fusion。\n\n6. margins合并的Circular面板若包含多条参考仍报错；不能忽略该限制。",
+      "details": "1. 本页记录原生 ggplot2 签名及其在 ggchord 图中的集成规则。\n\n2. 完整参考先于分面登记；分面仅确定成员，不能从本面板观察端点重新推断参考长度。缺少分面字段的参考或图层按正常分面规则重复。\n\n3. 六类 Coord 支持 scales=\"fixed\"；自由原生轴只对 Dotplot 开放，且必须使用 coord_dotplot(ratio=NULL)。路径类 Coord 的轨道值自由范围用 scale_y_continuous(domain=\"panel\")。这是待实现的集成合同。\n\n4. Circular要求每面板恰有一个有效参考。用明确的参考分面字段（例如accver）满足此条件，不从基因数据碰巧出现的ID猜参考。\n\n5. Facet组织同一构图规则的数据子集；不同Coord/独立图的数据组合用ggchord_fusion。\n\n6. margins合并的Circular面板若包含多条参考仍报错；不能忽略该限制。",
       "errors": "- 自由轴与Coord不兼容。\n\n- 总计面板不满足该Coord参考数量要求。",
       "roles": [],
       "example_setup": ""
@@ -609,37 +609,6 @@
       "roles": [],
       "example_setup": ""
     },
-    "track_band": {
-      "title": "声明轨道的物理容器",
-      "intro": "为一个或多个数值/区间轨道层声明共享的物理带。它只决定容器所在侧、次序、厚度和间隔；不提供数值范围、颜色域或数据来源。",
-      "arguments": [
-        {
-          "format": "非空character(1)；默认\"default\"",
-          "description": "图内唯一轨带ID，由geom_track(track=...)和scale_track_value(track=...)引用。显式重复声明同一ID报错；无需声明即可使用唯一default带。"
-        },
-        {
-          "format": "character；默认\"positive\"",
-          "description": "\"positive\"或\"negative\"，沿参考局部法向选择一侧。圆弧正侧为外侧，水平参考正侧为上方；不因strand改变。"
-        },
-        {
-          "format": "正整数；默认1",
-          "description": "同侧轨带由近参考到远参考的顺序。不同命名轨带同侧order不得相同，以免布局依赖添加先后。"
-        },
-        {
-          "format": "正mm / 绝对grid unit / 灵活配置；默认4",
-          "description": "轨带的最终物理厚度。支持按source/instance命名的覆盖，不参与y域训练或统计。"
-        },
-        {
-          "format": "非负mm / 绝对grid unit / 灵活配置；默认1",
-          "description": "本带与前一轨带容器之间的物理净空；第一带从解析后参考路径的中心线到本带内缘计算，不从任何 geom_seq 的可见外缘推断。需要额外避开骨架时显式增大 gap；此参数不是源位置间隔。"
-        }
-      ],
-      "value": "可添加到图的命名轨带声明。多个层可引用同一带；一个层一次只引用一条带。",
-      "details": "1. 任何层引用 track=\"default\" 且没有对 default 的显式声明时，激活本函数默认配置；其他命名轨带不会取消它。为 default 显式添加一条声明替换该隐式配置。未被使用的隐式 default 不占空间；同侧 order 冲突仍报错。\n\n2. 非default名字必须有显式声明。解析按最终图对象进行，不因band在Geom前后添加而改变结果。\n\n3. 同带数值层共享scale_track_value管理的y域；满带interval不训练y。不同带不因为颜色变量相同或ID相同就自动共享色域。\n\n4. 物理尺寸按最终面板确定。显式 thickness/gap 为锁定几何尺寸；空间不足产生诊断，render_policy 不得静默缩小它们。修改 geom_seq 的 linewidth/thickness 不移动轨带。",
-      "errors": "- 未知带ID、同ID多次显式声明、同侧order冲突。\n\n- 厚度非正、gap为负或使用相对npc单位。\n\n- 在无单参考路径定义的Dotplot中使用轨带。",
-      "roles": [],
-      "example_setup": ""
-    },
     "geom_seq": {
       "title": "绘制参考序列骨架",
       "intro": "将已声明的完整序列参考路径绘制为线、双线或带；也允许在 ggchord(data=NULL) 时由显式规范参考表声明唯一参考。绘制层的样式不拥有全图布局。",
@@ -686,7 +655,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个可添加到 ggchord 图的参考几何层。若它是唯一参考声明入口，同时提供待解析的完整参考数据；不修改传入表。",
@@ -740,7 +709,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个参考文字层；不生成、推断或修改参考数据。",
@@ -790,7 +759,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个参考文字层；不生成、推断或修改参考数据。",
@@ -844,7 +813,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个参考断点装饰层；没有断点时返回可正常绘制的空层。",
@@ -901,7 +870,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个 feature 图层；一条输入实体可以展开为多个几何片段，但保持实体 ID 与来源区间，不修改输入表。",
@@ -963,7 +932,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个 feature 图层；一条输入实体可以展开为多个几何片段，但保持实体 ID 与来源区间，不修改输入表。",
@@ -1025,7 +994,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个 feature 图层；一条输入实体可以展开为多个几何片段，但保持实体 ID 与来源区间，不修改输入表。",
@@ -1091,7 +1060,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个 feature 图层；一条输入实体可以展开为多个几何片段，但保持实体 ID 与来源区间，不修改输入表。",
@@ -1157,7 +1126,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个文字与可选引线的标签层；保留每条文字与目标实体的关联及排版状态，不改变目标图层。",
@@ -1222,7 +1191,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个文字与可选引线的标签层；保留每条文字与目标实体的关联及排版状态，不改变目标图层。",
@@ -1287,7 +1256,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个文字与可选引线的标签层；保留每条文字与目标实体的关联及排版状态，不改变目标图层。",
@@ -1352,7 +1321,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个文字与可选引线的标签层；保留每条文字与目标实体的关联及排版状态，不改变目标图层。",
@@ -1417,7 +1386,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个文字与可选引线的标签层；保留每条文字与目标实体的关联及排版状态，不改变目标图层。",
@@ -1482,7 +1451,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个文字与可选引线的标签层；保留每条文字与目标实体的关联及排版状态，不改变目标图层。",
@@ -1543,7 +1512,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个点位几何层，保留 site_id、pos 与独立切口边界；不修改输入。",
@@ -1604,7 +1573,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个点位几何层，保留 site_id、pos 与独立切口边界；不修改输入。",
@@ -1665,7 +1634,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "点位标签层，返回文字、可选引线及与 site_id 的关联。",
@@ -1725,7 +1694,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "点位标签层，返回文字、可选引线及与 site_id 的关联。",
@@ -1781,7 +1750,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个点连接层；每条路径保留两端源点与 link_id。",
@@ -1841,7 +1810,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         },
         {
           "format": "numeric / unit / vector",
@@ -1906,7 +1875,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个 Dotplot HSP 线段层；保留 q/s 原始身份、四端点、方向证据和显示轴位置。",
@@ -2124,8 +2093,8 @@
           "description": "NULL 按所选 Geom 默认：bar/col/area=stack，其余 identity。改 Stat 不自动改 Position；显式值优先，不兼容时报错。"
         },
         {
-          "format": "character(1)",
-          "description": "物理轨带 ID，默认 default；命名新带前先声明 track_band。不是颜色尺度作用域。"
+          "format": "字符串或 NULL",
+          "description": "具名轨带 ID。省略时独立建带，用 add_track() 可组合多层。"
         },
         {
           "format": "named arguments",
@@ -2145,11 +2114,11 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个 Track 图层；数值几何输出保留参考源位置、统计成员及带内数值映射。interval 只输出区间与容器几何，不伪造 y 统计。",
-      "details": "1. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n2. x 始终处于原生序列单位；y 是轨道数值。track_band 管物理容器厚度和间距，scale_track_value 管 y 的实际映射，fill/colour 使用普通视觉 Scale。\n\n3. 默认 track=\"default\" 的单带可不声明；其他名称必须先有 track_band。多个层引用同带时共享可比较的 y 训练域，不因为名称相同自动共享 fill 色板。\n\n4. 函数式 data 只接收图级 data；不会自动找已有 interval 或 signal 层。group、参考、分面与显示实例的边界不会被几何跨越。\n\n5. 输入 y 的尺度与 Stat 生命周期按统一规则处理：已变换输入不二次变换，新计算的 after_stat y 在其阶段变换一次。非线性 y 尺度与 stack 不兼容；baseline 为原 y 单位，log 下必须有效。\n\n6. point: Stat=identity；Position=identity。有效参数：size=1.5 mm、shape=19、stroke=0.5；shape 使用普通点符号字典。colour/alpha 可用；fill 仅支持有填充内部的点形状。\n\n7. line: Stat=identity；Position=identity。有效参数：linewidth=0.5、lineend=\"butt\"（butt/round/square）、linejoin=\"round\"、closed=FALSE。closed=TRUE 仅对连续闭合参考的同一组合法；不得跨 NA、窗口、样本和不同参考封口。fill 不适用。\n\n8. path: Stat=identity；Position=identity。有效参数同 line；输入顺序是路径合同，Stat 重排时以其输出顺序为准。closed=FALSE 默认，不跨 NA 或组边界连线；fill 不适用。\n\n9. step: Stat=identity；Position=identity。有效参数：direction=\"hv\"（hv/vh/mid）、linewidth=0.5、lineend=\"butt\"；组内先按源 x 排序。mid 的跳变在相邻源点中间；闭合或填充不适用。\n\n10. col: Stat=identity；Position=stack。有效参数：width=NULL（源单位；NULL 用 0.9 倍组内最小正 x 间距）、baseline=0（原数值单位）、just=0.5、colour=NA、fill=\"grey60\"、linewidth=0.3、alpha=1。只有一个独立 x 时默认 width=1 源单位。默认 Position 为 stack；不想堆叠时明确 identity。\n\n11. bar: Stat=count；Position=stack。有效几何参数同 col；默认 Stat=count，y 为 after_stat(count)，不能同时显式映射输入 y。权重用 aes(weight=...)。需要输入 y 的现成高度时使用 col 或显式 identity Stat。\n\n12. area: Stat=identity；Position=stack。有效参数：baseline=0（原 y 单位）、fill=\"grey60\"、colour=NA、alpha=1、linewidth=0.3、outline=\"upper\"（upper/both/full）。默认 Position=stack；不跨缺失数据段、窗口或参考填充。不能通过 closed 连接不同来源组。\n\n13. tile: Stat=identity；Position=identity。有效参数：width=NULL（源单位）、height=NULL（原 y 单位），NULL 分别用各轴最小正间距的 0.9 倍，单一坐标值时用该轴 1 单位；fill=\"grey60\"、colour=NA、linewidth=0.2、alpha=1。width/height 不能是轨带物理 mm。\n\n14. interval: Stat=identity；Position=identity。有效参数：fill=\"grey60\"、colour=NA、linewidth=0.2、alpha=1；物理全高来自 track_band。只接受不依赖 y 的 Position，本版 identity。显式 y/ymin/ymax/height/baseline 报错；图级继承的不适用 y 提示后不用于本层，不改变几何身份。",
+      "details": "1. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n2. x 始终处于原生序列单位；y 是轨道数值。layout_track 管物理容器厚度和间距，原生 scale_y_*() 管 y 的实际映射，fill/colour 使用普通视觉 Scale。\n\n3. 省略 track 会创建独立轨带。具名轨带用 layout_track() 声明，或用 add_track() 组合其成员。共带的数值层训练同一个 Y 域，普通视觉标度按映射通道跨层训练。\n\n4. 函数式 data 只接收图级 data；不会自动找已有 interval 或 signal 层。group、参考、分面与显示实例的边界不会被几何跨越。\n\n5. 输入 y 的尺度与 Stat 生命周期按统一规则处理：已变换输入不二次变换，新计算的 after_stat y 在其阶段变换一次。非线性 y 尺度与 stack 不兼容；baseline 为原 y 单位，log 下必须有效。\n\n6. point: Stat=identity；Position=identity。有效参数：size=1.5 mm、shape=19、stroke=0.5；shape 使用普通点符号字典。colour/alpha 可用；fill 仅支持有填充内部的点形状。\n\n7. line: Stat=identity；Position=identity。有效参数：linewidth=0.5、lineend=\"butt\"（butt/round/square）、linejoin=\"round\"、closed=FALSE。closed=TRUE 仅对连续闭合参考的同一组合法；不得跨 NA、窗口、样本和不同参考封口。fill 不适用。\n\n8. path: Stat=identity；Position=identity。有效参数同 line；输入顺序是路径合同，Stat 重排时以其输出顺序为准。closed=FALSE 默认，不跨 NA 或组边界连线；fill 不适用。\n\n9. step: Stat=identity；Position=identity。有效参数：direction=\"hv\"（hv/vh/mid）、linewidth=0.5、lineend=\"butt\"；组内先按源 x 排序。mid 的跳变在相邻源点中间；闭合或填充不适用。\n\n10. col: Stat=identity；Position=stack。有效参数：width=NULL（源单位；NULL 用 0.9 倍组内最小正 x 间距）、baseline=0（原数值单位）、just=0.5、colour=NA、fill=\"grey60\"、linewidth=0.3、alpha=1。只有一个独立 x 时默认 width=1 源单位。默认 Position 为 stack；不想堆叠时明确 identity。\n\n11. bar: Stat=count；Position=stack。有效几何参数同 col；默认 Stat=count，y 为 after_stat(count)，不能同时显式映射输入 y。权重用 aes(weight=...)。需要输入 y 的现成高度时使用 col 或显式 identity Stat。\n\n12. area: Stat=identity；Position=stack。有效参数：baseline=0（原 y 单位）、fill=\"grey60\"、colour=NA、alpha=1、linewidth=0.3、outline=\"upper\"（upper/both/full）。默认 Position=stack；不跨缺失数据段、窗口或参考填充。不能通过 closed 连接不同来源组。\n\n13. tile: Stat=identity；Position=identity。有效参数：width=NULL（源单位）、height=NULL（原 y 单位），NULL 分别用各轴最小正间距的 0.9 倍，单一坐标值时用该轴 1 单位；fill=\"grey60\"、colour=NA、linewidth=0.2、alpha=1。width/height 不能是轨带物理 mm。\n\n14. interval: Stat=identity；Position=identity。有效参数：fill=\"grey60\"、colour=NA、linewidth=0.2、alpha=1；物理全高来自 layout_track。只接受不依赖 y 的 Position，本版 identity。显式 y/ymin/ymax/height/baseline 报错；图级继承的不适用 y 提示后不用于本层，不改变几何身份。",
       "errors": "- 未知 track ID、未知参考或超界来源坐标。\n\n- 几何不支持的 y/width/height/closed 参数，或不兼容 Stat/Position。\n\n- 同带已知度量/单位不一致；非线性尺度与 stack 组合；非法 baseline。",
       "roles": [
         "必需参考身份。",
@@ -2182,8 +2151,8 @@
           "description": "默认 identity；使用与本几何数据域兼容的 Position。interval 首版仅 identity，其他兼容范围按数值坐标要求检查。"
         },
         {
-          "format": "character(1)",
-          "description": "物理轨带 ID，默认 default；其他 ID 必须已由 track_band 声明。"
+          "format": "字符串或 NULL",
+          "description": "具名轨带 ID。省略时独立建带，用 add_track() 可组合多层。"
         },
         {
           "format": "named arguments",
@@ -2203,11 +2172,11 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个 Track 图层；数值几何输出保留参考源位置、统计成员及带内数值映射。interval 只输出区间与容器几何，不伪造 y 统计。",
-      "details": "1. 默认严格展开为 geom_track(geom=\"point\", stat=\"identity\", position=\"identity\", track=\"default\", ...)；用户显式参数覆盖可覆盖默认，不再次强制注入。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. x 始终处于原生序列单位；y 是轨道数值。track_band 管物理容器厚度和间距，scale_track_value 管 y 的实际映射，fill/colour 使用普通视觉 Scale。\n\n4. 默认 track=\"default\" 的单带可不声明；其他名称必须先有 track_band。多个层引用同带时共享可比较的 y 训练域，不因为名称相同自动共享 fill 色板。\n\n5. 函数式 data 只接收图级 data；不会自动找已有 interval 或 signal 层。group、参考、分面与显示实例的边界不会被几何跨越。\n\n6. 输入 y 的尺度与 Stat 生命周期按统一规则处理：已变换输入不二次变换，新计算的 after_stat y 在其阶段变换一次。非线性 y 尺度与 stack 不兼容；baseline 为原 y 单位，log 下必须有效。\n\n7. 有效参数：size=1.5 mm、shape=19、stroke=0.5；shape 使用普通点符号字典。colour/alpha 可用；fill 仅支持有填充内部的点形状。",
+      "details": "1. 默认严格展开为 geom_track(geom=\"point\", stat=\"identity\", position=\"identity\", track=NULL, ...)；用户显式参数覆盖可覆盖默认，不再次强制注入。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. x 始终处于原生序列单位；y 是轨道数值。layout_track 管物理容器厚度和间距，原生 scale_y_*() 管 y 的实际映射，fill/colour 使用普通视觉 Scale。\n\n4. 省略 track 会创建独立轨带。具名轨带用 layout_track() 声明，或用 add_track() 组合其成员。共带的数值层训练同一个 Y 域，普通视觉标度按映射通道跨层训练。\n\n5. 函数式 data 只接收图级 data；不会自动找已有 interval 或 signal 层。group、参考、分面与显示实例的边界不会被几何跨越。\n\n6. 输入 y 的尺度与 Stat 生命周期按统一规则处理：已变换输入不二次变换，新计算的 after_stat y 在其阶段变换一次。非线性 y 尺度与 stack 不兼容；baseline 为原 y 单位，log 下必须有效。\n\n7. 有效参数：size=1.5 mm、shape=19、stroke=0.5；shape 使用普通点符号字典。colour/alpha 可用；fill 仅支持有填充内部的点形状。",
       "errors": "- 未知 track ID、未知参考或超界来源坐标。\n\n- 几何不支持的 y/width/height/closed 参数，或不兼容 Stat/Position。\n\n- 同带已知度量/单位不一致；非线性尺度与 stack 组合；非法 baseline。",
       "roles": [
         "必需参考身份。",
@@ -2239,8 +2208,8 @@
           "description": "默认 identity；使用与本几何数据域兼容的 Position。interval 首版仅 identity，其他兼容范围按数值坐标要求检查。"
         },
         {
-          "format": "character(1)",
-          "description": "物理轨带 ID，默认 default；其他 ID 必须已由 track_band 声明。"
+          "format": "字符串或 NULL",
+          "description": "具名轨带 ID。省略时独立建带，用 add_track() 可组合多层。"
         },
         {
           "format": "named arguments",
@@ -2260,11 +2229,11 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个 Track 图层；数值几何输出保留参考源位置、统计成员及带内数值映射。interval 只输出区间与容器几何，不伪造 y 统计。",
-      "details": "1. 默认严格展开为 geom_track(geom=\"line\", stat=\"identity\", position=\"identity\", track=\"default\", ...)；用户显式参数覆盖可覆盖默认，不再次强制注入。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. x 始终处于原生序列单位；y 是轨道数值。track_band 管物理容器厚度和间距，scale_track_value 管 y 的实际映射，fill/colour 使用普通视觉 Scale。\n\n4. 默认 track=\"default\" 的单带可不声明；其他名称必须先有 track_band。多个层引用同带时共享可比较的 y 训练域，不因为名称相同自动共享 fill 色板。\n\n5. 函数式 data 只接收图级 data；不会自动找已有 interval 或 signal 层。group、参考、分面与显示实例的边界不会被几何跨越。\n\n6. 输入 y 的尺度与 Stat 生命周期按统一规则处理：已变换输入不二次变换，新计算的 after_stat y 在其阶段变换一次。非线性 y 尺度与 stack 不兼容；baseline 为原 y 单位，log 下必须有效。\n\n7. 有效参数：linewidth=0.5、lineend=\"butt\"（butt/round/square）、linejoin=\"round\"、closed=FALSE。closed=TRUE 仅对连续闭合参考的同一组合法；不得跨 NA、窗口、样本和不同参考封口。fill 不适用。",
+      "details": "1. 默认严格展开为 geom_track(geom=\"line\", stat=\"identity\", position=\"identity\", track=NULL, ...)；用户显式参数覆盖可覆盖默认，不再次强制注入。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. x 始终处于原生序列单位；y 是轨道数值。layout_track 管物理容器厚度和间距，原生 scale_y_*() 管 y 的实际映射，fill/colour 使用普通视觉 Scale。\n\n4. 省略 track 会创建独立轨带。具名轨带用 layout_track() 声明，或用 add_track() 组合其成员。共带的数值层训练同一个 Y 域，普通视觉标度按映射通道跨层训练。\n\n5. 函数式 data 只接收图级 data；不会自动找已有 interval 或 signal 层。group、参考、分面与显示实例的边界不会被几何跨越。\n\n6. 输入 y 的尺度与 Stat 生命周期按统一规则处理：已变换输入不二次变换，新计算的 after_stat y 在其阶段变换一次。非线性 y 尺度与 stack 不兼容；baseline 为原 y 单位，log 下必须有效。\n\n7. 有效参数：linewidth=0.5、lineend=\"butt\"（butt/round/square）、linejoin=\"round\"、closed=FALSE。closed=TRUE 仅对连续闭合参考的同一组合法；不得跨 NA、窗口、样本和不同参考封口。fill 不适用。",
       "errors": "- 未知 track ID、未知参考或超界来源坐标。\n\n- 几何不支持的 y/width/height/closed 参数，或不兼容 Stat/Position。\n\n- 同带已知度量/单位不一致；非线性尺度与 stack 组合；非法 baseline。",
       "roles": [
         "必需参考身份。",
@@ -2296,8 +2265,8 @@
           "description": "默认 identity；使用与本几何数据域兼容的 Position。interval 首版仅 identity，其他兼容范围按数值坐标要求检查。"
         },
         {
-          "format": "character(1)",
-          "description": "物理轨带 ID，默认 default；其他 ID 必须已由 track_band 声明。"
+          "format": "字符串或 NULL",
+          "description": "具名轨带 ID。省略时独立建带，用 add_track() 可组合多层。"
         },
         {
           "format": "named arguments",
@@ -2317,11 +2286,11 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个 Track 图层；数值几何输出保留参考源位置、统计成员及带内数值映射。interval 只输出区间与容器几何，不伪造 y 统计。",
-      "details": "1. 默认严格展开为 geom_track(geom=\"path\", stat=\"identity\", position=\"identity\", track=\"default\", ...)；用户显式参数覆盖可覆盖默认，不再次强制注入。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. x 始终处于原生序列单位；y 是轨道数值。track_band 管物理容器厚度和间距，scale_track_value 管 y 的实际映射，fill/colour 使用普通视觉 Scale。\n\n4. 默认 track=\"default\" 的单带可不声明；其他名称必须先有 track_band。多个层引用同带时共享可比较的 y 训练域，不因为名称相同自动共享 fill 色板。\n\n5. 函数式 data 只接收图级 data；不会自动找已有 interval 或 signal 层。group、参考、分面与显示实例的边界不会被几何跨越。\n\n6. 输入 y 的尺度与 Stat 生命周期按统一规则处理：已变换输入不二次变换，新计算的 after_stat y 在其阶段变换一次。非线性 y 尺度与 stack 不兼容；baseline 为原 y 单位，log 下必须有效。\n\n7. 有效参数同 line；输入顺序是路径合同，Stat 重排时以其输出顺序为准。closed=FALSE 默认，不跨 NA 或组边界连线；fill 不适用。",
+      "details": "1. 默认严格展开为 geom_track(geom=\"path\", stat=\"identity\", position=\"identity\", track=NULL, ...)；用户显式参数覆盖可覆盖默认，不再次强制注入。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. x 始终处于原生序列单位；y 是轨道数值。layout_track 管物理容器厚度和间距，原生 scale_y_*() 管 y 的实际映射，fill/colour 使用普通视觉 Scale。\n\n4. 省略 track 会创建独立轨带。具名轨带用 layout_track() 声明，或用 add_track() 组合其成员。共带的数值层训练同一个 Y 域，普通视觉标度按映射通道跨层训练。\n\n5. 函数式 data 只接收图级 data；不会自动找已有 interval 或 signal 层。group、参考、分面与显示实例的边界不会被几何跨越。\n\n6. 输入 y 的尺度与 Stat 生命周期按统一规则处理：已变换输入不二次变换，新计算的 after_stat y 在其阶段变换一次。非线性 y 尺度与 stack 不兼容；baseline 为原 y 单位，log 下必须有效。\n\n7. 有效参数同 line；输入顺序是路径合同，Stat 重排时以其输出顺序为准。closed=FALSE 默认，不跨 NA 或组边界连线；fill 不适用。",
       "errors": "- 未知 track ID、未知参考或超界来源坐标。\n\n- 几何不支持的 y/width/height/closed 参数，或不兼容 Stat/Position。\n\n- 同带已知度量/单位不一致；非线性尺度与 stack 组合；非法 baseline。",
       "roles": [
         "必需参考身份。",
@@ -2353,8 +2322,8 @@
           "description": "默认 identity；使用与本几何数据域兼容的 Position。interval 首版仅 identity，其他兼容范围按数值坐标要求检查。"
         },
         {
-          "format": "character(1)",
-          "description": "物理轨带 ID，默认 default；其他 ID 必须已由 track_band 声明。"
+          "format": "字符串或 NULL",
+          "description": "具名轨带 ID。省略时独立建带，用 add_track() 可组合多层。"
         },
         {
           "format": "named arguments",
@@ -2374,11 +2343,11 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个 Track 图层；数值几何输出保留参考源位置、统计成员及带内数值映射。interval 只输出区间与容器几何，不伪造 y 统计。",
-      "details": "1. 默认严格展开为 geom_track(geom=\"step\", stat=\"identity\", position=\"identity\", track=\"default\", ...)；用户显式参数覆盖可覆盖默认，不再次强制注入。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. x 始终处于原生序列单位；y 是轨道数值。track_band 管物理容器厚度和间距，scale_track_value 管 y 的实际映射，fill/colour 使用普通视觉 Scale。\n\n4. 默认 track=\"default\" 的单带可不声明；其他名称必须先有 track_band。多个层引用同带时共享可比较的 y 训练域，不因为名称相同自动共享 fill 色板。\n\n5. 函数式 data 只接收图级 data；不会自动找已有 interval 或 signal 层。group、参考、分面与显示实例的边界不会被几何跨越。\n\n6. 输入 y 的尺度与 Stat 生命周期按统一规则处理：已变换输入不二次变换，新计算的 after_stat y 在其阶段变换一次。非线性 y 尺度与 stack 不兼容；baseline 为原 y 单位，log 下必须有效。\n\n7. 有效参数：direction=\"hv\"（hv/vh/mid）、linewidth=0.5、lineend=\"butt\"；组内先按源 x 排序。mid 的跳变在相邻源点中间；闭合或填充不适用。",
+      "details": "1. 默认严格展开为 geom_track(geom=\"step\", stat=\"identity\", position=\"identity\", track=NULL, ...)；用户显式参数覆盖可覆盖默认，不再次强制注入。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. x 始终处于原生序列单位；y 是轨道数值。layout_track 管物理容器厚度和间距，原生 scale_y_*() 管 y 的实际映射，fill/colour 使用普通视觉 Scale。\n\n4. 省略 track 会创建独立轨带。具名轨带用 layout_track() 声明，或用 add_track() 组合其成员。共带的数值层训练同一个 Y 域，普通视觉标度按映射通道跨层训练。\n\n5. 函数式 data 只接收图级 data；不会自动找已有 interval 或 signal 层。group、参考、分面与显示实例的边界不会被几何跨越。\n\n6. 输入 y 的尺度与 Stat 生命周期按统一规则处理：已变换输入不二次变换，新计算的 after_stat y 在其阶段变换一次。非线性 y 尺度与 stack 不兼容；baseline 为原 y 单位，log 下必须有效。\n\n7. 有效参数：direction=\"hv\"（hv/vh/mid）、linewidth=0.5、lineend=\"butt\"；组内先按源 x 排序。mid 的跳变在相邻源点中间；闭合或填充不适用。",
       "errors": "- 未知 track ID、未知参考或超界来源坐标。\n\n- 几何不支持的 y/width/height/closed 参数，或不兼容 Stat/Position。\n\n- 同带已知度量/单位不一致；非线性尺度与 stack 组合；非法 baseline。",
       "roles": [
         "必需参考身份。",
@@ -2410,8 +2379,8 @@
           "description": "默认 stack；使用与本几何数据域兼容的 Position。interval 首版仅 identity，其他兼容范围按数值坐标要求检查。"
         },
         {
-          "format": "character(1)",
-          "description": "物理轨带 ID，默认 default；其他 ID 必须已由 track_band 声明。"
+          "format": "字符串或 NULL",
+          "description": "具名轨带 ID。省略时独立建带，用 add_track() 可组合多层。"
         },
         {
           "format": "named arguments",
@@ -2431,11 +2400,11 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个 Track 图层；数值几何输出保留参考源位置、统计成员及带内数值映射。interval 只输出区间与容器几何，不伪造 y 统计。",
-      "details": "1. 默认严格展开为 geom_track(geom=\"col\", stat=\"identity\", position=\"stack\", track=\"default\", ...)；用户显式参数覆盖可覆盖默认，不再次强制注入。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. x 始终处于原生序列单位；y 是轨道数值。track_band 管物理容器厚度和间距，scale_track_value 管 y 的实际映射，fill/colour 使用普通视觉 Scale。\n\n4. 默认 track=\"default\" 的单带可不声明；其他名称必须先有 track_band。多个层引用同带时共享可比较的 y 训练域，不因为名称相同自动共享 fill 色板。\n\n5. 函数式 data 只接收图级 data；不会自动找已有 interval 或 signal 层。group、参考、分面与显示实例的边界不会被几何跨越。\n\n6. 输入 y 的尺度与 Stat 生命周期按统一规则处理：已变换输入不二次变换，新计算的 after_stat y 在其阶段变换一次。非线性 y 尺度与 stack 不兼容；baseline 为原 y 单位，log 下必须有效。\n\n7. 有效参数：width=NULL（源单位；NULL 用 0.9 倍组内最小正 x 间距）、baseline=0（原数值单位）、just=0.5、colour=NA、fill=\"grey60\"、linewidth=0.3、alpha=1。只有一个独立 x 时默认 width=1 源单位。默认 Position 为 stack；不想堆叠时明确 identity。\n\n8. stat_coverage() 默认 Position=identity；若通过 geom_track_col(stat=\"coverage\") 使用同一统计，本快捷式仍默认 stack。要求等价结果时明确 position=\"identity\"。",
+      "details": "1. 默认严格展开为 geom_track(geom=\"col\", stat=\"identity\", position=\"stack\", track=NULL, ...)；用户显式参数覆盖可覆盖默认，不再次强制注入。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. x 始终处于原生序列单位；y 是轨道数值。layout_track 管物理容器厚度和间距，原生 scale_y_*() 管 y 的实际映射，fill/colour 使用普通视觉 Scale。\n\n4. 省略 track 会创建独立轨带。具名轨带用 layout_track() 声明，或用 add_track() 组合其成员。共带的数值层训练同一个 Y 域，普通视觉标度按映射通道跨层训练。\n\n5. 函数式 data 只接收图级 data；不会自动找已有 interval 或 signal 层。group、参考、分面与显示实例的边界不会被几何跨越。\n\n6. 输入 y 的尺度与 Stat 生命周期按统一规则处理：已变换输入不二次变换，新计算的 after_stat y 在其阶段变换一次。非线性 y 尺度与 stack 不兼容；baseline 为原 y 单位，log 下必须有效。\n\n7. 有效参数：width=NULL（源单位；NULL 用 0.9 倍组内最小正 x 间距）、baseline=0（原数值单位）、just=0.5、colour=NA、fill=\"grey60\"、linewidth=0.3、alpha=1。只有一个独立 x 时默认 width=1 源单位。默认 Position 为 stack；不想堆叠时明确 identity。\n\n8. stat_coverage() 默认 Position=identity；若通过 geom_track_col(stat=\"coverage\") 使用同一统计，本快捷式仍默认 stack。要求等价结果时明确 position=\"identity\"。",
       "errors": "- 未知 track ID、未知参考或超界来源坐标。\n\n- 几何不支持的 y/width/height/closed 参数，或不兼容 Stat/Position。\n\n- 同带已知度量/单位不一致；非线性尺度与 stack 组合；非法 baseline。",
       "roles": [
         "必需参考身份。",
@@ -2467,8 +2436,8 @@
           "description": "默认 stack；使用与本几何数据域兼容的 Position。interval 首版仅 identity，其他兼容范围按数值坐标要求检查。"
         },
         {
-          "format": "character(1)",
-          "description": "物理轨带 ID，默认 default；其他 ID 必须已由 track_band 声明。"
+          "format": "字符串或 NULL",
+          "description": "具名轨带 ID。省略时独立建带，用 add_track() 可组合多层。"
         },
         {
           "format": "named arguments",
@@ -2488,11 +2457,11 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个 Track 图层；数值几何输出保留参考源位置、统计成员及带内数值映射。interval 只输出区间与容器几何，不伪造 y 统计。",
-      "details": "1. 默认严格展开为 geom_track(geom=\"bar\", stat=\"count\", position=\"stack\", track=\"default\", ...)；用户显式参数覆盖可覆盖默认，不再次强制注入。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. x 始终处于原生序列单位；y 是轨道数值。track_band 管物理容器厚度和间距，scale_track_value 管 y 的实际映射，fill/colour 使用普通视觉 Scale。\n\n4. 默认 track=\"default\" 的单带可不声明；其他名称必须先有 track_band。多个层引用同带时共享可比较的 y 训练域，不因为名称相同自动共享 fill 色板。\n\n5. 函数式 data 只接收图级 data；不会自动找已有 interval 或 signal 层。group、参考、分面与显示实例的边界不会被几何跨越。\n\n6. 输入 y 的尺度与 Stat 生命周期按统一规则处理：已变换输入不二次变换，新计算的 after_stat y 在其阶段变换一次。非线性 y 尺度与 stack 不兼容；baseline 为原 y 单位，log 下必须有效。\n\n7. 有效几何参数同 col；默认 Stat=count，y 为 after_stat(count)，不能同时显式映射输入 y。权重用 aes(weight=...)。需要输入 y 的现成高度时使用 col 或显式 identity Stat。",
+      "details": "1. 默认严格展开为 geom_track(geom=\"bar\", stat=\"count\", position=\"stack\", track=NULL, ...)；用户显式参数覆盖可覆盖默认，不再次强制注入。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. x 始终处于原生序列单位；y 是轨道数值。layout_track 管物理容器厚度和间距，原生 scale_y_*() 管 y 的实际映射，fill/colour 使用普通视觉 Scale。\n\n4. 省略 track 会创建独立轨带。具名轨带用 layout_track() 声明，或用 add_track() 组合其成员。共带的数值层训练同一个 Y 域，普通视觉标度按映射通道跨层训练。\n\n5. 函数式 data 只接收图级 data；不会自动找已有 interval 或 signal 层。group、参考、分面与显示实例的边界不会被几何跨越。\n\n6. 输入 y 的尺度与 Stat 生命周期按统一规则处理：已变换输入不二次变换，新计算的 after_stat y 在其阶段变换一次。非线性 y 尺度与 stack 不兼容；baseline 为原 y 单位，log 下必须有效。\n\n7. 有效几何参数同 col；默认 Stat=count，y 为 after_stat(count)，不能同时显式映射输入 y。权重用 aes(weight=...)。需要输入 y 的现成高度时使用 col 或显式 identity Stat。",
       "errors": "- 未知 track ID、未知参考或超界来源坐标。\n\n- 几何不支持的 y/width/height/closed 参数，或不兼容 Stat/Position。\n\n- 同带已知度量/单位不一致；非线性尺度与 stack 组合；非法 baseline。",
       "roles": [
         "参考与计数位置；x 默认 pos。",
@@ -2524,8 +2493,8 @@
           "description": "默认 stack；使用与本几何数据域兼容的 Position。interval 首版仅 identity，其他兼容范围按数值坐标要求检查。"
         },
         {
-          "format": "character(1)",
-          "description": "物理轨带 ID，默认 default；其他 ID 必须已由 track_band 声明。"
+          "format": "字符串或 NULL",
+          "description": "具名轨带 ID。省略时独立建带，用 add_track() 可组合多层。"
         },
         {
           "format": "named arguments",
@@ -2545,11 +2514,11 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个 Track 图层；数值几何输出保留参考源位置、统计成员及带内数值映射。interval 只输出区间与容器几何，不伪造 y 统计。",
-      "details": "1. 默认严格展开为 geom_track(geom=\"area\", stat=\"identity\", position=\"stack\", track=\"default\", ...)；用户显式参数覆盖可覆盖默认，不再次强制注入。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. x 始终处于原生序列单位；y 是轨道数值。track_band 管物理容器厚度和间距，scale_track_value 管 y 的实际映射，fill/colour 使用普通视觉 Scale。\n\n4. 默认 track=\"default\" 的单带可不声明；其他名称必须先有 track_band。多个层引用同带时共享可比较的 y 训练域，不因为名称相同自动共享 fill 色板。\n\n5. 函数式 data 只接收图级 data；不会自动找已有 interval 或 signal 层。group、参考、分面与显示实例的边界不会被几何跨越。\n\n6. 输入 y 的尺度与 Stat 生命周期按统一规则处理：已变换输入不二次变换，新计算的 after_stat y 在其阶段变换一次。非线性 y 尺度与 stack 不兼容；baseline 为原 y 单位，log 下必须有效。\n\n7. 有效参数：baseline=0（原 y 单位）、fill=\"grey60\"、colour=NA、alpha=1、linewidth=0.3、outline=\"upper\"（upper/both/full）。默认 Position=stack；不跨缺失数据段、窗口或参考填充。不能通过 closed 连接不同来源组。",
+      "details": "1. 默认严格展开为 geom_track(geom=\"area\", stat=\"identity\", position=\"stack\", track=NULL, ...)；用户显式参数覆盖可覆盖默认，不再次强制注入。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. x 始终处于原生序列单位；y 是轨道数值。layout_track 管物理容器厚度和间距，原生 scale_y_*() 管 y 的实际映射，fill/colour 使用普通视觉 Scale。\n\n4. 省略 track 会创建独立轨带。具名轨带用 layout_track() 声明，或用 add_track() 组合其成员。共带的数值层训练同一个 Y 域，普通视觉标度按映射通道跨层训练。\n\n5. 函数式 data 只接收图级 data；不会自动找已有 interval 或 signal 层。group、参考、分面与显示实例的边界不会被几何跨越。\n\n6. 输入 y 的尺度与 Stat 生命周期按统一规则处理：已变换输入不二次变换，新计算的 after_stat y 在其阶段变换一次。非线性 y 尺度与 stack 不兼容；baseline 为原 y 单位，log 下必须有效。\n\n7. 有效参数：baseline=0（原 y 单位）、fill=\"grey60\"、colour=NA、alpha=1、linewidth=0.3、outline=\"upper\"（upper/both/full）。默认 Position=stack；不跨缺失数据段、窗口或参考填充。不能通过 closed 连接不同来源组。",
       "errors": "- 未知 track ID、未知参考或超界来源坐标。\n\n- 几何不支持的 y/width/height/closed 参数，或不兼容 Stat/Position。\n\n- 同带已知度量/单位不一致；非线性尺度与 stack 组合；非法 baseline。",
       "roles": [
         "必需参考身份。",
@@ -2581,8 +2550,8 @@
           "description": "默认 identity；使用与本几何数据域兼容的 Position。interval 首版仅 identity，其他兼容范围按数值坐标要求检查。"
         },
         {
-          "format": "character(1)",
-          "description": "物理轨带 ID，默认 default；其他 ID 必须已由 track_band 声明。"
+          "format": "字符串或 NULL",
+          "description": "具名轨带 ID。省略时独立建带，用 add_track() 可组合多层。"
         },
         {
           "format": "named arguments",
@@ -2602,11 +2571,11 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个 Track 图层；数值几何输出保留参考源位置、统计成员及带内数值映射。interval 只输出区间与容器几何，不伪造 y 统计。",
-      "details": "1. 默认严格展开为 geom_track(geom=\"tile\", stat=\"identity\", position=\"identity\", track=\"default\", ...)；用户显式参数覆盖可覆盖默认，不再次强制注入。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. x 始终处于原生序列单位；y 是轨道数值。track_band 管物理容器厚度和间距，scale_track_value 管 y 的实际映射，fill/colour 使用普通视觉 Scale。\n\n4. 默认 track=\"default\" 的单带可不声明；其他名称必须先有 track_band。多个层引用同带时共享可比较的 y 训练域，不因为名称相同自动共享 fill 色板。\n\n5. 函数式 data 只接收图级 data；不会自动找已有 interval 或 signal 层。group、参考、分面与显示实例的边界不会被几何跨越。\n\n6. 输入 y 的尺度与 Stat 生命周期按统一规则处理：已变换输入不二次变换，新计算的 after_stat y 在其阶段变换一次。非线性 y 尺度与 stack 不兼容；baseline 为原 y 单位，log 下必须有效。\n\n7. 有效参数：width=NULL（源单位）、height=NULL（原 y 单位），NULL 分别用各轴最小正间距的 0.9 倍，单一坐标值时用该轴 1 单位；fill=\"grey60\"、colour=NA、linewidth=0.2、alpha=1。width/height 不能是轨带物理 mm。",
+      "details": "1. 默认严格展开为 geom_track(geom=\"tile\", stat=\"identity\", position=\"identity\", track=NULL, ...)；用户显式参数覆盖可覆盖默认，不再次强制注入。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. x 始终处于原生序列单位；y 是轨道数值。layout_track 管物理容器厚度和间距，原生 scale_y_*() 管 y 的实际映射，fill/colour 使用普通视觉 Scale。\n\n4. 省略 track 会创建独立轨带。具名轨带用 layout_track() 声明，或用 add_track() 组合其成员。共带的数值层训练同一个 Y 域，普通视觉标度按映射通道跨层训练。\n\n5. 函数式 data 只接收图级 data；不会自动找已有 interval 或 signal 层。group、参考、分面与显示实例的边界不会被几何跨越。\n\n6. 输入 y 的尺度与 Stat 生命周期按统一规则处理：已变换输入不二次变换，新计算的 after_stat y 在其阶段变换一次。非线性 y 尺度与 stack 不兼容；baseline 为原 y 单位，log 下必须有效。\n\n7. 有效参数：width=NULL（源单位）、height=NULL（原 y 单位），NULL 分别用各轴最小正间距的 0.9 倍，单一坐标值时用该轴 1 单位；fill=\"grey60\"、colour=NA、linewidth=0.2、alpha=1。width/height 不能是轨带物理 mm。",
       "errors": "- 未知 track ID、未知参考或超界来源坐标。\n\n- 几何不支持的 y/width/height/closed 参数，或不兼容 Stat/Position。\n\n- 同带已知度量/单位不一致；非线性尺度与 stack 组合；非法 baseline。",
       "roles": [
         "必需参考身份。",
@@ -2638,8 +2607,8 @@
           "description": "默认 identity；使用与本几何数据域兼容的 Position。interval 首版仅 identity，其他兼容范围按数值坐标要求检查。"
         },
         {
-          "format": "character(1)",
-          "description": "物理轨带 ID，默认 default；其他 ID 必须已由 track_band 声明。"
+          "format": "字符串或 NULL",
+          "description": "具名轨带 ID。省略时独立建带，用 add_track() 可组合多层。"
         },
         {
           "format": "named arguments",
@@ -2659,11 +2628,11 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个 Track 图层；数值几何输出保留参考源位置、统计成员及带内数值映射。interval 只输出区间与容器几何，不伪造 y 统计。",
-      "details": "1. 默认严格展开为 geom_track(geom=\"interval\", stat=\"identity\", position=\"identity\", track=\"default\", ...)；用户显式参数覆盖可覆盖默认，不再次强制注入。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. x 始终处于原生序列单位；y 是轨道数值。track_band 管物理容器厚度和间距，scale_track_value 管 y 的实际映射，fill/colour 使用普通视觉 Scale。\n\n4. 默认 track=\"default\" 的单带可不声明；其他名称必须先有 track_band。多个层引用同带时共享可比较的 y 训练域，不因为名称相同自动共享 fill 色板。\n\n5. 函数式 data 只接收图级 data；不会自动找已有 interval 或 signal 层。group、参考、分面与显示实例的边界不会被几何跨越。\n\n6. 输入 y 的尺度与 Stat 生命周期按统一规则处理：已变换输入不二次变换，新计算的 after_stat y 在其阶段变换一次。非线性 y 尺度与 stack 不兼容；baseline 为原 y 单位，log 下必须有效。\n\n7. 有效参数：fill=\"grey60\"、colour=NA、linewidth=0.2、alpha=1；物理全高来自 track_band。只接受不依赖 y 的 Position，本版 identity。显式 y/ymin/ymax/height/baseline 报错；图级继承的不适用 y 提示后不用于本层，不改变几何身份。\n\n8. 与同带折线叠加时只提供背景区间，不扩展折线 y 域；没有任何数值层时，该带不单独产生数值轴。",
+      "details": "1. 默认严格展开为 geom_track(geom=\"interval\", stat=\"identity\", position=\"identity\", track=NULL, ...)；用户显式参数覆盖可覆盖默认，不再次强制注入。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. x 始终处于原生序列单位；y 是轨道数值。layout_track 管物理容器厚度和间距，原生 scale_y_*() 管 y 的实际映射，fill/colour 使用普通视觉 Scale。\n\n4. 省略 track 会创建独立轨带。具名轨带用 layout_track() 声明，或用 add_track() 组合其成员。共带的数值层训练同一个 Y 域，普通视觉标度按映射通道跨层训练。\n\n5. 函数式 data 只接收图级 data；不会自动找已有 interval 或 signal 层。group、参考、分面与显示实例的边界不会被几何跨越。\n\n6. 输入 y 的尺度与 Stat 生命周期按统一规则处理：已变换输入不二次变换，新计算的 after_stat y 在其阶段变换一次。非线性 y 尺度与 stack 不兼容；baseline 为原 y 单位，log 下必须有效。\n\n7. 有效参数：fill=\"grey60\"、colour=NA、linewidth=0.2、alpha=1；物理全高来自 layout_track。只接受不依赖 y 的 Position，本版 identity。显式 y/ymin/ymax/height/baseline 报错；图级继承的不适用 y 提示后不用于本层，不改变几何身份。\n\n8. 与同带折线叠加时只提供背景区间，不扩展折线 y 域；没有任何数值层时，该带不单独产生数值轴。",
       "errors": "- 未知 track ID、未知参考或超界来源坐标。\n\n- 几何不支持的 y/width/height/closed 参数，或不兼容 Stat/Position。\n\n- 同带已知度量/单位不一致；非线性尺度与 stack 组合；非法 baseline。",
       "roles": [
         "必需源区间合同；不需要 x/y 数值高度。",
@@ -2906,8 +2875,8 @@
           "description": "\"error\"拒绝超出完整参考的输入区间；\"clip\"显式截断并记录原端点和被截长度。窗口本身非法仍报错。"
         },
         {
-          "format": "character(1)；默认\"default\"",
-          "description": "用于显示统计输出的既有轨带ID。自定义名字必须由track_band声明；不控制窗口或统计组。"
+          "format": "字符串或 NULL",
+          "description": "具名轨带 ID。省略时独立建带，用 add_track() 可组合多层。"
         },
         {
           "format": "已选Geom参数与固定视觉属性",
@@ -2927,7 +2896,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个同时声明Coverage Stat和所选Track Geom的图层；statistics阶段可导出每个窗口及其来源成员。",
@@ -2987,7 +2956,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个区间关系统计图层；统计输出为聚合或保留原记录的规范link表，带source_members、n_members与sum_weight。",
@@ -3047,7 +3016,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "保留原关系行的统计图层；统计输出附加q_bin/s_bin、bin_weight、bin_area、density_raw、density、normalization与来源成员信息。",
@@ -3061,107 +3030,29 @@
       "example_setup": ""
     },
     "scale_for": {
-      "title": "给指定图层建立独立的视觉尺度域",
-      "intro": "对一个或多个具名图层训练同一视觉标度。",
+      "title": "为指定图层或轨带设定标度",
+      "intro": "选定映射优先采用该标度。图例选项写在标度上。",
       "arguments": [
         {
-          "format": "非空character向量",
-          "description": "同一图内一个或多个不同的图层 ID。在 Fusion 中选择根级连带。可用 `layer_id()` 为原生 ggplot2 图层命名。"
+          "format": "ggplot2 标度",
+          "description": "视觉标度，或完整轨带的连续 Y 标度。"
         },
         {
-          "format": "一个普通视觉Scale对象",
-          "description": "例如scale_fill_manual/gradient/identity或scale_colour_*。其aesthetics决定通道，可含fill、colour、alpha、linewidth、linetype、shape、size及明确支持的fill_from/fill_to；不得含x/y或领域位置通道。"
+          "format": "字符向量或 NULL",
+          "description": "图层名。两个选择器都省略时使用最近的对象。"
+        },
+        {
+          "format": "字符向量或 NULL",
+          "description": "轨带名，与 layers 二选一。"
+        },
+        {
+          "format": "shared 或 panel",
+          "description": "共用训练域，或对轨带 Y 按分面独立训练。"
         }
       ],
-      "value": "一个可添加到图的有作用域Scale声明；构建时从全局域移出选中层的对应通道，并对集合共同训练。",
-      "details": "无论添加顺序如何，`scale_for()` 在指定图层和视觉通道上优先于普通标度。其余图层使用该通道的普通显式标度；若未指定，则遵循各层 `id` 的默认规则。在传入的标度上设置独立图例的标题、断点和标签。\n\n固定样式直接用于绘图。特征几何映射形状时，应提供输出相应几何名称的标度；ggplot2 的点符号使用另一组形状。在 Fusion 中，作用域面向根级连带层。对子图的标度设置请在组合前完成。",
-      "errors": "- 未知或重复图层ID、两个独立域重叠。\n\n- 非Scale对象、位置Scale、层不支持的视觉通道。\n\n- 共同Scale输出类型不能被所有所选Geom消费。",
-      "roles": [],
-      "example_setup": ""
-    },
-    "scale_seq_position": {
-      "title": "定义线性序列位置的刻度与说明",
-      "intro": "为单参考路径族使用同一线性源坐标模型，设置位置轴标题、断点、标签和Guide。本版不暴露不能同时作用于全部几何的非线性transform或尺度裁剪参数。",
-      "arguments": [
-        {
-          "format": "character / expression / NULL / waiver",
-          "description": "轴标题；waiver根据参考单位生成，NULL不显示标题。不同参考单位需要各自明确说明，不通过改标题进行数值换算。"
-        },
-        {
-          "format": "numeric / function / 命名列表 / waiver / NULL",
-          "description": "源位置断点；一个数值是一个断点，不是间距。函数接收当前合法坐标范围。按source命名列表可分别配置；NULL不生成主断点，waiver自动选择。"
-        },
-        {
-          "format": "同breaks；默认waiver",
-          "description": "次断点的生成规则。默认在主断点之间自动选择，NULL关闭；所有断点都必须在声明参考的合法坐标内。"
-        },
-        {
-          "format": "character / expression / function / 命名列表 / waiver / NULL",
-          "description": "主断点的文字。向量长度必须与最终breaks一致；函数接收对应coordinates域中的数值。NULL只隐藏文字，不删除几何或刻度数据。"
-        },
-        {
-          "format": "character；默认\"local\"",
-          "description": "\"local\"使用当前规范参考坐标（例如显式focus后的1起点）；\"source\"使用已保存的最初来源坐标。Layout windows只裁剪显示，不重新编号。"
-        },
-        {
-          "format": "guide_seq_axis对象 / \"none\"",
-          "description": "解释这些断点的序列轴Guide；默认guide_seq_axis()。none不生成说明，不改变参考域。"
-        }
-      ],
-      "value": "可添加到图的领域线性位置尺度。提供共享断点合同并交给Guide绘制，不改参考的完整长度或源数据。",
-      "details": "1. 支持Chord、Circular、Collinear、Radial和Sankey的参考路径。Dotplot的两条拼接轴使用其显式轴合同，不将本对象隐式复制到两轴。\n\n2. 不提供transform、limits、oob或expand。源窗口显示由Layout、画布视口由Coord、输入筛选由数据操作负责；名称不能看起来是完整连续Scale却只影响文字。\n\n3. source模式要求可逆来源映射；多个来源或不连续段必须按显示实例分别生成断点，不能把一套局部断点拼成虚假的连续源轴。\n\n4. 灵活格式允许按source或显式instance覆盖breaks/labels；同一键重复或未知时报错。源单位可格式化为kb/Mb标签，但不是bp/aa科学投影。\n\n圆图省略 guide 时默认在内侧绘制序列坐标。显式正侧仍表示外侧。\n\n相邻序列的端点靠得很近时，默认避让会调整端点刻度文字的位置，刻度线仍指向原来的序列坐标。",
-      "errors": "- source模式缺少来源映射。\n\n- break/label数目不匹配、未知配置键。\n\n- 传入本接口不支持的transform/limits或在Dotplot误用。",
-      "roles": [],
-      "example_setup": ""
-    },
-    "scale_track_value": {
-      "title": "把轨道数值映射到物理带内的高度",
-      "intro": "为一条命名轨带定义真实的数值位置映射。控制限值、变换、越界处理、刻度和分面训练域；轨带物理厚度仍由track_band声明，fill/colour独立使用视觉Scale。",
-      "arguments": [
-        {
-          "format": "character(1)；默认\"default\"",
-          "description": "既有轨带ID。一个尺度只管理一条带；同带所有数值层共同训练。没有显式带声明时仅default合法。"
-        },
-        {
-          "format": "character / expression / NULL / waiver",
-          "description": "数值轴标题。waiver优先使用Stat的measure名称和unit，否则使用y映射名称；NULL隐藏标题。"
-        },
-        {
-          "format": "numeric(2) / function / NULL",
-          "description": "原数值单位中的域边界；NULL由数据与合法Position结果训练。数值向量可有单个NA表示该端自动；函数接收训练范围并返回两个端点。限制会影响oob处理，不能当成只裁剪画布。"
-        },
-        {
-          "format": "numeric / function / waiver / NULL",
-          "description": "原数值单位中的主断点。NULL关闭断点，waiver自动选择；函数接收训练范围。"
-        },
-        {
-          "format": "character / function / waiver / NULL",
-          "description": "断点标签。显式向量长度必须与breaks一致；percent等格式只改变说明，不把coverage数值乘100。"
-        },
-        {
-          "format": "变换名称/对象；默认\"identity\"",
-          "description": "真实的单调、可逆数值位置变换，例如log10或sqrt。输入y的Stat生命周期遵循ggplot规则，计算后的after_stat值只变换一次；非线性stack明确拒绝。"
-        },
-        {
-          "format": "越界函数；默认scales::censor",
-          "description": "如何处理limits外的数值：censor转缺失并由Geom正常处理；可显式使用squish压到边界。不得修改源参考坐标。"
-        },
-        {
-          "format": "character(1) / NULL",
-          "description": "轨道值的科学单位声明。NULL采用可靠的输入/Stat元数据；显式单位用于说明及一致性校验，不执行隐式单位换算。"
-        },
-        {
-          "format": "character；默认\"shared\"",
-          "description": "shared使本图同带跨参考与分面共同训练；panel使每个facet独立训练高度范围。它不改变参考路径的原生画布轴。"
-        },
-        {
-          "format": "guide_track_axis对象 / \"none\"",
-          "description": "局部数值轴说明；默认guide_track_axis()。none只关闭Guide，仍进行数值映射。"
-        }
-      ],
-      "value": "管理指定轨带y位置的领域Scale对象；实际训练范围、变换、unit和measure可导出查询。",
-      "details": "1. 同一带中的已知measure和unit必须一致。coverage与mean_depth即使都是无量纲也不是同一度量；已知矛盾时报错。普通数据无measure元信息时不自动猜科学意义，由用户显式放入同带承担可比性。\n\n2. 满带geom_track_interval不提供y训练数据，不会自己产生数值轴；同带存在数值层时只使用数值层的域。\n\n3. baseline是原数值单位的Geom参数。log尺度下0/负基线不合法，不能静默换成1；需要有效正基线和兼容Position。\n\n4. 固定limits对所有panel生效；domain=panel只影响自动训练部分。单位、limits或transform不等价时，Fusion即使收集Guide也不能把它们合成一个共同尺度。",
-      "errors": "- 未知track、同带重复冲突数值尺度或measure/unit矛盾。\n\n- 非法limits、非单调不可逆变换、不合法基线或非线性stack。\n\n- 用scale_for或原生scale_y_*竞争同一轨道高度控制。",
+      "value": "带作用域的标度声明。",
+      "details": "选定映射优先采用该标度。图例选项写在标度上。",
+      "errors": "",
       "roles": [],
       "example_setup": ""
     },
@@ -3209,19 +3100,19 @@
           "description": "要检查的独立图对象。列表名字用于返回证据；没有名字时按输入位置生成稳定标签。只构建取得统计与尺度范围所需阶段，不强制执行文字排版。"
         },
         {
-          "format": "character向量；默认\"default\"",
-          "description": "需比较的轨带ID；每个图必须明确包含这些带及至少一个数值层。不同ID不因相同标题而自动合并。"
+          "format": "字符向量或 NULL",
+          "description": "轨带 ID。每个图只有一条数值轨带时可以省略。"
         }
       ],
       "value": "data.frame，每个track一行，包含track、limits（原数值单位的两元素list-column）、unit、measure、plots、status。范围取各图当前有效训练域/显式域的并集；报告冲突或不可得状态，不把失败当空范围。",
-      "details": "1. 同名track只有在已知unit/measure/transform兼容时合并。遇到已知冲突直接报错；未声明科学度量时metadata标记unknown，不能宣称已验证科学可比性。\n\n2. Position叠加和有效baseline对最终数值域的贡献应计入范围。返回原数值单位中的范围，供scale_track_value(limits=...)再次使用。\n\n3. 后续改变数据、Stat、Position或Scale后旧快照不会更新。guides=\"collect\"只组织说明，不能代替本查询或显式共用limits。",
+      "details": "1. 同名track只有在已知unit/measure/transform兼容时合并。遇到已知冲突直接报错；未声明科学度量时metadata标记unknown，不能宣称已验证科学可比性。\n\n2. Position叠加和有效baseline对最终数值域的贡献应计入范围。返回原数值单位中的范围，供scale_y_continuous(limits=...)再次使用。\n\n3. 后续改变数据、Stat、Position或Scale后旧快照不会更新。guides=\"collect\"只组织说明，不能代替本查询或显式共用limits。",
       "errors": "- 某图缺指定带或只有满带interval而无数值域。\n\n- 已知measure/unit/transform不兼容。\n\n- 统计或尺度构建失败；不能生成伪成功范围。",
       "roles": [],
       "example_setup": ""
     },
     "guide_seq_axis": {
       "title": "绘制参考路径上的序列位置轴",
-      "intro": "把scale_seq_position产生的断点解释为沿参考路径的刻度、标签与标题。它选择解释哪些参考和哪一侧，不筛掉序列、特征或关系。",
+      "intro": "把scale_seq_continuous产生的断点解释为沿参考路径的刻度、标签与标题。它选择解释哪些参考和哪一侧，不筛掉序列、特征或关系。",
       "arguments": [
         {
           "format": "选择向量/列表 / NULL；默认NULL",
@@ -3244,7 +3135,7 @@
           "description": "本Guide局部外观。支持axis.line、axis.ticks、axis.ticks.length、axis.text、axis.title等对应领域轴元素；覆盖共同theme_ggchord默认，不修改breaks或数值域。"
         }
       ],
-      "value": "序列位置Guide对象，交给scale_seq_position(guide=...)使用。",
+      "value": "序列位置Guide对象，交给scale_seq_continuous(guide=...)使用。",
       "details": "1. 坐标值、单位和labels由Scale提供。若要每100bp一个刻度，在Scale的breaks给生成函数，不在Guide新增刻度间距参数。\n\n2. sequences只影响说明选择。隐藏A的轴后，A的骨架、基因和连接仍然存在。\n\n3. 固定图例Guide和序列位置Guide不是同一对象；guide=\"none\"不生成整条说明，element_blank()可只隐藏其中某个外观部件。\n\n相邻序列的端点靠得很近时，默认避让会调整端点刻度文字的位置，刻度线仍指向原来的序列坐标。\n\n桑基图的序列弯曲时，自动定向的刻度文字沿路径切线排列，刻度线垂直于路径，并在选定一侧向外伸出。序列端点也遵循此规则。",
       "errors": "- 未知参考/实例、非法side或angle。\n\n- 局部theme试图改变数据或使用不支持的Guide外观元素。",
       "roles": [],
@@ -3275,8 +3166,8 @@
           "description": "本Guide的局部axis.line/ticks/text/title等外观，覆盖ggchord.track.axis.*共同样式。只调整说明，不触碰数据映射。"
         }
       ],
-      "value": "轨道值Guide，交给scale_track_value(guide=...)。从该Scale获取范围、breaks、labels和标题。",
-      "details": "1. 不同参考上复用同一个已训练数值域。domain=panel时每个面板显示各自的域，不能因轴外观相同而宣称跨面板数值高度可直接比较。\n\n2. 圆形路径的start/end依据显示开口/起点与direction定位；完整圆两端几何相邻但来源身份不同，仍使用明确选择而非任意角度猜测。\n\n3. axis.ticks.length等物理外观使用grid单位；文字size沿用theme的pt。Position和track_band参数不通过局部theme传入。",
+      "value": "轨道值Guide，交给scale_y_continuous(guide=...)。从该Scale获取范围、breaks、labels和标题。",
+      "details": "1. 不同参考上复用同一个已训练数值域。scale_for(..., by = \"panel\")时每个面板显示各自的域，不能因轴外观相同而宣称跨面板数值高度可直接比较。\n\n2. 圆形路径的start/end依据显示开口/起点与direction定位；完整圆两端几何相邻但来源身份不同，仍使用明确选择而非任意角度猜测。\n\n3. axis.ticks.length等物理外观使用grid单位；文字size沿用theme的pt。Position和layout_track参数不通过局部theme传入。",
       "errors": "- 挂载参考/实例不存在、position非start/end。\n\n- 没有数值层却要求局部数值轴。\n\n- 把文字angle误用作数据布局参数。",
       "roles": [],
       "example_setup": ""
@@ -3294,12 +3185,12 @@
           "description": "共同字体族；空字符串使用当前设备默认字体。实际测量依赖设备能否提供所选字体。"
         },
         {
-          "format": "明确的theme元素",
-          "description": "普通ggplot2 theme元素，以及注册的ggchord.axis.*与ggchord.track.axis.*。例如plot.background、legend.position、ggchord.axis.text。未知元素报错；不接受数据映射、Coord、Position或label_layout开关。"
+          "format": "留空",
+          "description": "用 theme() 配置主题元素。"
         }
       ],
       "value": "完整的ggplot2 theme对象，可用+添加到普通ggplot或ggchord；注册的领域元素仅在相关Guide存在时生效。",
-      "details": "1. 返回纯外观配置，不能添加Coord、Geom、Stat、Scale或修改数据。普通legend.*只设置共同图例外观，不按gene/ribbon/track复制私有参数组。\n\n2. 领域元素为ggchord.axis.line/ticks/ticks.length/text/title和ggchord.track.axis.line/ticks/ticks.length/text/title；局部Guide theme优先于共同元素。\n\n3. 快捷主题的所有效果均可由母主题及明确theme元素展开。用户通过...传入的元素覆盖快捷默认；后续+theme(...)继续按ggplot2规则修改。\n\n4. 基础主题采用暖白色（#FFFCF5）画布和绘图区、深灰文字（#30353A）、居中加粗的图标题和右侧图例。绘图区省略网格和边框。轴线和刻度采用灰色（#60696F），轴文字和轴标题分别为基础字号的 0.8 和 0.9 倍，领域轴的主刻度长 1.2 mm。\n\n5. 原生Dotplot轴继续使用普通axis.*；路径类Coord不绘制多余的画布轴，而使用自己的序列/轨道Guide。这由Coord/Guide能力决定，Theme不根据投影自动改数据。",
+      "details": "主题预设提供基础外观。用 `theme()` 配置已注册的 ggchord 元素和普通 ggplot2 元素。",
       "errors": "- 字号非正或字体参数非标量。\n\n- 未知theme元素、传入preset/position等非外观配置。",
       "roles": [],
       "example_setup": ""
@@ -3317,12 +3208,12 @@
           "description": "共同字体族；空字符串使用当前设备默认字体。实际测量依赖设备能否提供所选字体。"
         },
         {
-          "format": "明确的theme元素",
-          "description": "普通ggplot2 theme元素，以及注册的ggchord.axis.*与ggchord.track.axis.*。例如plot.background、legend.position、ggchord.axis.text。未知元素报错；不接受数据映射、Coord、Position或label_layout开关。"
+          "format": "留空",
+          "description": "用 theme() 配置主题元素。"
         }
       ],
       "value": "一个完整的纯外观theme对象；与母主题按下列元素展开后的结果等价。",
-      "details": "1. 返回纯外观配置，不能添加Coord、Geom、Stat、Scale或修改数据。普通legend.*只设置共同图例外观，不按gene/ribbon/track复制私有参数组。\n\n2. 领域元素为ggchord.axis.line/ticks/ticks.length/text/title和ggchord.track.axis.line/ticks/ticks.length/text/title；局部Guide theme优先于共同元素。\n\n3. 快捷主题的所有效果均可由母主题及明确theme元素展开。用户通过...传入的元素覆盖快捷默认；后续+theme(...)继续按ggplot2规则修改。\n\n4. 母主题基础上：panel.border=element_blank()；ggchord.axis.line=element_blank()；ggchord.track.axis.line=element_blank()。刻度与文字保留，背景仍为白色。",
+      "details": "主题预设提供基础外观。用 `theme()` 配置已注册的 ggchord 元素和普通 ggplot2 元素。",
       "errors": "- 非法字号、未知主题元素或试图通过主题修改统计/几何/位置。",
       "roles": [],
       "example_setup": ""
@@ -3340,12 +3231,12 @@
           "description": "共同字体族；空字符串使用当前设备默认字体。实际测量依赖设备能否提供所选字体。"
         },
         {
-          "format": "明确的theme元素",
-          "description": "普通ggplot2 theme元素，以及注册的ggchord.axis.*与ggchord.track.axis.*。例如plot.background、legend.position、ggchord.axis.text。未知元素报错；不接受数据映射、Coord、Position或label_layout开关。"
+          "format": "留空",
+          "description": "用 theme() 配置主题元素。"
         }
       ],
       "value": "一个完整的纯外观theme对象；与母主题按下列元素展开后的结果等价。",
-      "details": "1. 返回纯外观配置，不能添加Coord、Geom、Stat、Scale或修改数据。普通legend.*只设置共同图例外观，不按gene/ribbon/track复制私有参数组。\n\n2. 领域元素为ggchord.axis.line/ticks/ticks.length/text/title和ggchord.track.axis.line/ticks/ticks.length/text/title；局部Guide theme优先于共同元素。\n\n3. 快捷主题的所有效果均可由母主题及明确theme元素展开。用户通过...传入的元素覆盖快捷默认；后续+theme(...)继续按ggplot2规则修改。\n\n4. 画布和绘图区采用炭灰色（#17191C），文字采用浅色（#F1F3F5），轴线和刻度为灰色（#ADB5BD）。图例背景和色键背景透明；数据配色由普通视觉标度控制。",
+      "details": "主题预设提供基础外观。用 `theme()` 配置已注册的 ggchord 元素和普通 ggplot2 元素。",
       "errors": "- 非法字号、未知主题元素或试图通过主题修改统计/几何/位置。",
       "roles": [],
       "example_setup": ""
@@ -3363,12 +3254,12 @@
           "description": "共同字体族；空字符串使用当前设备默认字体。实际测量依赖设备能否提供所选字体。"
         },
         {
-          "format": "明确的theme元素",
-          "description": "普通ggplot2 theme元素，以及注册的ggchord.axis.*与ggchord.track.axis.*。例如plot.background、legend.position、ggchord.axis.text。未知元素报错；不接受数据映射、Coord、Position或label_layout开关。"
+          "format": "留空",
+          "description": "用 theme() 配置主题元素。"
         }
       ],
       "value": "一个完整的纯外观theme对象；与母主题按下列元素展开后的结果等价。",
-      "details": "1. 返回纯外观配置，不能添加Coord、Geom、Stat、Scale或修改数据。普通legend.*只设置共同图例外观，不按gene/ribbon/track复制私有参数组。\n\n2. 领域元素为ggchord.axis.line/ticks/ticks.length/text/title和ggchord.track.axis.line/ticks/ticks.length/text/title；局部Guide theme优先于共同元素。\n\n3. 快捷主题的所有效果均可由母主题及明确theme元素展开。用户通过...传入的元素覆盖快捷默认；后续+theme(...)继续按ggplot2规则修改。\n\n4. 母主题基础上：base_size默认10；panel.border为空；text和轴文字#111111；轴线#333333；legend.position=\"bottom\"；plot.margin=margin(4,4,4,4,unit=\"mm\")。其他属性继承母主题，可被用户覆盖。",
+      "details": "主题预设提供基础外观。用 `theme()` 配置已注册的 ggchord 元素和普通 ggplot2 元素。",
       "errors": "- 非法字号、未知主题元素或试图通过主题修改统计/几何/位置。",
       "roles": [],
       "example_setup": ""
@@ -3386,12 +3277,12 @@
           "description": "共同字体族；空字符串使用当前设备默认字体。实际测量依赖设备能否提供所选字体。"
         },
         {
-          "format": "明确的theme元素",
-          "description": "普通ggplot2 theme元素，以及注册的ggchord.axis.*与ggchord.track.axis.*。例如plot.background、legend.position、ggchord.axis.text。未知元素报错；不接受数据映射、Coord、Position或label_layout开关。"
+          "format": "留空",
+          "description": "用 theme() 配置主题元素。"
         }
       ],
       "value": "一个完整的纯外观theme对象；与母主题按下列元素展开后的结果等价。",
-      "details": "1. 返回纯外观配置，不能添加Coord、Geom、Stat、Scale或修改数据。普通legend.*只设置共同图例外观，不按gene/ribbon/track复制私有参数组。\n\n2. 领域元素为ggchord.axis.line/ticks/ticks.length/text/title和ggchord.track.axis.line/ticks/ticks.length/text/title；局部Guide theme优先于共同元素。\n\n3. 快捷主题的所有效果均可由母主题及明确theme元素展开。用户通过...传入的元素覆盖快捷默认；后续+theme(...)继续按ggplot2规则修改。\n\n4. 画布和绘图区采用象牙白（#FFFCF5）。深色序列轴（#252525）显示坐标文字，主刻度长 2.2 mm、次刻度长 0.8 mm。序列轴标题隐藏，图例位于下方，轨道数值轴保留。要省略序列轴，可设置 scale_seq_position(guide = \"none\")。",
+      "details": "主题预设提供基础外观。用 `theme()` 配置已注册的 ggchord 元素和普通 ggplot2 元素。",
       "errors": "- 非法字号、未知主题元素或试图通过主题修改统计/几何/位置。",
       "roles": [],
       "example_setup": ""
@@ -4769,7 +4660,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "可添加到 ggchord_fusion 的真实关系层，导出保留 source_members 和两端 panel_path。",
@@ -5134,7 +5025,7 @@
         },
         {
           "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
+          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
         }
       ],
       "value": "一个可添加到 ggchord 图的参考几何层。若它是唯一参考声明入口，同时提供待解析的完整参考数据；不修改传入表。",
@@ -5246,11 +5137,11 @@
       "example_setup": ""
     },
     "auto_id": {
-      "title": "自动分配图层 ID 并按层训练默认视觉标度",
-      "intro": "默认的 `id = auto_id()` 在图内分配 ID。两个 ggchord 图层映射同一视觉通道时，各自训练标度。第一个示例中，骨架颜色表示序列，基因轮廓颜色表示链方向。",
+      "title": "分配图内图层 ID",
+      "intro": "可使用自动 ID，或提供唯一名称进行显式引用。",
       "arguments": [],
       "value": "图层 ID 声明，在构图时解析。",
-      "details": "在需要共享标度的各层写 `id = NULL` 或 `id = NA`，如第二个示例。字符串 ID 可用于按名称引用图层，仍保留该层的独立默认标度。\n\n显式添加的普通标度会应用于映射该通道的所有图层，已由 `scale_for()` 指定标度的图层除外。若需几个指定图层共享自定义标度，可先给它们命名，再将名称一起传给 `scale_for()`。原生笛卡尔字符面板沿用 ggplot2 的标度规则。",
+      "details": "添加图层时分配身份。普通视觉标度按映射通道共同训练。",
       "errors": "具名 ID 必须是图内唯一的单个非空字符串。",
       "roles": [],
       "example_setup": ""
@@ -5262,6 +5153,334 @@
       "value": "标签目标声明，在同一张图的图层中解析。",
       "details": "基因、引物和位点标签分别查找对应类型的图层。通用特征标签可跟随任意区间特征层，包括基因、引物和区域。目标层可位于标签层之前或之后。\n\n提供标签数据、非恒等 Stat 或显式 Position 时，默认独立定位。也可用 `anchor_layer = NULL` 明确要求独立标签。如需只标注目标的一部分实体，可给目标命名，将名称传给 `anchor_layer`，并提供包含相应实体键的标签表。",
       "errors": "多个图层符合条件时，错误提示会列出候选 ID。像第二个示例那样，为目标层命名并通过 `anchor_layer` 指定。没有兼容层时，可添加目标层或提供可用的独立标签数据。",
+      "roles": [],
+      "example_setup": ""
+    },
+    "layout_track": {
+      "title": "配置轨带布局",
+      "intro": "仅覆盖提供了值的字段。具名声明可放在图层之前或之后。空声明不占空间。",
+      "arguments": [
+        {
+          "format": "字符串或 NULL",
+          "description": "轨带名。省略时配置最近的轨带。"
+        },
+        {
+          "format": "positive 或 negative",
+          "description": "参考路径的局部法向侧。"
+        },
+        {
+          "format": "正整数或 NULL",
+          "description": "同侧顺序。自动轨带填入空闲序号。"
+        },
+        {
+          "format": "正毫米值或绝对单位",
+          "description": "轨带厚度，默认 4 mm。"
+        },
+        {
+          "format": "非负毫米值或绝对单位",
+          "description": "与上一轨带或参考路径的间隙，默认 1 mm。"
+        }
+      ],
+      "value": "一个轨带布局声明。",
+      "details": "仅覆盖提供了值的字段。具名声明可放在图层之前或之后。空声明不占空间。",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scale_seq_continuous": {
+      "title": "定义线性序列位置的刻度与说明",
+      "intro": "为单参考路径族使用同一线性源坐标模型，设置位置轴标题、断点、标签和Guide。本版不暴露不能同时作用于全部几何的非线性transform或尺度裁剪参数。",
+      "arguments": [
+        {
+          "format": "character / expression / NULL / waiver",
+          "description": "轴标题；waiver根据参考单位生成，NULL不显示标题。不同参考单位需要各自明确说明，不通过改标题进行数值换算。"
+        },
+        {
+          "format": "numeric / function / 命名列表 / waiver / NULL",
+          "description": "源位置断点；一个数值是一个断点，不是间距。函数接收当前合法坐标范围。按source命名列表可分别配置；NULL不生成主断点，waiver自动选择。"
+        },
+        {
+          "format": "同breaks；默认waiver",
+          "description": "次断点的生成规则。默认在主断点之间自动选择，NULL关闭；所有断点都必须在声明参考的合法坐标内。"
+        },
+        {
+          "format": "character / expression / function / 命名列表 / waiver / NULL",
+          "description": "主断点的文字。向量长度必须与最终breaks一致；函数接收对应coordinates域中的数值。NULL只隐藏文字，不删除几何或刻度数据。"
+        },
+        {
+          "format": "character；默认\"local\"",
+          "description": "\"local\"使用当前规范参考坐标（例如显式focus后的1起点）；\"source\"使用已保存的最初来源坐标。Layout windows只裁剪显示，不重新编号。"
+        },
+        {
+          "format": "guide_seq_axis对象 / \"none\"",
+          "description": "解释这些断点的序列轴Guide；默认guide_seq_axis()。none不生成说明，不改变参考域。"
+        }
+      ],
+      "value": "可添加到图的领域线性位置尺度。提供共享断点合同并交给Guide绘制，不改参考的完整长度或源数据。",
+      "details": "1. 支持Chord、Circular、Collinear、Radial和Sankey的参考路径。Dotplot的两条拼接轴使用其显式轴合同，不将本对象隐式复制到两轴。\n\n2. 不提供transform、limits、oob或expand。源窗口显示由Layout、画布视口由Coord、输入筛选由数据操作负责；名称不能看起来是完整连续Scale却只影响文字。\n\n3. source模式要求可逆来源映射；多个来源或不连续段必须按显示实例分别生成断点，不能把一套局部断点拼成虚假的连续源轴。\n\n4. 灵活格式允许按source或显式instance覆盖breaks/labels；同一键重复或未知时报错。源单位可格式化为kb/Mb标签，但不是bp/aa科学投影。\n\n圆图省略 guide 时默认在内侧绘制序列坐标。显式正侧仍表示外侧。\n\n相邻序列的端点靠得很近时，默认避让会调整端点刻度文字的位置，刻度线仍指向原来的序列坐标。",
+      "errors": "- source模式缺少来源映射。\n\n- break/label数目不匹配、未知配置键。\n\n- 传入本接口不支持的transform/limits或在Dotplot误用。",
+      "roles": [],
+      "example_setup": ""
+    },
+    "add_track": {
+      "title": "将多个图层放入同一轨带",
+      "intro": "成员共用一条物理轨带及一个 Y 数值域。",
+      "arguments": [
+        {
+          "format": "轨道图层",
+          "description": "按绘制次序列出成员。"
+        },
+        {
+          "format": "字符串或 auto_id()",
+          "description": "轨带 ID，可使用预先声明的空轨带。"
+        },
+        {
+          "format": "positive 或 negative",
+          "description": "参考路径的局部法向侧。"
+        },
+        {
+          "format": "正整数或 NULL",
+          "description": "同侧顺序。自动轨带填入空闲序号。"
+        },
+        {
+          "format": "正毫米值或绝对单位",
+          "description": "轨带厚度，默认 4 mm。"
+        },
+        {
+          "format": "非负毫米值或绝对单位",
+          "description": "与上一轨带或参考路径的间隙，默认 1 mm。"
+        }
+      ],
+      "value": "一个轨道图层组合。",
+      "details": "成员共用一条物理轨带及一个 Y 数值域。",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scales_ggchord": {
+      "title": "启用传统 ggchord 配色",
+      "intro": "启用传统 ggchord 配色。",
+      "arguments": [
+        {
+          "format": "字符向量",
+          "description": "自动识别或指定配色角色。"
+        }
+      ],
+      "value": "一个配色预设声明。",
+      "details": "构建绘图时按已映射角色启用配色。显式作用域标度和普通标度优先。",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "pal_ggchord": {
+      "title": "ggchord 分类配色",
+      "intro": "ggchord 分类配色。",
+      "arguments": [
+        {
+          "format": "数量",
+          "description": "需要的颜色数。"
+        }
+      ],
+      "value": "颜色向量。",
+      "details": "ggchord 分类配色。",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "pal_sequence": {
+      "title": "序列标识配色",
+      "intro": "序列标识配色。",
+      "arguments": [
+        {
+          "format": "字符向量",
+          "description": "按参考顺序排列的序列 ID。"
+        }
+      ],
+      "value": "颜色向量。",
+      "details": "序列标识配色。",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "pal_strand": {
+      "title": "链方向配色",
+      "intro": "链方向配色。",
+      "arguments": [],
+      "value": "颜色向量。",
+      "details": "链方向配色。",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "pal_feature_type": {
+      "title": "特征类型配色",
+      "intro": "特征类型配色。",
+      "arguments": [
+        {
+          "format": "字符向量",
+          "description": "特征类型。"
+        }
+      ],
+      "value": "颜色向量。",
+      "details": "特征类型配色。",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "pal_plasmid": {
+      "title": "质粒特征配色",
+      "intro": "质粒特征配色。",
+      "arguments": [],
+      "value": "颜色向量。",
+      "details": "质粒特征配色。",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "pal_pident": {
+      "title": "连带一致性配色",
+      "intro": "连带一致性配色。",
+      "arguments": [],
+      "value": "颜色向量。",
+      "details": "连带一致性配色。",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "pal_link_pident": {
+      "title": "点连接一致性配色",
+      "intro": "点连接一致性配色。",
+      "arguments": [],
+      "value": "颜色向量。",
+      "details": "点连接一致性配色。",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "pal_signal": {
+      "title": "定量信号配色",
+      "intro": "定量信号配色。",
+      "arguments": [],
+      "value": "颜色向量。",
+      "details": "定量信号配色。",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "pal_residue": {
+      "title": "残基符号配色",
+      "intro": "残基符号配色。",
+      "arguments": [
+        {
+          "format": "DNA、RNA 或 AA",
+          "description": "残基字母表。"
+        },
+        {
+          "format": "具名颜色或 NULL",
+          "description": "按符号覆盖颜色。"
+        }
+      ],
+      "value": "颜色向量。",
+      "details": "残基符号配色。",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scale_colour_ggchord": {
+      "title": "ggchord 分类线色标度",
+      "intro": "ggchord 分类线色标度。",
+      "arguments": [
+        {
+          "format": "具名参数",
+          "description": "传给底层视觉标度的参数。"
+        },
+        {
+          "format": "字符向量",
+          "description": "该标度训练的映射通道。"
+        }
+      ],
+      "value": "一个 ggplot2 标度。",
+      "details": "ggchord 分类线色标度。",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scale_fill_ggchord": {
+      "title": "ggchord 分类填色标度",
+      "intro": "ggchord 分类填色标度。",
+      "arguments": [
+        {
+          "format": "具名参数",
+          "description": "传给底层视觉标度的参数。"
+        },
+        {
+          "format": "字符向量",
+          "description": "该标度训练的映射通道。"
+        }
+      ],
+      "value": "一个 ggplot2 标度。",
+      "details": "ggchord 分类填色标度。",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scale_fill_plasmid": {
+      "title": "质粒特征填色标度",
+      "intro": "质粒特征填色标度。",
+      "arguments": [
+        {
+          "format": "具名参数",
+          "description": "传给底层视觉标度的参数。"
+        }
+      ],
+      "value": "一个 ggplot2 标度。",
+      "details": "质粒特征填色标度。",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scale_colour_link_pident": {
+      "title": "点连接一致性线色标度",
+      "intro": "点连接一致性线色标度。",
+      "arguments": [
+        {
+          "format": "具名参数",
+          "description": "传给底层视觉标度的参数。"
+        }
+      ],
+      "value": "一个 ggplot2 标度。",
+      "details": "点连接一致性线色标度。",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scale_fill_signal": {
+      "title": "连续信号填色标度",
+      "intro": "连续信号填色标度。",
+      "arguments": [
+        {
+          "format": "具名参数",
+          "description": "传给底层视觉标度的参数。"
+        }
+      ],
+      "value": "一个 ggplot2 标度。",
+      "details": "连续信号填色标度。",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scale_colour_signal": {
+      "title": "连续信号线色标度",
+      "intro": "连续信号线色标度。",
+      "arguments": [
+        {
+          "format": "具名参数",
+          "description": "传给底层视觉标度的参数。"
+        }
+      ],
+      "value": "一个 ggplot2 标度。",
+      "details": "连续信号线色标度。",
+      "errors": "",
       "roles": [],
       "example_setup": ""
     }
@@ -5279,7 +5498,6 @@
     "facet_null": "分面",
     "layout_sequences": "序列与点阵图布局",
     "layout_dotplot": "Dotplot 双轴布局",
-    "track_band": "轨道位置与宽度",
     "geom_seq": "序列骨架",
     "geom_seq_label": "序列标签",
     "geom_seq_break": "序列断点标记",
@@ -5296,10 +5514,8 @@
     "label_layout_fixed": "标签布局",
     "position_offset": "特征位置调整",
     "stat_coverage": "区间覆盖统计",
-    "scale_for": "指定图层的标度",
+    "scale_for": "为指定图层或轨带设定标度",
     "scale_colour_sequence": "序列、特征与一致性配色",
-    "scale_seq_position": "序列位置标度",
-    "scale_track_value": "轨道数值标度与范围",
     "scale_fill_residue": "残基配色",
     "guide_seq_axis": "序列轴与轨道轴",
     "theme_ggchord": "绘图主题",
@@ -5323,7 +5539,13 @@
     "fusion_zoom": "跨视图标记放大区间",
     "register_ggchord_alignment": "比对注册与位置查询",
     "view_ggchord": "绘图尺寸与预览",
-    "export_ggchord_layout": "布局导出与检查"
+    "export_ggchord_layout": "布局导出与检查",
+    "layout_track": "配置轨带布局",
+    "scale_seq_continuous": "序列位置标度",
+    "track_limits": "定量轨带数值范围",
+    "scales_ggchord": "启用传统 ggchord 配色",
+    "pal_ggchord": "ggchord 分类配色",
+    "scale_colour_ggchord": "ggchord 分类线色标度"
   },
   "articles": {
     "geom_seq": {
@@ -5523,13 +5745,13 @@
         "geom": "`geom_track()` 的显式参数。可选 `\"point\"`（默认）、`\"line\"`、`\"path\"`、`\"step\"`、`\"col\"`、`\"bar\"`、`\"area\"`、`\"tile\"` 或 `\"interval\"`。快捷入口直接选用对应几何。",
         "stat": "通用入口默认 `NULL`，按几何选择统计。计数柱默认 `\"count\"`，其他快捷入口默认 `\"identity\"`。可传入兼容的 Stat 或受支持的名称，例如 `\"bin\"`、`\"summary\"`、`\"smooth\"` 或 `\"coverage\"`。覆盖度的输入和计算列见 [`stat_coverage()`](stat_coverage.html#api-stat_coverage)。",
         "position": "通用入口默认 `NULL`，由几何决定默认位置调整。数值柱、计数柱和面积默认 `\"stack\"`，其他默认 `\"identity\"`。使用恒等 Stat 的全带区间要求恒等 Position。",
-        "track": "轨带名称。可直接使用 `\"default\"`。用其他名称时，先通过 [`track_band()`](track_band.html#api-track_band) 声明轨带。",
+        "track": "填写已声明的轨带 ID。省略时独立建带。用 add_track() 将多层放入同一轨带。",
         "...": "所选几何或 Stat 的样式及参数。折线与路径支持用 `closed` 闭合连续完整的圆，阶梯用 `direction` 指定跳变方式。数值柱、计数柱和面积可设 `baseline`，面积还可设 `outline`。沿参考方向的宽度使用源单位。矩形块的高度使用轨道的数值单位。 用 `measure` 命名数值代表的测量量，用 `bounds` 控制超出参考范围时是报错还是裁剪。非零 `baseline` 要求恒等 Position。外部 Stat 和 Geom 同时接受同名参数时，须消除歧义。",
         "show.legend": "默认 `NA`。用逻辑值或具名逻辑向量控制图例键。",
         "inherit.aes": "默认 `TRUE`。继承图级映射，并在轨道数据中求值。"
       },
-      "roles": "使用 `accver` 标识参考。`x` 映射为源单位下的位置，`y` 映射为测量单位下的值。计数柱计算 `after_stat(count)`，可另设 `weight` 映射。全带区间使用 `start` 和 `end`，占满物理轨带且不参与数值标度训练。用 `group` 区分同一参考上的数据系列。[轨带声明](track_band.html#api-track_band)控制物理空间，[`scale_track_value()`](scale_track_value.html#api-scale_track_value)控制数值标度。",
-      "details": "折线和阶梯按源位置排序。路径按输入顺序或所选 Stat 的输出顺序连接。已有数值高度时用数值柱，统计观测次数时用计数柱。等价的覆盖度写法为 `stat_coverage(binwidth = 100)` 和 `geom_track(geom = \"col\", stat = \"coverage\", position = \"identity\", binwidth = 100)`。快捷入口默认使用恒等 Position，改写为通用形式时应显式指定。测量方式、分母及计算映射见[覆盖度示例](stat_coverage.html#ref-examples)。\n\n连续的折线和路径会在缺失值、参考、窗口或分组的边界处断开。外部 Stat 可通过 `source_rows` 列表列报告来源成员，其中的索引对应 `source_row`。来源成员和各阶段的导出方式见 [`export_ggchord_layout()`](export_ggchord_layout.html#api-export_ggchord_layout)。",
+      "roles": "使用 `accver` 标识参考。`x` 映射为源单位下的位置，`y` 映射为测量单位下的值。计数柱计算 `after_stat(count)`，可另设 `weight` 映射。全带区间使用 `start` 和 `end`，占满物理轨带且不参与数值标度训练。用 `group` 区分同一参考上的数据系列。[轨带声明](layout_track.html#api-layout_track)控制物理空间，[`scale_y_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html)控制数值标度。",
+      "details": "每个独立轨道层创建一个轨带。使用 `layout_track()` 配置物理布局，使用 `add_track()` 将多层放入同一带。原生 `scale_y_*()` 配置最近的数值轨带。用 `scale_for()` 可显式选择完整的轨带数值域。普通视觉标度按映射通道跨层训练。",
       "example_intro": "各示例共用一组小型参考序列，并加入与几何相应的测量、计数或区间数据。",
       "examples": {
         "geom_track": {

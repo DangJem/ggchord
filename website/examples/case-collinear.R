@@ -37,9 +37,10 @@ overview <- ggchord(comparison$seq_data) +
     linewidth = 0.15) +
   scale_colour_manual(name = "Sequence", values = sequence_colours,
     guide = guide_legend(nrow = 1, order = 2)) +
-  scale_for("genes", scale_fill_manual(name = "Strand", values = strand_colours,
+  scale_fill_pident() +
+  scale_for(scale_fill_manual(name = "Strand", values = strand_colours,
     breaks = c("+", "-"),
-    guide = guide_legend(nrow = 1, order = 1))) +
+    guide = guide_legend(nrow = 1, order = 1)), layers = "genes") +
   layout_sequences(align = "center", row_gap = 41) +
   coord_collinear(fit = "labels", clip = "off") +
   theme_ggchord_publication() +
@@ -62,7 +63,7 @@ overview + gene_names +
     label_layout = label_layout_fixed(orientation = "horizontal", along = -1.2, offset = 0),
     size = 3.7) +
   annotation_seq_scalebar(length = 10000) +
-  scale_seq_position(name = NULL, minor_breaks = NULL,
+  scale_seq_continuous(name = NULL, minor_breaks = NULL,
     labels = label_comma(), guide = guide_seq_axis(side = "negative")) +
   guides(fill = guide_coloursteps(position = "left", direction = "vertical",
     even.steps = FALSE, show.limits = TRUE,

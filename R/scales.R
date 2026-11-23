@@ -141,7 +141,10 @@ scale_feature_shape_manual <- function(..., values, name = "Feature",
   out
 }
 
-ggchord_plasmid_feature_colours <- function() {
+#' Plasmid feature colours
+#' @return A named vector of colours.
+#' @export
+pal_plasmid <- function() {
   c(
     CDS="#993366", gene="#993366", resistance_gene="#CCFFCC",
     selection_marker="#CCFFCC", reporter="#05FD14",
@@ -198,7 +201,7 @@ ggchord_contrast_colour <- function(fill) {
 
 #' @noRd
 scale_feature_fill_plasmid <- function(..., limits = NULL) {
-  values <- ggchord_plasmid_feature_colours()
+  values <- pal_plasmid()
   if (is.null(limits)) limits <- names(values)
   out <- scale_fill_manual(
     ..., values=values, limits=limits, aesthetics="feature_fill", na.value="#B8BDC3"
@@ -235,32 +238,6 @@ scale_region_fill_manual <- function(..., values) {
   scale_fill_manual(..., values = values, aesthetics = "region_fill")
 }
 
-#' @noRd
-scale_seq_position_continuous <- function(
-    name = ggplot2::waiver(), breaks = ggplot2::waiver(),
-    minor_breaks = ggplot2::waiver(), labels = ggplot2::waiver(),
-    limits = NULL, expand = ggplot2::waiver(), oob = scales::censor,
-    transform = "identity", n.breaks = 6,
-    coordinates = c("relative", "source"), guide = guide_seq_axis(), ...) {
-  ggchord_check_argument_names(sys.call(), sys.function(), continuous_scale)
-  coordinates <- ggchord_match_arg(coordinates)
-  if ("sequences" %in% names(list(...)))
-    ggchord_stop("Use guide = guide_seq_axis(sequences = ...) to select displayed axes")
-  if (identical(guide, "none")) guide <- guide_seq_axis(character())
-  if (!inherits(guide, "ggchord_seq_axis")) ggchord_stop("Use guide_seq_axis() or 'none'")
-  sc <- continuous_scale(
-    aesthetics = "seq_position",
-    palette = function(x) x,
-    name = name, breaks = breaks, minor_breaks = minor_breaks,
-    labels = labels, limits = limits, expand = expand, oob = oob,
-    transform = transform, n.breaks = n.breaks, guide = "none", ...
-  )
-  sc$ggchord_position_coordinates <- coordinates
-  sc$ggchord_axis_sequences <- guide$sequences
-  sc$ggchord_check_overlap <- guide$check.overlap
-  sc
-}
-
 #' Configure a sequence position guide
 #'
 #' @param sequences Source accessions, or a list with source and instance IDs.
@@ -271,7 +248,7 @@ scale_seq_position_continuous <- function(
 #'   projected axes, competing endpoint labels can move along their own
 #'   sequence paths. Set to `FALSE` to keep the original positions.
 #' @param theme Optional local axis theme.
-#' @return A guide for [scale_seq_position()].
+#' @return A guide for [scale_seq_continuous()].
 #' @export
 #' @examples
 #' library(ggplot2)
@@ -282,7 +259,7 @@ scale_seq_position_continuous <- function(
 #' )
 #'
 #' ggchord(data = seqs) + geom_seq() +
-#'   scale_seq_position(breaks = scales::breaks_width(200),
+#'   scale_seq_continuous(breaks = scales::breaks_width(200),
 #'     guide = guide_seq_axis(sequences = "A", side = "negative",
 #'       theme = theme(axis.text = element_text(size = 8)))) +
 #'   coord_collinear()
@@ -330,6 +307,9 @@ ggchord_check_axis_theme <- function(theme, overlap) {
 
 #' Define the linear scale for sequence positions
 #'
+#' Reference positions are one-based. Use [layout_sequences()] to choose
+#' display windows. This scale sets sequence-path ticks and labels.
+#'
 #' @param name Optional axis title.
 #' @param breaks,minor_breaks Position vectors, functions or named lists.
 #' @param labels Labels or a labelling function, optionally by source or instance.
@@ -345,11 +325,11 @@ ggchord_check_axis_theme <- function(theme, overlap) {
 #' )
 #'
 #' ggchord(data = seqs) + geom_seq() +
-#'   scale_seq_position(
+#'   scale_seq_continuous(
 #'     breaks = scales::breaks_width(200),
 #'     labels = scales::label_number(suffix = " bp")
 #'   ) + coord_collinear()
-scale_seq_position <- function(name = waiver(), breaks = waiver(),
+scale_seq_continuous <- function(name = waiver(), breaks = waiver(),
     minor_breaks = waiver(), labels = waiver(), coordinates = "local",
     guide = guide_seq_axis()) {
   ggchord_local_console_errors()
@@ -359,7 +339,7 @@ scale_seq_position <- function(name = waiver(), breaks = waiver(),
   if (!is.null(name) && !is_waiver(name) &&
       (!(is.character(name) || is.expression(name)) || length(name) != 1L ||
        (is.character(name) && is.na(name))))
-    ggchord_stop("scale_seq_position(): name must be one title or NULL")
+    ggchord_stop("scale_seq_continuous(): name must be one title or NULL")
   if (identical(guide, "none")) guide <- guide_seq_axis(character())
   if (!inherits(guide, "ggchord_seq_axis")) ggchord_stop("Use guide_seq_axis() or 'none'")
   out <- continuous_scale("seq_position", palette = identity,
@@ -375,93 +355,80 @@ scale_seq_position <- function(name = waiver(), breaks = waiver(),
   out
 }
 
-#' Map measurements to height within a physical track
-#'
-#' @param track Track ID.
-#' @param name Axis title.
-#' @param limits,breaks,labels,oob Continuous scale settings.
-#' @param transform A continuous transformation name or object. An explicit
-#'   transformation object must be monotone and invertible over the values
-#'   used by the track scale.
-#' @param unit Optional unit of measurement for the shared track.
-#' @param domain Train a shared scale or train separately by panel.
-#' @param guide A track axis guide or `"none"`.
-#' @return A numerical height scale for the chosen track.
-#' @export
-#' @examples
-#' library(ggplot2)
-#'
-#' seqs <- data.frame(
-#'   accver = c("A", "B"), length = c(1000, 800),
-#'   sequence_unit = "bp", topology = "linear"
-#' )
-#'
-#' signal <- data.frame(accver = rep(c("A", "B"), each = 3),
-#'   pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))
-#'
-#' ggchord(data = seqs) +
-#'   track_band("signal", thickness = 6) +
-#'   geom_track_line(data = signal, aes(x = pos, y = value), track = "signal") +
-#'   scale_track_value("signal", limits = c(0, 6), breaks = c(0, 3, 6),
-#'                     name = "Signal", unit = "a.u.") +
-#'   coord_collinear()
-scale_track_value <- function(track = "default", name = waiver(), limits = NULL,
-    breaks = waiver(), labels = waiver(), transform = "identity", oob = scales::censor,
-    unit = NULL, domain = "shared", guide = guide_track_axis()) {
-  ggchord_local_console_errors()
-  ggchord_check_argument_names(sys.call(), sys.function())
-  ggchord_track_id(track)
-  domain <- ggchord_match_choice(domain, c("shared", "panel"), "domain")
-  if (!is.null(unit) && (!is.character(unit) || length(unit) != 1L || is.na(unit) || !nzchar(unit)))
-    ggchord_stop("unit must be one nonempty measurement unit")
-  if (!is.null(limits) && !is.function(limits) && (!is.numeric(limits) ||
-      length(limits) != 2L || all(is.na(limits)) || any(is.infinite(limits) | is.nan(limits)) ||
-      isTRUE(limits[1L] > limits[2L])))
-    ggchord_stop("limits must be an increasing range with at most one automatic endpoint")
-  if (!is.function(oob)) ggchord_stop("oob must be a function")
-  axis <- ggchord_track_axis_guide(guide)
-  custom <- inherits(transform, "transform")
-  if (custom) transform <- ggchord_check_track_transform(transform, track)
-  sc <- continuous_scale(ggchord_track_aes("value", track), palette = identity,
-    name = name, limits = limits, breaks = breaks, labels = labels,
-    transform = transform, oob = oob, guide = "none")
-  sc$ggchord_facet_domain <- domain
-  sc$ggchord_domain_policy <- list(transform = sc$get_transformation()$name, oob = oob, limits = limits)
-  sc$ggchord_track_axis <- axis$show
-  sc$ggchord_track_axis_guide <- axis$guide
-  sc$ggchord_track_unit <- unit
-  sc$ggchord_track_id <- track
-  sc$ggchord_custom_transform <- custom
-  sc
+ggchord_check_track_y_scale <- function(scale) {
+  if (!inherits(scale, "ScaleContinuousPosition") ||
+      !setequal(scale$aesthetics, scale_y_continuous()$aesthetics))
+    ggchord_stop("Track Y requires a continuous ggplot2 scale_y_*()")
+  if (!is.null(scale$secondary.axis) && !is_waiver(scale$secondary.axis))
+    ggchord_stop("Track Y does not support secondary axes")
 }
 
-ggchord_check_track_transform <- function(transformation, track) {
-  original <- transformation
-  transformation$transform <- function(x) {
-    result <- original$transform(x)
-    valid <- is.finite(x) & x >= original$domain[1L] & x <= original$domain[2L]
-    valid <- which(valid)
-    if (length(valid)) {
-      index <- valid[order(x[valid])]
-      index <- index[!duplicated(x[index])]
-      values <- result[index]
-      restored <- suppressWarnings(original$inverse(values))
-      direction <- sign(diff(values))
-      if (length(result) != length(x) || any(!is.finite(values)) ||
-          length(restored) != length(index) || any(!is.finite(restored)) ||
-          any(abs(restored - x[index]) > sqrt(.Machine$double.eps) * pmax(1, abs(x[index]))) ||
-          (length(direction) && (!all(direction > 0) && !all(direction < 0))))
-        ggchord_stop("Track '", track, "' requires a monotone, invertible value transform")
+ggchord_track_y_scale <- function(plot, id) plot$ggchord$track_y_scales[[id]]
+
+ggchord_prepare_position_scales <- function(plot) {
+  if (isTRUE(plot$ggchord$position_scales_prepared)) return(plot)
+  plot <- ggchord_prepare_track_layout(plot)
+  pending <- plot$ggchord$position_scales
+  explicit <- Filter(function(scope) isTRUE(scope$y), plot$ggchord$scoped_scales)
+  if (isTRUE(plot$coordinates$ggchord_dotplot)) {
+    if (length(explicit) || any(vapply(pending, function(x) !is.null(x$track), logical(1))))
+      ggchord_stop("coord_dotplot(): Track Y scales require a sequence-path coordinate")
+    if (length(pending)) {
+      plot$scales <- plot$scales$clone()
+      for (spec in pending) plot$scales$add(spec$scale)
     }
-    result
+  } else {
+    layers <- plot$layers
+    numerical <- vapply(layers, function(l) identical(l$ggchord_type, "track") &&
+      !identical(l$ggchord_params$track_kind, "tile") && !isTRUE(l$ggchord_params$interval), logical(1))
+    owners <- vapply(layers, function(l) l$ggchord_params$track_id %||% "", character(1))
+    assigned <- list()
+    for (spec in pending) {
+      if (is.null(spec$track)) {
+        if ("x" %in% spec$scale$aesthetics)
+          ggchord_stop("Use scale_seq_continuous() for the reference axis. Native X scales require coord_dotplot().")
+        ggchord_stop("Add a numerical Track before scale_y_*() or select one with scale_for().")
+      }
+      if (!spec$track %in% owners[numerical])
+        ggchord_stop("Track '", spec$track, "' has no numerical layers for a Y scale")
+      if (!is.null(assigned[[spec$track]]))
+        message("Scale for y in track '", spec$track, "' is already present. The new scale replaces it.")
+      assigned[[spec$track]] <- list(scale = spec$scale, by = "shared", group = spec$track)
+    }
+    claimed <- character()
+    for (scope in explicit) {
+      selected <- ggchord_scope_layers(plot, scope)
+      if (!is.null(scope$layers) && !all(numerical[selected]))
+        ggchord_stop("scale_for(): Y can target only complete numerical tracks")
+      ids <- unique(owners[selected[numerical[selected]]])
+      if (!length(ids) || (!is.null(scope$tracks) && !all(scope$tracks %in% ids)) ||
+          any(!which(numerical & owners %in% ids) %in% selected))
+        ggchord_stop("scale_for(): select every numerical layer of each target track")
+      overlap <- intersect(claimed, ids)
+      if (length(overlap)) ggchord_stop("scale_for(): track '", overlap[1L], "' already has a scoped Y scale")
+      claimed <- c(claimed, ids)
+      for (id in ids) assigned[[id]] <- list(scale = scope$scale, by = scope$by, group = ids)
+    }
+    plot$ggchord$track_y_scales <- lapply(assigned, function(spec) {
+      ggchord_check_track_y_scale(spec$scale)
+      sc <- spec$scale$clone()
+      axis <- ggchord_track_axis_guide(sc$guide)
+      sc$ggchord_track_axis <- axis$show
+      sc$ggchord_track_axis_guide <- axis$guide
+      sc$ggchord_facet_domain <- spec$by
+      sc$ggchord_track_group <- spec$group
+      sc
+    })
   }
-  transformation
+  plot$ggchord$position_scales_prepared <- TRUE
+  plot
 }
 
 #' Report shared numerical limits across independent plots
 #'
 #' @param plots A ggchord plot or a list of independent ggchord plots.
-#' @param tracks IDs of numerical tracks present in every plot.
+#' @param tracks IDs of numerical tracks present in every plot. Omit when each
+#'   plot has just one numerical track.
 #' @return A data frame of current limits, units and available measure evidence.
 #' @export
 #' @examples
@@ -481,23 +448,35 @@ ggchord_check_track_transform <- function(transformation, track) {
 #' p2 <- ggchord(data = seqs) +
 #'   geom_track_line(data = signal2, aes(x = pos, y = value)) + coord_collinear()
 #' rng <- track_limits(list(first = p1, second = p2))
-#' p1 + scale_track_value(limits = rng$limits[[1]])
-#' p2 + scale_track_value(limits = rng$limits[[1]])
-track_limits <- function(plots, tracks = "default") {
+#' p1 + scale_y_continuous(limits = rng$limits[[1]])
+#' p2 + scale_y_continuous(limits = rng$limits[[1]])
+track_limits <- function(plots, tracks = NULL) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   if (inherits(plots, "ggchord")) plots <- list(plots)
   if (!is.list(plots) || !length(plots) || !all(vapply(plots, inherits, logical(1), "ggchord")))
     ggchord_stop("track_limits(): supply independent ggchord plots")
-  ggchord_id_vector(tracks, "tracks")
+  if (!is.null(tracks)) ggchord_id_vector(tracks, "tracks")
   labels <- names(plots) %||% as.character(seq_along(plots))
   labels[!nzchar(labels)] <- as.character(which(!nzchar(labels)))
   reports <- lapply(plots, function(plot) {
     plot <- ggchord_render_inputs(plot)
     plot <- ggchord_register_layers(plot)
+    plot <- ggchord_prepare_position_scales(plot)
     plot <- ggchord_prepare_facet_sources(plot)
     ggchord_prepare_track_layers(plot)
   })
+  owners_for <- function(plot, id) Filter(function(l)
+    !identical(l$ggchord_params$track_kind, "tile") &&
+      identical(l$ggchord_params$track_id, id), plot$layers)
+  implicit <- is.null(tracks)
+  if (implicit) {
+    available <- lapply(reports, function(plot) names(plot$ggchord$track_quantities))
+    if (any(lengths(available) != 1L)) ggchord_stop(
+      "track_limits(): specify tracks. Available numerical tracks: ",
+      paste(unique(unlist(available)), collapse = ", "))
+    tracks <- available[[1L]]
+  }
   compatible <- function(values, field) {
     known <- unique(values[!is.na(values)])
     if (length(known) > 1L) ggchord_stop("Incompatible track ", field)
@@ -505,12 +484,15 @@ track_limits <- function(plots, tracks = "default") {
   }
   do.call(rbind, lapply(tracks, function(id) {
     ranges <- lapply(reports, function(plot) {
-      owners <- Filter(function(l) identical(l$ggchord_params$track_id, id) &&
-        !identical(l$ggchord_params$track_kind, "tile"), plot$layers)
-      if (!length(owners)) ggchord_stop("No numerical layer in track '", id, "'")
-      values <- unlist(lapply(owners, function(l)
+      resolved <- if (implicit) names(plot$ggchord$track_quantities)[1L] else id
+      owners <- owners_for(plot, resolved)
+      if (!length(owners)) ggchord_stop("No numerical layer in track '", id,
+        "'. Available tracks: ", paste(names(plot$ggchord$track_quantities), collapse = ", "))
+      group <- ggchord_track_y_scale(plot, resolved)$ggchord_track_group %||% resolved
+      selected <- unlist(lapply(group, function(owner) owners_for(plot, owner)), recursive = FALSE)
+      values <- unlist(lapply(selected, function(l)
         ggchord_track_domain_values(ggchord_resolve_layer_input(l), l$ggchord_params)), use.names = FALSE)
-      scale <- ggchord_train_track_scale(plot, id, values)
+      scale <- ggchord_train_track_scale(plot, resolved, values)
       if (!scale$has_domain) ggchord_stop("No numerical domain in track '", id, "'")
       sc <- scale$scale
       measures <- vapply(owners, function(l) l$ggchord_params$measure %||% NA_character_, character(1))

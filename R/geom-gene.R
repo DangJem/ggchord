@@ -19,7 +19,7 @@
 #'   an existing discrete guide trained by another layer. A fixed-style arrow
 #'   can float above the backbone when it joins one compatible legend group.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Provide one-based closed intervals with `accver`, `start` and `end`. A strand or disjoint segments can be supplied where appropriate. The gene shortcut uses strand placement and a shoulderless arrow by default.
 #' Set `head_style = "shouldered"` through `...` to use a wider arrowhead.
@@ -68,7 +68,7 @@ geom_gene <- function(mapping = NULL, data = NULL, shape = "arrow",
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details The source entities have `accver`, `start`, `end` and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry.
 #' @examples
@@ -115,7 +115,7 @@ geom_gene_label <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details The source entities have `accver`, `start`, `end` and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry.
 #' @examples
@@ -160,7 +160,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL, stat = "identity"
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details The source entities have `accver`, `start`, `end` and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry.
 #' @examples
@@ -208,7 +208,7 @@ geom_primer_label <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details The source entities have `accver`, `start`, `end` and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry.
 #' @examples

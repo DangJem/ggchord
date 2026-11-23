@@ -55,11 +55,11 @@ ggchord_validate_coord_contract <- function(plot) {
       (!isTRUE(coord$ggchord_dotplot) || !is.null(coord$ratio)))
     ggchord_stop("Free facet axes require coord_dotplot(ratio = NULL)")
   if (isTRUE(coord$ggchord_dotplot) && !is.null(plot$scales$get_scales("seq_position")))
-    ggchord_stop("scale_seq_position() requires a single reference path")
+    ggchord_stop("scale_seq_continuous() requires a single reference path")
   value_scale <- plot$scales$get_scales("y")
   has_track <- any(vapply(plot$layers, function(layer)
     identical(layer$ggchord_type, "track") && !identical(layer$ggchord_params$track_kind, "tile"), logical(1)))
   if (has_track && !is.null(value_scale) && !identical(value_scale$get_transformation()$name, "identity"))
-    ggchord_stop("Track heights use scale_track_value(transform = ...)")
+    ggchord_stop("Track heights use scale_y_continuous(transform = ...)")
   invisible(plot)
 }

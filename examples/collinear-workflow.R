@@ -44,7 +44,7 @@ windows <- tibble(
 workflow_source_axis <- workflow_base +
   layout_sequences(windows = windows) +
   geom_seq_break() +
-  scale_seq_position(coordinates = "source")
+  scale_seq_continuous(coordinates = "source")
 
 # Place the mark at a source position; query its display location at export size.
 mark <- tibble(accver = "A", pos = 400)

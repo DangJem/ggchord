@@ -5,7 +5,7 @@
 #' @param angle Tick label angle or the default waiver.
 #' @param check.overlap Hide overlapping tick labels.
 #' @param theme Optional local axis theme.
-#' @return A guide for [scale_track_value()].
+#' @return A guide for [`scale_y_continuous()`][ggplot2::scale_y_continuous].
 #' @export
 #' @examples
 #' library(ggplot2)
@@ -18,9 +18,9 @@
 #' signal <- data.frame(accver = rep(c("A", "B"), each = 3),
 #'   pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))
 #'
-#' ggchord(data = seqs) + track_band("signal") +
+#' ggchord(data = seqs) + layout_track("signal") +
 #'   geom_track_line(data = signal, aes(x = pos, y = value), track = "signal") +
-#'   scale_track_value("signal", guide = guide_track_axis(
+#'   scale_y_continuous(guide = guide_track_axis(
 #'     position = "end", sequences = "A", angle = 0)) +
 #'   coord_collinear()
 guide_track_axis <- function(position = "start", sequences = NULL,
@@ -42,6 +42,7 @@ guide_track_axis <- function(position = "start", sequences = NULL,
 # Track value scales own their own axis Guide declaration. Theme affects only
 # decorations; the named scale and physical position retain their old domains.
 ggchord_track_axis_guide <- function(guide) {
+  if (is_waiver(guide)) guide <- "axis"
   if (is.character(guide)) return(list(show = ggchord_match_arg(guide, c("axis", "none")) == "axis", guide = NULL))
   if (!inherits(guide, "GuideAxis"))
     ggchord_stop("Track value guide must be 'axis', 'none', or guide_axis(theme = ...)")
@@ -58,7 +59,7 @@ ggchord_track_axis_guide <- function(guide) {
 }
 
 ggchord_track_axis_style <- function(plot, id) {
-  sc <- plot$scales$get_scales(ggchord_track_aes("value", id))
+  sc <- ggchord_track_y_scale(plot, id)
   guide <- sc$ggchord_track_axis_guide
   local <- guide$params$theme
   themed <- plot

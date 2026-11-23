@@ -1,7 +1,66 @@
+# Resolve order once for the plot. Facet panels use the same relative order
+# even when they display different subsets of the registered layers.
+ggchord_prepare_track_layout <- function(plot) {
+  entries <- plot$ggchord$track_entries
+  known <- names(Filter(function(entry) !is.null(entry$layout), entries))
+  tracks <- Filter(function(entry) length(entry$members) > 0L, entries)
+  unknown <- setdiff(names(tracks), known)
+  if (length(unknown)) {
+    id <- unknown[1L]
+    closest <- if (length(known)) known[which.min(as.vector(utils::adist(id, known)))]
+    ggchord_stop("Unknown track '", id, "'. ",
+      if (length(closest)) paste0("Did you mean '", closest, "'? Available tracks: ",
+        paste(known, collapse = ", "), ". "),
+      "Declare it with layout_track(id = '", id, "').")
+  }
+  created <- vapply(tracks, `[[`, integer(1), "created_index")
+  tracks <- tracks[order(created)]
+  bands <- lapply(tracks, function(entry) {
+    band <- entry$layout
+    side <- band$side %||% "positive"
+    band$side <- if (side == "positive") "outside" else "inside"
+    band$width <- band$width %||% 4
+    band$gap <- band$gap %||% 1
+    band
+  })
+  for (side in c("outside", "inside")) {
+    ids <- names(Filter(function(band) band$side == side, bands))
+    orders <- lapply(bands[ids], `[[`, "track_order")
+    used <- unlist(orders, use.names = FALSE)
+    if (anyDuplicated(used))
+      ggchord_stop("layout_track(): repeated explicit order ", used[anyDuplicated(used)],
+        " on the ", if (side == "outside") "positive" else "negative", " side")
+    next_order <- 1L
+    for (id in ids[lengths(orders) == 0L]) {
+      while (next_order %in% used) next_order <- next_order + 1L
+      bands[[id]]$track_order <- next_order
+      next_order <- next_order + 1L
+    }
+  }
+  plot$ggchord$track_bands <- bands
+  plot
+}
+
+ggchord_track_band_dimensions <- function(band, seqs, plot) {
+  instances <- plot$ggchord$complete_display_instances
+  available <- instances$key %||% plot$ggchord$complete_reference_ids %||% seqs
+  resolve <- function(value, field) {
+    if (!is.null(instances)) value <- ggchord_instance_param(value, instances)
+    keys <- names(value)
+    if (!is.null(keys)) {
+      if (anyDuplicated(keys) || any(!keys %in% available))
+        ggchord_stop("layout_track(): invalid or unknown ", field, " keys")
+      value <- value[keys %in% seqs]
+    }
+    ggchord_track_dimension(if (length(value)) value, seqs, field)
+  }
+  list(width = resolve(band$width, "thickness"), gap = resolve(band$gap, "gap"))
+}
+
 # Small explicit band allocator. It shares source frames, not pseudo radii.
 ggchord_track_dimension <- function(value, seqs, name) {
   if (!is.null(names(value)) && (anyDuplicated(names(value)) || any(!names(value) %in% seqs)))
-    ggchord_stop("track_band(): invalid or unknown ", name, " keys")
+    ggchord_stop("layout_track(): invalid or unknown ", name, " keys")
   fallback <- if (name == "width") 4 else 1
   mm <- process_sequence_param(if (is.list(value)) unlist(value) else value,
     seqs, name, fallback)
@@ -127,14 +186,15 @@ ggchord_track_polygons_overlap <- function(a, b) {
 }
 
 ggchord_track_domain_values <- function(data, params) {
+  if (!any(is.finite(data$track_value))) return(numeric())
   c(data$track_value, data$track_ymin, data$track_ymax,
     if (params$track_kind == "bar") params$baseline)
 }
 
 ggchord_train_track_scale <- function(plot, id, values) {
-  key <- ggchord_track_aes("value", id)
-  sc <- plot$scales$get_scales(key) %||% scale_track_value(id)
+  sc <- ggchord_track_y_scale(plot, id) %||% scale_y_continuous()
   sc <- sc$clone()
+  if (is.null(sc$ggchord_track_axis)) sc$ggchord_track_axis <- TRUE
   quantity <- plot$ggchord$track_quantities[[id]]
   if (length(quantity$unit)) sc$ggchord_track_unit <- quantity$unit
   if (length(quantity$label) && is_waiver(sc$name)) sc$name <- quantity$label
@@ -142,10 +202,34 @@ ggchord_train_track_scale <- function(plot, id, values) {
   transformed <- suppressWarnings(sc$transform(finite))
   if (any(!is.finite(transformed))) ggchord_stop("Track '", id, "' has values/baseline incompatible with its scale transform")
   sc$train(transformed)
-  has_domain <- length(finite) > 0L || !is.null(sc$limits)
-  if (has_domain && (length(sc$get_limits()) != 2L || any(!is.finite(sc$get_limits()))))
-    ggchord_stop("Track numerical scale limits must define a finite domain")
+  has_domain <- length(finite) > 0L || (is.numeric(sc$limits) && all(is.finite(sc$limits)))
+  if (has_domain) {
+    limits <- sc$get_limits()
+    if (length(limits) != 2L || any(!is.finite(limits)) || is.unsorted(limits))
+      ggchord_stop("Track numerical scale limits must define an ordered finite domain")
+    expand <- sc$expand
+    if (is_waiver(expand)) expand <- ggplot2::expansion(mult = .05)
+    sc$ggchord_track_range <- scales::expand_range(limits,
+      mul = expand[c(1L, 3L)], add = expand[c(2L, 4L)])
+  }
   list(scale = sc, has_domain = has_domain)
+}
+
+ggchord_track_fraction <- function(scale, values) {
+  if (!length(values)) return(numeric())
+  scale$rescale(scale$map(values), range = scale$ggchord_track_range)
+}
+
+ggchord_train_track_domains <- function(plot, values) {
+  domains <- list()
+  for (id in names(values)) {
+    if (!is.null(domains[[id]])) next
+    group <- ggchord_track_y_scale(plot, id)$ggchord_track_group %||% id
+    members <- intersect(group, names(values))
+    trained <- ggchord_train_track_scale(plot, id, unlist(values[members], use.names = FALSE))
+    domains[members] <- rep(list(trained), length(members))
+  }
+  domains
 }
 
 ggchord_facet_track_scales <- function(plot, sources, members, panels) {
@@ -155,13 +239,13 @@ ggchord_facet_track_scales <- function(plot, sources, members, panels) {
     p <- layer$ggchord_params
     if (!identical(layer$ggchord_type, "track") || p$track_kind == "tile" ||
         (is.numeric(layer$layout) && !any(panels$PANEL %in% layer$layout))) next
-    scale <- plot$scales$get_scales(ggchord_track_aes("value", p$track_id))
+    scale <- ggchord_track_y_scale(plot, p$track_id)
     if (identical(scale$ggchord_facet_domain, "panel")) next
     rows <- unique(members[[i]]$.ggchord_input_index)
     values[[p$track_id]] <- c(values[[p$track_id]],
       ggchord_track_domain_values(sources[[i]][rows, , drop = FALSE], p))
   }
-  Map(function(id, height) ggchord_train_track_scale(plot, id, height), names(values), values)
+  ggchord_train_track_domains(plot, values)
 }
 
 ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
@@ -208,34 +292,23 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
   }
   ids <- vapply(layers, function(l) l$ggchord_params$track_id, character(1))
   unique_ids <- unique(ids)
+  numeric_layers <- which(vapply(layers, function(l) l$ggchord_params$track_kind != "tile", logical(1)))
+  values <- lapply(split(numeric_layers, ids[numeric_layers]), function(rows)
+    unlist(lapply(rows, function(i) ggchord_track_domain_values(data[[i]],
+      layers[[i]]$ggchord_params)), use.names = FALSE))
+  shared <- plot$ggchord$shared_track_scales
+  local <- ggchord_train_track_domains(plot, values[setdiff(names(values), names(shared))])
   declarations <- list(); scales <- list(); trained <- list()
   for (id in unique_ids) {
     members <- which(ids == id)
     pos <- plot$ggchord$track_bands[[id]]
-    if (is.null(pos) && id == "default") pos <- track_band("default")
-    if (is.null(pos)) {
-      known <- c("default", names(plot$ggchord$track_bands))
-      ggchord_stop("Unknown track '", id, "'. Available bands: ", paste(unique(known), collapse = ", "),
-        ". Add track_band('", id, "') to declare a new band.")
-    }
-    instances <- plot$ggchord$display_instances
-    if (!is.null(instances)) {
-      pos$width <- ggchord_instance_param(pos$width, instances)
-      pos$gap <- ggchord_instance_param(pos$gap, instances)
-    }
-    width <- ggchord_track_dimension(pos$width, seqs, "width")
-    gap <- ggchord_track_dimension(pos$gap, seqs, "gap")
-    declarations[[id]] <- list(position = pos, width = width, gap = gap,
-      layers = vapply(layers[members], function(l) l$ggchord_layer_id, character(1)))
+    dimensions <- ggchord_track_band_dimensions(pos, seqs, plot)
+    declarations[[id]] <- c(list(position = pos,
+      layers = vapply(layers[members], function(l) l$ggchord_layer_id, character(1))), dimensions)
     numeric <- members[vapply(members, function(i) layers[[i]]$ggchord_params$track_kind != "tile", logical(1))]
     if (!length(numeric)) next
     declarations[[id]]$measure <- plot$ggchord$track_quantities[[id]]$measure
-    training <- plot$ggchord$shared_track_scales[[id]]
-    if (is.null(training)) {
-      values <- unlist(lapply(numeric, function(i)
-        ggchord_track_domain_values(data[[i]], layers[[i]]$ggchord_params)), use.names = FALSE)
-      training <- ggchord_train_track_scale(plot, id, values)
-    }
+    training <- shared[[id]] %||% local[[id]]
     sc <- training$scale
     for (i in numeric) {
       position <- layers[[i]]$ggchord_params$native_position
@@ -243,20 +316,19 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
           !sc$get_transformation()$name %in% c("identity", "reverse"))
         ggchord_stop("Track '", id, "' cannot stack values on a nonlinear scale")
     }
-    for (i in numeric) if (layers[[i]]$ggchord_params$track_kind == "bar" &&
-        (!is.finite(sc$map(sc$transform(layers[[i]]$ggchord_params$baseline))) ||
-         sc$map(sc$transform(layers[[i]]$ggchord_params$baseline)) < 0 ||
-         sc$map(sc$transform(layers[[i]]$ggchord_params$baseline)) > 1))
-      ggchord_stop("Track '", id, "' scale excludes its baseline; change limits or explicitly choose an oob policy")
+    for (i in numeric) {
+      p <- layers[[i]]$ggchord_params
+      if (!training$has_domain || !any(is.finite(data[[i]]$track_value)) ||
+          !p$native_geom %in% c("area", "bar", "col")) next
+      baseline <- ggchord_track_fraction(sc, sc$transform(p$baseline))
+      if (!is.finite(baseline) || baseline < 0 || baseline > 1)
+        ggchord_stop("Track '", id, "' scale excludes its baseline; change limits or explicitly choose an oob policy")
+    }
     scales[[id]] <- sc; trained[[id]] <- training$has_domain
   }
   # The first band starts from the reference centreline; each subsequent
   # band starts from the preceding band edge on the same physical side.
   bands <- list(); band_polygons <- list(); counters <- list()
-  order_keys <- vapply(declarations, function(x) paste(x$position$side,
-    x$position$track_order), character(1))
-  if (anyDuplicated(order_keys))
-    ggchord_stop("track_band(): tracks on the same side must have distinct order values")
   ordered <- order(vapply(declarations, function(x) x$position$track_order, numeric(1)), names(declarations))
   for (id in names(declarations)[ordered]) {
     declaration <- declarations[[id]]; p <- declaration$position
@@ -334,7 +406,7 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
     id <- unname(ids[i]); owner <- layer$ggchord_layer_id; geometry <- list(); group <- 0L
     sc <- scales[[id]]
     mapped <- if (p$track_kind == "tile") rep(1, nrow(d)) else if (isTRUE(trained[[id]]))
-      sc$map(suppressWarnings(sc$transform(d$track_value))) else rep(NA_real_, nrow(d))
+      ggchord_track_fraction(sc, suppressWarnings(sc$transform(d$track_value))) else rep(NA_real_, nrow(d))
     if (any(!is.na(mapped) & (!is.finite(mapped) | mapped < 0 | mapped > 1)))
       ggchord_stop("Track scale oob policy allows values outside its physical band; use limits with censor or squish")
     reason <- ifelse(is.na(mapped), ifelse(is.na(d$track_value %||% rep(NA_real_, nrow(d))), "missing_value", "outside_scale_limits"), "retained")
@@ -407,7 +479,7 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
       if (min(a, z) < 1 || max(a, z) > len) { a <- max(1, min(a, len)); z <- max(1, min(z, len)); clipped[j] <- TRUE }
       if (a > z && !isTRUE(layout$circular)) ggchord_stop("Origin-crossing track intervals require circular coordinates or explicit window splitting")
       pieces <- if (a > z) list(c(a, len), c(1, z)) else list(c(a, z))
-      baseline <- if (p$track_kind == "bar") sc$map(sc$transform(p$baseline)) else 0
+      baseline <- if (p$track_kind == "bar") ggchord_track_fraction(sc, sc$transform(p$baseline)) else 0
       for (part in pieces) {
         edges <- c(part[1L] - 1, part[2L])
         pos <- seq(edges[1L], edges[2L], length.out = if (isTRUE(layout$collinear)) 2L else 32L)
@@ -463,9 +535,9 @@ ggchord_track_axes <- function(layout, registry, plot) {
       style <- ggchord_track_axis_style(plot, id)
       # One explicit numerical reference per shared track domain. Automatic
       # breaks use its endpoints; explicit user breaks/labels remain untouched.
-      breaks <- if (is_waiver(sc$breaks)) unique(sc$get_limits()) else sc$get_breaks()
+      breaks <- sc$get_breaks()
       labels <- sc$get_labels(breaks)
-      fractions <- sc$map(breaks)
+      fractions <- ggchord_track_fraction(sc, breaks)
       keep <- is.finite(fractions) & fractions >= 0 & fractions <= 1
       fractions <- fractions[keep]; labels <- labels[keep]
       seq <- band$accver

@@ -33,7 +33,7 @@ annotation_seq_scalebar(
 
 \item{colour}{Fixed colour.}
 
-\item{id}{Layer identifier. \code{\link[=auto_id]{auto_id()}} assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or \code{NULL} or \code{NA} to share scales.}
+\item{id}{Layer identifier. \code{\link[=auto_id]{auto_id()}} assigns a plot-local ID. Use a name for explicit references.}
 }
 \value{
 A ggplot2 layer for addition to a plot.

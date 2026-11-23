@@ -21,6 +21,6 @@ ggchord(reference) +
   ) +
   geom_link_ribbon(data = hits, id = "observed", fill = "#3A7984", alpha = 0.65) +
   layout_sequences(row_gap = 35) +
-  scale_seq_position(guide = guide_seq_axis(side = "negative")) +
+  scale_seq_continuous(guide = guide_seq_axis(side = "negative")) +
   coord_collinear() +
   theme_ggchord_minimal()

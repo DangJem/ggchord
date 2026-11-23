@@ -45,9 +45,9 @@
 #' intervals <- genes[c("accver", "start", "end")]
 #'
 #' ggchord(data = seqs) + geom_seq() +
-#'   track_band("coverage", thickness = 5) +
+#'   layout_track("coverage", thickness = 5) +
 #'   stat_coverage(data = intervals, binwidth = 100, track = "coverage") +
-#'   scale_track_value("coverage", limits = c(0, 1),
+#'   scale_y_continuous(limits = c(0, 1),
 #'                     labels = scales::label_percent()) +
 #'   coord_collinear()
 #'
@@ -57,7 +57,7 @@
 #'   coord_collinear()
 stat_coverage <- function(mapping = NULL, data = NULL, geom = "track_col",
     position = "identity", binwidth = NULL, windows = NULL, bounds = "error",
-    track = "default", ..., na.rm = FALSE, show.legend = NA,
+    track = NULL, ..., na.rm = FALSE, show.legend = NA,
     inherit.aes = TRUE, id = auto_id()) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())

@@ -19,7 +19,7 @@ The native ggplot2 facet functions divide observations among panels.
 
 Use the ordinary ggplot2 aesthetics and visual scales. \code{\link[=scale_for]{scale_for()}}
 assigns a separate visual scale to explicitly named layers.
-\code{\link[=track_band]{track_band()}} declares a physical container, \code{\link[=scale_track_value]{scale_track_value()}}
+\code{\link[=layout_track]{layout_track()}} declares a physical container, \code{\link[ggplot2:scale_y_continuous]{scale_y_continuous()}}
 controls its numerical height, and \code{\link[=guide_track_axis]{guide_track_axis()}} explains the
 resulting scale. \code{\link[=theme_ggchord]{theme_ggchord()}} controls appearance.
 }

@@ -48,7 +48,7 @@ nonadjacent rows or radial spokes are dashed. Radial adjacency is cyclic.}
 
 \item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
 
-\item{id}{Layer identifier. \code{\link[=auto_id]{auto_id()}} assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or \code{NULL} or \code{NA} to share scales.}
+\item{id}{Layer identifier. \code{\link[=auto_id]{auto_id()}} assigns a plot-local ID. Use a name for explicit references.}
 
 \item{gap}{Nonnegative clearance in mm between a ribbon front and the edge of
 the sequence or avoided feature. Accepts flexible per-sequence values.}

@@ -131,7 +131,7 @@ ggchord_prepare_link_statistics <- function(plot, references) {
 #'   out-of-bounds coordinates remain errors.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer whose statistic output retains the original members
 #'   in `source_members`, with `n_members` and `sum_weight` for each result.
 #' @details The statistic bins the midpoints of closed query and subject
@@ -182,7 +182,7 @@ stat_link_bundle <- function(mapping = NULL, data = NULL, geom = "link_ribbon",
 #'   out-of-bounds coordinates remain errors.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer. Its statistic output retains the source rows and
 #'   adds `q_bin`, `s_bin`, `bin_weight`, `bin_area`, `density_raw`,
 #'   `density`, `normalization`, `density_unit` and `source_members`.

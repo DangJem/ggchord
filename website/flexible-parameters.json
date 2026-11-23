@@ -40,7 +40,11 @@
   "position_feature_stack": {
     "spacing": "band"
   },
-  "track_band": {
+  "layout_track": {
+    "thickness": "band",
+    "gap": "band"
+  },
+  "add_track": {
     "thickness": "band",
     "gap": "band"
   }

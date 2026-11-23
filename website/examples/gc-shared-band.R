@@ -10,14 +10,16 @@ reference <- plasmid_example_pUC19 |>
 
 ggchord(reference) +
   geom_seq(show.legend = FALSE) +
-  track_band("gc", thickness = 15) +
-  geom_track_col(
-    aes(x = midpoint, y = value, width = window_length),
-    data = windows, track = "gc", bounds = "clip", fill = "#99C9C2"
+  add_track(
+    geom_track_col(
+      aes(x = midpoint, y = value, width = window_length),
+      data = windows, bounds = "clip", fill = "#99C9C2"
+    ),
+    geom_track_line(
+      aes(x = midpoint, y = value), data = windows,
+      colour = "#1F5961", linewidth = .85
+    ),
+    thickness = 15
   ) +
-  geom_track_line(
-    aes(x = midpoint, y = value), data = windows, track = "gc",
-    colour = "#1F5961", linewidth = .85
-  ) +
-  scale_track_value("gc", name = "GC (%)", limits = c(0, 100)) +
+  scale_y_continuous(name = "GC (%)", limits = c(0, 100)) +
   coord_collinear()

@@ -323,7 +323,7 @@ ggchord_domain_label <- function(mapping, data, stat, anchor_layer, anchor, posi
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details The source entities have `accver`, `start`, `end` and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry. A segmented feature is anchored to its visible runs. For a circular feature label, mapping `fill` sets the background of an exterior callout. If `colour` is omitted, text over a feature or on a callout uses a contrasting colour.
 #' Filled circular exterior labels have a visible outline. Circular
@@ -379,7 +379,7 @@ geom_feature_label <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details The source entities have `accver`, `start`, `end` and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry. A segmented feature is anchored to its visible runs. For a circular feature label, mapping `fill` sets the background of an exterior callout. If `colour` is omitted, text over a feature or on a callout uses a contrasting colour.
 #' Filled circular exterior labels have a visible outline. Circular

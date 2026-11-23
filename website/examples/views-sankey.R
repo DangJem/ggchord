@@ -22,6 +22,7 @@ ggchord(reference) +
     label_layout = label_layout_fixed(orientation = "vertical", along = -5)
   ) +
   geom_link_ribbon(aes(fill = pident), data = hit) +
+  scale_fill_pident() +
   layout_sequences(column_gap = 75, row_gap = 11) +
   coord_sankey(fit = "labels") +
   theme_ggchord_minimal()

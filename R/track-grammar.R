@@ -57,7 +57,7 @@
 #'   as NULL with `source_status = "unknown"`. An explicit empty integer vector
 #'   denotes a known empty set. Reported members must belong to the same
 #'   accession and facet as the result.
-#' @param track Character ID declared with [track_band()]. Omit for the shared default band.
+#' @param track Character ID declared with [layout_track()]. Omit to create an individual band.
 #' @param position Native data adjustment such as `"identity"`, `"stack"` or
 #'   `ggplot2::position_dodge(width = 10)`. Source x uses sequence units.
 #'   Feature placement belongs on feature layers.
@@ -98,28 +98,26 @@
 #' zero values and an empty source_rows list element. Bars span the bin,
 #' points/lines/steps use its centre, and tiles fill its full band and
 #' interval. Coverage layers use identity position.
-#' @return A ggplot2 layer using a shared sequence-local band.
+#' @return A ggplot2 track layer.
+#' @section Track scales:
+#' Add a continuous ggplot2 `scale_y_*()` after a numerical track to
+#' configure its height. Limits use the scale's out-of-bounds policy.
+#' Supply numeric limits when using a Stat that computes new values or
+#' a Position that adjusts data. Use [add_track()] for multiple layers
+#' on one band and [scale_for()] to select complete bands explicitly.
 #' @export
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
 #' @examples
 #' library(ggplot2)
-#'
-#' seqs <- data.frame(
-#'   accver = c("A", "B"), length = c(1000, 800),
-#'   sequence_unit = "bp", topology = "linear"
-#' )
-#'
-#' signal <- data.frame(accver = rep(c("A", "B"), each = 3),
-#'   pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))
-#'
-#' ggchord(seqs) +
-#'   geom_seq() +
-#'   geom_track(aes(x = pos, y = value), data = signal, geom = "line") +
-#'   scale_track_value(name = "Signal") +
+#' seqs <- data.frame(accver = "A", length = 100)
+#' gc_bins <- data.frame(accver = "A", pos = c(20, 50, 80), gc = c(.4, .5, .6))
+#' ggchord(seqs) + geom_seq() +
+#'   geom_track_col(aes(x = pos, y = gc), data = gc_bins) +
+#'   scale_y_continuous(limits = c(0, 1)) +
 #'   coord_collinear()
 geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
-    position = NULL, track = "default", ...,
+    position = NULL, track = NULL, ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
@@ -255,12 +253,12 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
 #' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
-#' @param track ID of the physical band. The default band is available when first used.
+#' @param track ID of the physical band. Omit to create an individual band.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
 #' @examples
@@ -277,10 +275,10 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
 #' ggchord(seqs) +
 #'   geom_seq() +
 #'   geom_track_point(aes(x = pos, y = value), data = signal, size = 2) +
-#'   scale_track_value(name = "Signal") +
+#'   scale_y_continuous(name = "Signal") +
 #'   coord_collinear()
 geom_track_point <- function(mapping = NULL, data = NULL, stat = "identity",
-    position = "identity", track = "default", ...,
+    position = "identity", track = NULL, ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
@@ -295,12 +293,12 @@ geom_track_point <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
-#' @param track ID of the physical band. The default band is available when first used.
+#' @param track ID of the physical band. Omit to create an individual band.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
 #' @examples
@@ -317,10 +315,10 @@ geom_track_point <- function(mapping = NULL, data = NULL, stat = "identity",
 #' ggchord(seqs) +
 #'   geom_seq() +
 #'   geom_track_line(aes(x = pos, y = value), data = signal) +
-#'   scale_track_value(name = "Signal") +
+#'   scale_y_continuous(name = "Signal") +
 #'   coord_collinear()
 geom_track_line <- function(mapping = NULL, data = NULL, stat = "identity",
-    position = "identity", track = "default", ...,
+    position = "identity", track = NULL, ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
@@ -335,12 +333,12 @@ geom_track_line <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
-#' @param track ID of the physical band. The default band is available when first used.
+#' @param track ID of the physical band. Omit to create an individual band.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
 #' @examples
@@ -357,10 +355,10 @@ geom_track_line <- function(mapping = NULL, data = NULL, stat = "identity",
 #' ggchord(seqs) +
 #'   geom_seq() +
 #'   geom_track_path(aes(x = pos, y = value), data = signal) +
-#'   scale_track_value(name = "Signal") +
+#'   scale_y_continuous(name = "Signal") +
 #'   coord_collinear()
 geom_track_path <- function(mapping = NULL, data = NULL, stat = "identity",
-    position = "identity", track = "default", ...,
+    position = "identity", track = NULL, ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
@@ -375,12 +373,12 @@ geom_track_path <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
-#' @param track ID of the physical band. The default band is available when first used.
+#' @param track ID of the physical band. Omit to create an individual band.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
 #' @examples
@@ -397,10 +395,10 @@ geom_track_path <- function(mapping = NULL, data = NULL, stat = "identity",
 #' ggchord(seqs) +
 #'   geom_seq() +
 #'   geom_track_step(aes(x = pos, y = value), data = signal, direction = "hv") +
-#'   scale_track_value(name = "Signal") +
+#'   scale_y_continuous(name = "Signal") +
 #'   coord_collinear()
 geom_track_step <- function(mapping = NULL, data = NULL, stat = "identity",
-    position = "identity", track = "default", ...,
+    position = "identity", track = NULL, ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
@@ -415,12 +413,12 @@ geom_track_step <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
-#' @param track ID of the physical band. The default band is available when first used.
+#' @param track ID of the physical band. Omit to create an individual band.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
 #' @examples
@@ -437,10 +435,10 @@ geom_track_step <- function(mapping = NULL, data = NULL, stat = "identity",
 #' ggchord(seqs) +
 #'   geom_seq() +
 #'   geom_track_col(aes(x = pos, y = value), data = signal, width = 40) +
-#'   scale_track_value(name = "Signal") +
+#'   scale_y_continuous(name = "Signal") +
 #'   coord_collinear()
 geom_track_col <- function(mapping = NULL, data = NULL, stat = "identity",
-    position = "stack", track = "default", ...,
+    position = "stack", track = NULL, ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
@@ -455,12 +453,12 @@ geom_track_col <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
-#' @param track ID of the physical band. The default band is available when first used.
+#' @param track ID of the physical band. Omit to create an individual band.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
 #' @examples
@@ -477,10 +475,10 @@ geom_track_col <- function(mapping = NULL, data = NULL, stat = "identity",
 #' ggchord(seqs) +
 #'   geom_seq() +
 #'   geom_track_bar(aes(x = pos), data = signal, width = 40) +
-#'   scale_track_value(name = "Count") +
+#'   scale_y_continuous(name = "Count") +
 #'   coord_collinear()
 geom_track_bar <- function(mapping = NULL, data = NULL, stat = "count",
-    position = "stack", track = "default", ...,
+    position = "stack", track = NULL, ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
@@ -495,12 +493,12 @@ geom_track_bar <- function(mapping = NULL, data = NULL, stat = "count",
 #' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
-#' @param track ID of the physical band. The default band is available when first used.
+#' @param track ID of the physical band. Omit to create an individual band.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
 #' @examples
@@ -517,10 +515,10 @@ geom_track_bar <- function(mapping = NULL, data = NULL, stat = "count",
 #' ggchord(seqs) +
 #'   geom_seq() +
 #'   geom_track_area(aes(x = pos, y = value), data = signal, position = "identity") +
-#'   scale_track_value(name = "Signal") +
+#'   scale_y_continuous(name = "Signal") +
 #'   coord_collinear()
 geom_track_area <- function(mapping = NULL, data = NULL, stat = "identity",
-    position = "stack", track = "default", ...,
+    position = "stack", track = NULL, ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
@@ -535,12 +533,12 @@ geom_track_area <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
-#' @param track ID of the physical band. The default band is available when first used.
+#' @param track ID of the physical band. Omit to create an individual band.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
 #' @examples
@@ -557,10 +555,10 @@ geom_track_area <- function(mapping = NULL, data = NULL, stat = "identity",
 #' ggchord(seqs) +
 #'   geom_seq() +
 #'   geom_track_tile(aes(x = pos, y = value, fill = value), data = signal, width = 40, height = 0.5) +
-#'   scale_track_value(name = "Signal") +
+#'   scale_y_continuous(name = "Signal") +
 #'   coord_collinear()
 geom_track_tile <- function(mapping = NULL, data = NULL, stat = "identity",
-    position = "identity", track = "default", ...,
+    position = "identity", track = NULL, ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
@@ -575,12 +573,12 @@ geom_track_tile <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
-#' @param track ID of the physical band. The default band is available when first used.
+#' @param track ID of the physical band. Omit to create an individual band.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
 #' @examples
@@ -608,7 +606,7 @@ geom_track_tile <- function(mapping = NULL, data = NULL, stat = "identity",
 #'   scale_fill_manual(values = gene_colours) +
 #'   coord_collinear()
 geom_track_interval <- function(mapping = NULL, data = NULL, stat = "identity",
-    position = "identity", track = "default", ...,
+    position = "identity", track = NULL, ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
@@ -712,18 +710,21 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
     ggchord_stop("geom_track(): use a sequence-path coordinate such as coord_collinear(axis = 'y')")
   if (coverage && is.null(raw)) ggchord_stop("Coverage needs interval data or a plot feature table")
   ggchord_require_columns(raw, character(), "geom_track()")
-  value_scale <- plot$scales$get_scales(ggchord_track_aes("value", p$track_id))
+  value_scale <- ggchord_track_y_scale(plot, p$track_id)
   value_transform <- if (!is.null(value_scale) && !isTRUE(p$interval))
     value_scale$get_transformation()
   transformed_height <- !is.null(value_transform) &&
-    (value_transform$name != "identity" || isTRUE(value_scale$ggchord_custom_transform))
+    value_transform$name != "identity"
+  if (is.function(value_scale$limits) &&
+      (p$native_stat != "identity" || !ggchord_is_data_identity(p$native_position)))
+    ggchord_stop("Track '", p$track_id, "' requires numeric limits for statistics or adjusted positions")
   if (transformed_height) {
     stacked <- identical(p$native_position, "stack") || inherits(p$native_position, "PositionStack")
-    if (stacked && value_transform$name != "reverse")
-      ggchord_stop("Track '", p$track_id, "' cannot stack values on a nonlinear scale")
     if (p$native_geom %in% c("bar", "col", "area") &&
         !is.finite(suppressWarnings(value_transform$transform(p$baseline))))
       ggchord_stop("Track '", p$track_id, "' has a baseline incompatible with its scale transform")
+    if (stacked && value_transform$name != "reverse")
+      ggchord_stop("Track '", p$track_id, "' cannot stack values on a nonlinear scale")
   }
   original_source <- raw
   facet_rows <- ggchord_facet_stat_input(raw, plot, layer)
@@ -869,6 +870,15 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
   }
   source <- source_data
   start_aes <- ggchord_track_start_aesthetics(mapping, native_roles, source, raw, caller)
+  if (transformed_height) {
+    fields <- intersect(paste0(".ggchord_start_", value_scale$aesthetics), names(start_aes$data))
+    for (field in fields) {
+      values <- start_aes$data[[field]]
+      if (!is.numeric(values) ||
+          any(!is.finite(suppressWarnings(value_transform$transform(values[!is.na(values)])))))
+        ggchord_stop("Track '", p$track_id, "' has values incompatible with its scale transform")
+    }
+  }
   if (!is.null(capture) && "mapped" %in% capture$requested) {
     mapped <- source
     mapped$accver <- reference_data$accver
@@ -965,10 +975,12 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
       ggplot2::scale_size_identity() + ggplot2::scale_linewidth_identity() + shape_scale +
       ggplot2::scale_continuous_identity(aesthetics=".ggchord_stat_x")
     if (!is.null(value_transform)) {
-      limits <- value_scale$ggchord_domain_policy$limits
-      # Data-dependent limits use the final shared or facet-specific domain.
-      q <- q + scale_y_continuous(transform = value_transform,
-        limits = if (is.numeric(limits)) limits, oob = value_scale$oob)
+      # Preserve native transform and OOB order in the source build.
+      native_y <- value_scale$clone()
+      native_y$guide <- "none"
+      # Function limits use the jointly trained domain during projection.
+      if (is.function(native_y$limits)) native_y$limits <- NULL
+      q <- q + native_y
     }
     if (nrow(domains) > 1L)
       q <- q + ggplot2::facet_wrap(ggplot2::vars(.track_domain), scales = "free")
@@ -1243,7 +1255,7 @@ ggchord_track_bin_stat <- function(stat) {
 
 ggchord_track_native_geometry <- function(d, p, layout, sc, at_value, draw_rows) {
   pieces <- list(); group <- 0L
-  map_value <- function(x) sc$map(suppressWarnings(sc$transform(x)))
+  map_value <- function(x) ggchord_track_fraction(sc, suppressWarnings(sc$transform(x)))
   add <- function(pos, value, rows, component) {
     if (!length(pos)) return()
     mapped <- map_value(value)
@@ -1265,6 +1277,8 @@ ggchord_track_native_geometry <- function(d, p, layout, sc, at_value, draw_rows)
   }
   path <- function(x, y, rows) {
     if (length(x) < 2L) return(list(x = x, y = y, rows = rows))
+    transform <- sc$get_transformation()
+    y <- transform$transform(y)
     xx <- yy <- numeric(); rr <- integer()
     for (i in seq_len(length(x) - 1L)) {
       n <- if (isTRUE(layout$collinear)) 2L else 16L
@@ -1272,7 +1286,7 @@ ggchord_track_native_geometry <- function(d, p, layout, sc, at_value, draw_rows)
       yy <- c(yy, seq(y[i], y[i+1L], length.out = n))
       rr <- c(rr, rep(rows[i], n-1L), rows[i+1L])
     }
-    list(x = xx, y = yy, rows = rr)
+    list(x = xx, y = transform$inverse(yy), rows = rr)
   }
   geom <- p$native_geom
   if (geom %in% c("line", "path", "step", "area", "ribbon")) {

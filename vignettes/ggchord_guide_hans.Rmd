@@ -32,7 +32,7 @@ library(ggplot2)
 
 从完整参考表起图。观察层各自接收数据并在该表上求值映射。可以添加另一层 geom_seq()，在同一参考上使用第二种骨架样式，也可以省略骨架而保留坐标框架。
 
-将连带填色映射到 `pident`，默认使用 0 到 100 的 Identity (%) 阶梯图例。可用普通填色标度自定义。
+将连带填色映射到 `pident`，再添加 `scale_fill_pident()`，即可绘制 0 到 100 的 Identity (%) 阶梯图例。
 
 ```{r workflow-2}
 refs <- seq_data_example
@@ -40,9 +40,10 @@ relationships <- ribbon_data_example
 
 comparison <- ggchord(refs) +
   geom_link_ribbon(aes(fill = pident), data = relationships) +
+  scale_fill_pident() +
   geom_seq(linewidth = 0.6) +
   geom_seq_label() +
-  scale_seq_position(guide = "none")
+  scale_seq_continuous(guide = "none")
 
 comparison + coord_chord(start_angle = 90)
 ```
@@ -107,9 +108,9 @@ signal <- data.frame(accver = "A", pos = c(50, 250, 450, 650, 850),
 
 ggchord(ref) +
   geom_seq() +
-  track_band("signal", thickness = 6) +
+  layout_track("signal", thickness = 6) +
   geom_track_line(data = signal, track = "signal", colour = "#277A73") +
-  scale_track_value("signal", name = "Signal") +
+  scale_y_continuous(name = "Signal") +
   coord_collinear()
 ```
 

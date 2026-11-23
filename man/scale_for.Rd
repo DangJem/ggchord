@@ -4,26 +4,25 @@
 \alias{scale_for}
 \title{Train a visual scale on selected layers}
 \usage{
-scale_for(layers, scale)
+scale_for(scale, layers = NULL, tracks = NULL, by = "shared")
 }
 \arguments{
-\item{layers}{One or more explicitly named layer IDs.}
+\item{scale}{A ggplot2 visual scale or a continuous track Y scale.}
 
-\item{scale}{An ordinary ggplot2 visual scale for those layers.}
+\item{layers, tracks}{Layer IDs or track IDs. Supply at most one selector.}
+
+\item{by}{Train a shared domain or one domain per facet panel. The latter
+applies to track Y scales.}
 }
 \value{
 A scale declaration for a ggchord plot or a Fusion root.
 }
 \description{
-Apply one visual scale to the selected layers, overriding both the
-plot-wide scale and their independent defaults. See \code{\link[=auto_id]{auto_id()}}.
+Apply a ggplot2 scale to selected layers or complete track bands. By default
+the most recently added layer or track supplies the scope. Visual scales
+outside the selected scope continue to train together by aesthetic.
 }
 \details{
-Unscoped backbones and features can use the sequence palette when
-mapped directly to \code{accver}. Features mapped to \code{strand} use red (+),
-blue (-), purple (+/-) and grey (unknown). Circular features mapped to
-\code{type} use the plasmid palette with stable colours for additional types.
-An explicit scale takes precedence.
 Custom ggplot2 statistics continue to receive public aesthetic names,
 such as \code{colour}, on scoped layers.
 Each selected layer needs a mapped aesthetic handled by \code{scale}.
@@ -61,7 +60,8 @@ gene_colours <- c(CDS = "#187B77", tRNA = "#CC7D3A")
 ggchord(data = seqs) + geom_seq() +
   geom_gene(data = genes, aes(fill = type), id = "genes") +
   geom_link_ribbon(data = links, aes(fill = pident), id = "matches") +
-  scale_for("genes", scale_fill_manual(values = gene_colours, name = "Type")) +
-  scale_for("matches", scale_fill_gradient(limits = c(0, 100), name = "Identity (\%)")) +
+  scale_for(scale_fill_manual(values = gene_colours, name = "Type"), layers = "genes") +
+  scale_for(scale_fill_gradient(limits = c(0, 100), name = "Identity (\%)"),
+    layers = "matches") +
   coord_chord()
 }

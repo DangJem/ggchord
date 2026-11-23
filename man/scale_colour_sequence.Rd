@@ -22,7 +22,8 @@ Use the ggchord sequence palette on a discrete colour aesthetic. In a
 ggchord plot each registered reference keeps its colour across layers,
 including layers displaying a subset of references. On a plain ggplot
 colours follow the scale limits.
-
+}
+\details{
 With default scales, mapping both backbone colour and feature fill to
 \code{accver} composes their glyphs in each shared legend key. Use
 \code{aesthetics = c("colour", "fill")} to supply one explicit scale for both

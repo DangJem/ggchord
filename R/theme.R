@@ -5,8 +5,9 @@
 #'
 #' @param base_size Base font size in points.
 #' @param base_family Base font family.
-#' @param ... Named ggplot2 theme elements, including ggchord sequence and
-#'   track axis elements. Explicit settings override theme defaults.
+#' @param ... Must be empty.
+#' @details Add `theme()` to configure registered `ggchord.*` elements or
+#'   standard ggplot2 theme elements.
 #' @return A ggplot2 theme.
 #' @export
 #' @examples
@@ -26,12 +27,13 @@
 #' p_basic <- ggchord(seqs) + geom_seq() +
 #'   geom_gene(data = genes) + coord_collinear()
 #'
-#' p_basic + theme_ggchord(base_size = 12,
-#'   legend.position = "bottom",
+#' p_basic + theme_ggchord(base_size = 12) +
+#'   theme(legend.position = "bottom",
 #'   ggchord.axis.text = element_text(colour = "#40545A"))
 theme_ggchord <- function(base_size = 11, base_family = "", ...) {
   ggchord_local_console_errors()
-  ggchord_make_theme(base_size, base_family, "default", list(...))
+  ggchord_check_theme_arguments(...)
+  ggchord_make_theme(base_size, base_family, "default")
 }
 
 #' Minimal sequence-plot appearance
@@ -57,7 +59,8 @@ theme_ggchord <- function(base_size = 11, base_family = "", ...) {
 #' p_basic + theme_ggchord_minimal(base_size = 11)
 theme_ggchord_minimal <- function(base_size = 11, base_family = "", ...) {
   ggchord_local_console_errors()
-  ggchord_make_theme(base_size, base_family, "minimal", list(...))
+  ggchord_check_theme_arguments(...)
+  ggchord_make_theme(base_size, base_family, "minimal")
 }
 
 #' Dark sequence-plot appearance
@@ -83,7 +86,8 @@ theme_ggchord_minimal <- function(base_size = 11, base_family = "", ...) {
 #' p_basic + theme_ggchord_dark(base_size = 11)
 theme_ggchord_dark <- function(base_size = 11, base_family = "", ...) {
   ggchord_local_console_errors()
-  ggchord_make_theme(base_size, base_family, "dark", list(...))
+  ggchord_check_theme_arguments(...)
+  ggchord_make_theme(base_size, base_family, "dark")
 }
 
 #' Publication sequence-plot appearance
@@ -109,13 +113,14 @@ theme_ggchord_dark <- function(base_size = 11, base_family = "", ...) {
 #' p_basic + theme_ggchord_publication(base_size = 10)
 theme_ggchord_publication <- function(base_size = 10, base_family = "", ...) {
   ggchord_local_console_errors()
-  ggchord_make_theme(base_size, base_family, "publication", list(...))
+  ggchord_check_theme_arguments(...)
+  ggchord_make_theme(base_size, base_family, "publication")
 }
 
 #' Plasmid sequence-plot appearance
 #'
 #' The warm ivory background and dark sequence axis distinguish annotations
-#' from major and minor ticks. Use `scale_seq_position(guide = "none")`
+#' from major and minor ticks. Use `scale_seq_continuous(guide = "none")`
 #' to omit the sequence guide.
 #' @inheritParams theme_ggchord
 #' @return An ordinary ggplot2 theme.
@@ -140,16 +145,21 @@ theme_ggchord_publication <- function(base_size = 10, base_family = "", ...) {
 #'   coord_circular() + theme_ggchord_plasmid()
 theme_ggchord_plasmid <- function(base_size = 11, base_family = "", ...) {
   ggchord_local_console_errors()
-  ggchord_make_theme(base_size, base_family, "plasmid", list(...))
+  ggchord_check_theme_arguments(...)
+  ggchord_make_theme(base_size, base_family, "plasmid")
 }
 
-ggchord_make_theme <- function(base_size, base_family, variant, overrides) {
+ggchord_check_theme_arguments <- function(...) {
+  if (...length())
+    ggchord_stop("Add + theme(...) to set theme elements. Presets accept base_size and base_family.")
+}
+
+ggchord_make_theme <- function(base_size, base_family, variant) {
   if (!is.numeric(base_size) || length(base_size) != 1L ||
       !is.finite(base_size) || base_size <= 0)
     ggchord_stop("base_size must be a positive font size in points")
   if (!is.character(base_family) || length(base_family) != 1L || is.na(base_family))
     ggchord_stop("base_family must be one font family")
-  ggchord_check_param_names(overrides, names(ggplot2::get_element_tree()), "theme_ggchord()")
   blank <- element_blank()
   dark <- variant == "dark"
   publication <- variant == "publication"
@@ -197,8 +207,7 @@ ggchord_make_theme <- function(base_size, base_family, variant, overrides) {
   if (plasmid) out <- out + theme(ggchord.axis.gap = unit(0, "mm"),
     ggchord.axis.minor.ticks.length = unit(.8, "mm"), plot.margin = margin(6, 6, 6, 6))
   if (publication) out <- out + theme(plot.margin = margin(4, 4, 4, 4, unit = "mm"))
-  if (length(overrides)) out <- out + do.call(theme, overrides)
-  attr(out, "ggchord.explicit_theme") <- overrides
+  attr(out, "ggchord.explicit_theme") <- list()
   out
 }
 
@@ -283,8 +292,7 @@ ggchord_unit_inches <- function(x) {
 ggchord_plot_settings <- function(plot) {
   found <- attr(plot$theme, "ggchord.settings")
   if (is.null(found)) {
-    nms <- setdiff(names(formals(theme_ggchord)), "...")
-    found <- ggchord_theme_settings(setNames(rep(list(NULL), length(nms)), nms))
+    found <- ggchord_theme_settings(list())
   }
   physical <- c("axis", "axis.gap", "axis.ticks.length", "axis.minor.ticks.length",
     "axis.text.offset", "axis.text.orientation", "axis.text.check.overlap")

@@ -38,7 +38,7 @@ ggchord_empty_seq_scale_geometry <- function() data.frame(
 #' @param height Scale-bar height in millimetres.
 #' @param text_size Scale-bar text size in ggplot2 text units.
 #' @param colour Fixed colour.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
 #' @examples
 #' seqs <- data.frame(

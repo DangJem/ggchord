@@ -27,28 +27,14 @@ reconstruct_layer <- function(lyr, data, mapping = NULL) {
   new
 }
 
-#' Choose a layer identifier and default scale scope
+#' Assign a plot-local layer identifier automatically
 #'
-#' In a ggchord plot, layers that map the same visual aesthetic train their
-#' own scales by default. A character ID gives a layer a stable name for
-#' [scale_for()], label binding and export. An ordinary explicit scale applies
-#' to all layers mapping its aesthetic except those selected by `scale_for()`.
-#' Use `id = NULL` or a scalar `NA` on each layer that should share the
-#' ordinary ggplot2 scale. Fixed styles and position scales are independent
-#' of this choice. Native ggplot2 plots use their ordinary scales.
-#' @return A declaration resolved when the layers of a plot are registered.
+#' IDs identify layers for [scale_for()], label binding and export. Ordinary
+#' visual scales are shared across layers by aesthetic.
+#' @return A declaration resolved when the layer is added.
 #' @export
 #' @examples
-#' library(ggplot2)
-#' seqs <- data.frame(accver = c("A", "B"), length = c(1000, 800))
-#' genes <- data.frame(accver = c("A", "B"), start = c(100, 150),
-#'   end = c(240, 380), strand = c("+", "-"), label = c("a", "b"))
-#' ggchord(seqs) +
-#'   geom_seq(aes(colour = accver)) +
-#'   geom_gene(aes(colour = strand), data = genes)
-#' ggchord(seqs) +
-#'   geom_seq(aes(colour = accver), id = NULL) +
-#'   geom_gene(aes(colour = strand), data = genes, id = NA)
+#' ggchord(seq_data_example) + geom_seq(id = auto_id())
 auto_id <- function() {
   ggchord_local_console_errors()
   structure(list(), class = "ggchord_auto_id")
@@ -71,29 +57,38 @@ ggchord_check_layer_id <- function(id) {
   invisible(id)
 }
 
-# Register a plot-local copy without changing the caller's layer object.
+# Freeze identity on a plot-local copy. Native layers retain their methods.
+ggchord_assign_layer_id <- function(layer, occupied, index) {
+  id <- layer$ggchord_layer_id %||% ggchord_declared_id(layer$ggchord_params$id)
+  if (!is.null(id) && id %in% occupied) ggchord_stop("Duplicate layer id '", id, "'")
+  if (is.null(id)) {
+    id <- sprintf("layer-%04d", index)
+    while (id %in% occupied) {
+      index <- index + 1L
+      id <- sprintf("layer-%04d", index)
+    }
+  }
+  copy <- if (is.null(layer$ggchord_type)) ggproto(NULL, layer) else
+    reconstruct_layer(layer, layer$data, mapping = layer$mapping)
+  copy$ggchord_layer_id <- id
+  copy
+}
+
+# Prepare disposable drawing copies. Older plot objects can lack frozen IDs.
 ggchord_register_layers <- function(plot) {
-  next_id <- 0L
-  declared <- lapply(plot$layers, function(layer) {
-    if (is.null(layer$ggchord_type)) layer$ggchord_layer_id else ggchord_declared_id(layer$ggchord_params$id)
-  })
-  declared <- Filter(Negate(is.null), declared)
-  for (id in declared) ggchord_check_layer_id(id)
-  reserved <- unlist(declared, use.names = FALSE)
-  if (anyDuplicated(reserved)) ggchord_stop("Duplicate layer id '", reserved[anyDuplicated(reserved)], "'")
-  plot$layers <- lapply(plot$layers, function(layer) {
+  ids <- lapply(plot$layers, function(layer)
+    layer$ggchord_layer_id %||% ggchord_declared_id(layer$ggchord_params$id))
+  occupied <- unlist(ids, use.names = FALSE)
+  if (anyDuplicated(occupied))
+    ggchord_stop("Duplicate layer id '", occupied[anyDuplicated(occupied)], "'")
+  plot$layers <- lapply(seq_along(plot$layers), function(i) {
+    layer <- plot$layers[[i]]
+    if (is.null(layer$ggchord_layer_id)) {
+      layer <- ggchord_assign_layer_id(layer, setdiff(occupied, ids[[i]]), i)
+      occupied <<- c(occupied, layer$ggchord_layer_id)
+    }
     if (is.null(layer$ggchord_type)) return(layer)
     copy <- reconstruct_layer(layer, layer$data, mapping = layer$mapping)
-    next_id <<- next_id + 1L
-    id <- ggchord_declared_id(copy$ggchord_params$id)
-    if (is.null(id)) {
-      id <- sprintf("layer-%04d", next_id)
-      while (id %in% reserved) {
-        next_id <<- next_id + 1L
-        id <- sprintf("layer-%04d", next_id)
-      }
-    }
-    copy$ggchord_layer_id <- id
     type <- copy$ggchord_params$type
     copy$ggchord_params$plot_data <- list(if (!is_waiver(plot$data)) plot$data)
     copy$ggchord_params$reference <- plot$ggchord$data$seq_data

@@ -40,7 +40,8 @@
         "layout_sequences",
         "layout_dotplot",
         "suggest_sequence_layout",
-        "track_band"
+        "layout_track",
+        "add_track"
       ],
       "previous_anchors": []
     },
@@ -131,10 +132,25 @@
         "scale_fill_strand",
         "scale_fill_feature_type",
         "scale_fill_pident",
-        "scale_seq_position",
-        "scale_track_value",
+        "scale_seq_continuous",
         "scale_fill_residue",
-        "track_limits"
+        "track_limits",
+        "scales_ggchord",
+        "pal_ggchord",
+        "pal_sequence",
+        "pal_strand",
+        "pal_feature_type",
+        "pal_plasmid",
+        "pal_pident",
+        "pal_link_pident",
+        "pal_signal",
+        "pal_residue",
+        "scale_colour_ggchord",
+        "scale_fill_ggchord",
+        "scale_fill_plasmid",
+        "scale_colour_link_pident",
+        "scale_fill_signal",
+        "scale_colour_signal"
       ],
       "previous_anchors": [
         "scales-and-guides",
@@ -373,7 +389,7 @@
         "coord_collinear",
         "coord_radial_synteny",
         "coord_sankey",
-        "scale_seq_position",
+        "scale_seq_continuous",
         "coord_circular"
       ],
       "native": false,
@@ -658,7 +674,7 @@
       "related": [
         "facet_null",
         "facet_grid",
-        "scale_track_value"
+        "track_limits"
       ],
       "native": true,
       "defaults": {
@@ -794,7 +810,7 @@
         "coord_collinear",
         "coord_radial_synteny",
         "coord_sankey",
-        "track_band"
+        "layout_track"
       ],
       "native": false,
       "defaults": {
@@ -883,41 +899,6 @@
         "reference": "NULL",
         "weight": "\"aligned_length\"",
         "min_support": "0.1"
-      }
-    },
-    "track_band": {
-      "usage": "track_band(\n  id = \"default\", side = \"positive\", order = 1,\n  thickness = 4, gap = 1\n)",
-      "arguments": [
-        [
-          "id"
-        ],
-        [
-          "side"
-        ],
-        [
-          "order"
-        ],
-        [
-          "thickness"
-        ],
-        [
-          "gap"
-        ]
-      ],
-      "roles": [],
-      "examples": "ggchord(data = seqs) + geom_seq() +\n  track_band(\"signal\", thickness = 5, gap = 2) +\n  geom_track_line(data = signal, aes(x = pos, y = value), track = \"signal\") +\n  scale_track_value(\"signal\", name = \"Signal\") + coord_collinear()",
-      "related": [
-        "geom_track",
-        "scale_track_value",
-        "position_offset"
-      ],
-      "native": false,
-      "defaults": {
-        "id": "\"default\"",
-        "side": "\"positive\"",
-        "order": "1",
-        "thickness": "4",
-        "gap": "1"
       }
     },
     "geom_seq": {
@@ -2505,7 +2486,7 @@
       }
     },
     "geom_track": {
-      "usage": "geom_track(\n  mapping = NULL,\n  data = NULL,\n  geom = \"point\",\n  stat = NULL,\n  position = NULL,\n  track = \"default\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
+      "usage": "geom_track(\n  mapping = NULL,\n  data = NULL,\n  geom = \"point\",\n  stat = NULL,\n  position = NULL,\n  track = NULL,\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
       "arguments": [
         [
           "mapping"
@@ -2549,13 +2530,13 @@
         "`colour, fill, alpha, linewidth, linetype`",
         "`start, end`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track(aes(x = pos, y = value), data = signal, geom = \"line\") +\n  scale_track_value(name = \"Signal\") +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track(aes(x = pos, y = value), data = signal, geom = \"line\") +\n  scale_y_continuous(name = \"Signal\") +\n  coord_collinear()",
       "related": [
         "geom_track_line",
         "geom_track_col",
         "geom_track_interval",
-        "track_band",
-        "scale_track_value"
+        "layout_track",
+        "track_limits"
       ],
       "native": false,
       "defaults": {
@@ -2564,7 +2545,7 @@
         "geom": "\"point\"",
         "stat": "NULL",
         "position": "NULL",
-        "track": "\"default\"",
+        "track": "NULL",
         "...": "",
         "na.rm": "FALSE",
         "show.legend": "NA",
@@ -2573,7 +2554,7 @@
       }
     },
     "geom_track_point": {
-      "usage": "geom_track_point(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  track = \"default\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
+      "usage": "geom_track_point(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  track = NULL,\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
       "arguments": [
         [
           "mapping"
@@ -2613,11 +2594,11 @@
         "`group`",
         "`colour, fill, alpha, linewidth, linetype`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_point(aes(x = pos, y = value), data = signal, size = 2) +\n  scale_track_value(name = \"Signal\") +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_point(aes(x = pos, y = value), data = signal, size = 2) +\n  scale_y_continuous(name = \"Signal\") +\n  coord_collinear()",
       "related": [
         "geom_track",
-        "track_band",
-        "scale_track_value",
+        "layout_track",
+        "track_limits",
         "stat_coverage"
       ],
       "native": false,
@@ -2626,7 +2607,7 @@
         "data": "NULL",
         "stat": "\"identity\"",
         "position": "\"identity\"",
-        "track": "\"default\"",
+        "track": "NULL",
         "...": "",
         "na.rm": "FALSE",
         "show.legend": "NA",
@@ -2635,7 +2616,7 @@
       }
     },
     "geom_track_line": {
-      "usage": "geom_track_line(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  track = \"default\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
+      "usage": "geom_track_line(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  track = NULL,\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
       "arguments": [
         [
           "mapping"
@@ -2675,11 +2656,11 @@
         "`group`",
         "`colour, fill, alpha, linewidth, linetype`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  track_band(thickness = 12, gap = 8) +\n  geom_track_line(\n    aes(x = pos, y = value), data = unordered_signal,\n    colour = \"#187B77\", linewidth = 0.8\n  ) +\n  geom_track_point(\n    aes(x = pos, y = value), data = unordered_signal,\n    colour = \"#187B77\", size = 2\n  ) +\n  scale_track_value(name = \"Signal\") +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_line(\n    aes(x = pos, y = value), data = unordered_signal,\n    colour = \"#187B77\", linewidth = 0.8\n  ) +\n  geom_track_point(\n    aes(x = pos, y = value), data = unordered_signal,\n    colour = \"#187B77\", size = 2\n  ) +\n  scale_y_continuous(name = \"Signal\") +\n  coord_collinear()",
       "related": [
         "geom_track",
-        "track_band",
-        "scale_track_value",
+        "layout_track",
+        "track_limits",
         "stat_coverage"
       ],
       "native": false,
@@ -2688,7 +2669,7 @@
         "data": "NULL",
         "stat": "\"identity\"",
         "position": "\"identity\"",
-        "track": "\"default\"",
+        "track": "NULL",
         "...": "",
         "na.rm": "FALSE",
         "show.legend": "NA",
@@ -2697,7 +2678,7 @@
       }
     },
     "geom_track_path": {
-      "usage": "geom_track_path(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  track = \"default\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
+      "usage": "geom_track_path(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  track = NULL,\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
       "arguments": [
         [
           "mapping"
@@ -2737,11 +2718,11 @@
         "`group`",
         "`colour, fill, alpha, linewidth, linetype`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  track_band(thickness = 12, gap = 8) +\n  geom_track_path(\n    aes(x = pos, y = value), data = unordered_signal,\n    colour = \"#187B77\", linewidth = 0.8\n  ) +\n  geom_track_point(\n    aes(x = pos, y = value), data = unordered_signal,\n    colour = \"#187B77\", size = 2\n  ) +\n  scale_track_value(name = \"Signal\") +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_path(\n    aes(x = pos, y = value), data = unordered_signal,\n    colour = \"#187B77\", linewidth = 0.8\n  ) +\n  geom_track_point(\n    aes(x = pos, y = value), data = unordered_signal,\n    colour = \"#187B77\", size = 2\n  ) +\n  scale_y_continuous(name = \"Signal\") +\n  coord_collinear()",
       "related": [
         "geom_track",
-        "track_band",
-        "scale_track_value",
+        "layout_track",
+        "track_limits",
         "stat_coverage"
       ],
       "native": false,
@@ -2750,7 +2731,7 @@
         "data": "NULL",
         "stat": "\"identity\"",
         "position": "\"identity\"",
-        "track": "\"default\"",
+        "track": "NULL",
         "...": "",
         "na.rm": "FALSE",
         "show.legend": "NA",
@@ -2759,7 +2740,7 @@
       }
     },
     "geom_track_step": {
-      "usage": "geom_track_step(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  track = \"default\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
+      "usage": "geom_track_step(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  track = NULL,\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
       "arguments": [
         [
           "mapping"
@@ -2799,11 +2780,11 @@
         "`group`",
         "`colour, fill, alpha, linewidth, linetype`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_step(aes(x = pos, y = value), data = signal, direction = \"hv\") +\n  scale_track_value(name = \"Signal\") +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_step(aes(x = pos, y = value), data = signal, direction = \"hv\") +\n  scale_y_continuous(name = \"Signal\") +\n  coord_collinear()",
       "related": [
         "geom_track",
-        "track_band",
-        "scale_track_value",
+        "layout_track",
+        "track_limits",
         "stat_coverage"
       ],
       "native": false,
@@ -2812,7 +2793,7 @@
         "data": "NULL",
         "stat": "\"identity\"",
         "position": "\"identity\"",
-        "track": "\"default\"",
+        "track": "NULL",
         "...": "",
         "na.rm": "FALSE",
         "show.legend": "NA",
@@ -2821,7 +2802,7 @@
       }
     },
     "geom_track_col": {
-      "usage": "geom_track_col(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"stack\",\n  track = \"default\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
+      "usage": "geom_track_col(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"stack\",\n  track = NULL,\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
       "arguments": [
         [
           "mapping"
@@ -2861,11 +2842,11 @@
         "`group`",
         "`colour, fill, alpha, linewidth, linetype`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_col(aes(x = pos, y = value), data = signal, width = 40) +\n  scale_track_value(name = \"Signal\") +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_col(aes(x = pos, y = value), data = signal, width = 40) +\n  scale_y_continuous(name = \"Signal\") +\n  coord_collinear()",
       "related": [
         "geom_track",
-        "track_band",
-        "scale_track_value",
+        "layout_track",
+        "track_limits",
         "stat_coverage"
       ],
       "native": false,
@@ -2874,7 +2855,7 @@
         "data": "NULL",
         "stat": "\"identity\"",
         "position": "\"stack\"",
-        "track": "\"default\"",
+        "track": "NULL",
         "...": "",
         "na.rm": "FALSE",
         "show.legend": "NA",
@@ -2883,7 +2864,7 @@
       }
     },
     "geom_track_bar": {
-      "usage": "geom_track_bar(\n  mapping = NULL,\n  data = NULL,\n  stat = \"count\",\n  position = \"stack\",\n  track = \"default\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
+      "usage": "geom_track_bar(\n  mapping = NULL,\n  data = NULL,\n  stat = \"count\",\n  position = \"stack\",\n  track = NULL,\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
       "arguments": [
         [
           "mapping"
@@ -2923,11 +2904,11 @@
         "`group`",
         "`colour, fill, alpha, linewidth, linetype`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_bar(aes(x = pos), data = signal, width = 40) +\n  scale_track_value(name = \"Count\") +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_bar(aes(x = pos), data = signal, width = 40) +\n  scale_y_continuous(name = \"Count\") +\n  coord_collinear()",
       "related": [
         "geom_track",
-        "track_band",
-        "scale_track_value",
+        "layout_track",
+        "track_limits",
         "stat_coverage"
       ],
       "native": false,
@@ -2936,7 +2917,7 @@
         "data": "NULL",
         "stat": "\"count\"",
         "position": "\"stack\"",
-        "track": "\"default\"",
+        "track": "NULL",
         "...": "",
         "na.rm": "FALSE",
         "show.legend": "NA",
@@ -2945,7 +2926,7 @@
       }
     },
     "geom_track_area": {
-      "usage": "geom_track_area(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"stack\",\n  track = \"default\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
+      "usage": "geom_track_area(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"stack\",\n  track = NULL,\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
       "arguments": [
         [
           "mapping"
@@ -2985,11 +2966,11 @@
         "`group`",
         "`colour, fill, alpha, linewidth, linetype`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_area(aes(x = pos, y = value), data = signal, position = \"identity\") +\n  scale_track_value(name = \"Signal\") +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_area(aes(x = pos, y = value), data = signal, position = \"identity\") +\n  scale_y_continuous(name = \"Signal\") +\n  coord_collinear()",
       "related": [
         "geom_track",
-        "track_band",
-        "scale_track_value",
+        "layout_track",
+        "track_limits",
         "stat_coverage"
       ],
       "native": false,
@@ -2998,7 +2979,7 @@
         "data": "NULL",
         "stat": "\"identity\"",
         "position": "\"stack\"",
-        "track": "\"default\"",
+        "track": "NULL",
         "...": "",
         "na.rm": "FALSE",
         "show.legend": "NA",
@@ -3007,7 +2988,7 @@
       }
     },
     "geom_track_tile": {
-      "usage": "geom_track_tile(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  track = \"default\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
+      "usage": "geom_track_tile(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  track = NULL,\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
       "arguments": [
         [
           "mapping"
@@ -3047,11 +3028,11 @@
         "`group`",
         "`colour, fill, alpha, linewidth, linetype`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_tile(aes(x = pos, y = value, fill = value), data = signal, width = 40, height = 0.5) +\n  scale_track_value(name = \"Signal\") +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_tile(aes(x = pos, y = value, fill = value), data = signal, width = 40, height = 0.5) +\n  scale_y_continuous(name = \"Signal\") +\n  coord_collinear()",
       "related": [
         "geom_track",
-        "track_band",
-        "scale_track_value",
+        "layout_track",
+        "track_limits",
         "stat_coverage"
       ],
       "native": false,
@@ -3060,7 +3041,7 @@
         "data": "NULL",
         "stat": "\"identity\"",
         "position": "\"identity\"",
-        "track": "\"default\"",
+        "track": "NULL",
         "...": "",
         "na.rm": "FALSE",
         "show.legend": "NA",
@@ -3069,7 +3050,7 @@
       }
     },
     "geom_track_interval": {
-      "usage": "geom_track_interval(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  track = \"default\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
+      "usage": "geom_track_interval(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  track = NULL,\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
       "arguments": [
         [
           "mapping"
@@ -3109,8 +3090,8 @@
       "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_interval(aes(fill = type), data = states) +\n  scale_fill_manual(values = gene_colours) +\n  coord_collinear()",
       "related": [
         "geom_track",
-        "track_band",
-        "scale_track_value",
+        "layout_track",
+        "track_limits",
         "stat_coverage"
       ],
       "native": false,
@@ -3119,7 +3100,7 @@
         "data": "NULL",
         "stat": "\"identity\"",
         "position": "\"identity\"",
-        "track": "\"default\"",
+        "track": "NULL",
         "...": "",
         "na.rm": "FALSE",
         "show.legend": "NA",
@@ -3161,7 +3142,7 @@
       "roles": [],
       "examples": "ggchord(one_seq) +\n  geom_seq() +\n  coord_collinear() +\n  annotation_seq_scalebar(length = 100, sequence = \"A\")",
       "related": [
-        "scale_seq_position",
+        "scale_seq_continuous",
         "geom_seq",
         "layout_sequences"
       ],
@@ -3355,7 +3336,7 @@
       }
     },
     "stat_coverage": {
-      "usage": "stat_coverage(\n  mapping = NULL, data = NULL,\n  geom = \"track_col\", position = \"identity\",\n  binwidth = NULL, windows = NULL, bounds = \"error\",\n  track = \"default\", ..., na.rm = FALSE,\n  show.legend = NA, inherit.aes = TRUE, id = auto_id()\n)",
+      "usage": "stat_coverage(\n  mapping = NULL, data = NULL,\n  geom = \"track_col\", position = \"identity\",\n  binwidth = NULL, windows = NULL, bounds = \"error\",\n  track = NULL, ..., na.rm = FALSE,\n  show.legend = NA, inherit.aes = TRUE, id = auto_id()\n)",
       "arguments": [
         [
           "mapping"
@@ -3403,12 +3384,12 @@
         "`y`",
         "`fill, colour, alpha`"
       ],
-      "examples": "ggchord(data = seqs) + geom_seq() +\n  track_band(\"coverage\", thickness = 5) +\n  stat_coverage(data = intervals, binwidth = 100, track = \"coverage\") +\n  scale_track_value(\"coverage\", limits = c(0, 1),\n                    labels = scales::label_percent()) +\n  coord_collinear()\n\n# 同一个统计通过Geom入口调用\nggchord(data = seqs) +\n  geom_track_line(data = intervals, aes(y = after_stat(mean_depth)),\n                  stat = \"coverage\", binwidth = 100) +\n  coord_collinear()",
+      "examples": "ggchord(data = seqs) + geom_seq() +\n  layout_track(\"coverage\", thickness = 5) +\n  stat_coverage(data = intervals, binwidth = 100, track = \"coverage\") +\n  scale_y_continuous(limits = c(0, 1),\n                    labels = scales::label_percent()) +\n  coord_collinear()\n\n# 同一个统计通过Geom入口调用\nggchord(data = seqs) +\n  geom_track_line(data = intervals, aes(y = after_stat(mean_depth)),\n                  stat = \"coverage\", binwidth = 100) +\n  coord_collinear()",
       "related": [
         "geom_track",
         "geom_track_interval",
-        "scale_track_value",
-        "track_band",
+        "track_limits",
+        "layout_track",
         "geom_track_col"
       ],
       "native": false,
@@ -3420,7 +3401,7 @@
         "binwidth": "NULL",
         "windows": "NULL",
         "bounds": "\"error\"",
-        "track": "\"default\"",
+        "track": "NULL",
         "...": "",
         "na.rm": "FALSE",
         "show.legend": "NA",
@@ -3556,126 +3537,35 @@
       }
     },
     "scale_for": {
-      "usage": "scale_for(layers, scale)",
+      "usage": "scale_for(scale, layers = NULL, tracks = NULL, by = \"shared\")",
       "arguments": [
+        [
+          "scale"
+        ],
         [
           "layers"
         ],
         [
-          "scale"
+          "tracks"
+        ],
+        [
+          "by"
         ]
       ],
       "roles": [],
-      "examples": "ggchord(seqs) +\n  geom_link_ribbon(aes(fill = pident), data = links) +\n  geom_gene(aes(fill = strand), data = genes, id = \"genes\") +\n  scale_for(\"genes\", scale_fill_strand(name = \"Strand\"))",
+      "examples": "ggchord(seqs) +\n  geom_link_ribbon(aes(fill = pident), data = links) +\n  geom_gene(aes(fill = strand), data = genes, id = \"genes\") +\n  scale_for(scale_fill_strand(), layers = \"genes\")",
       "related": [
         "auto_id",
-        "layer_id",
-        "scale_track_value",
-        "scale_seq_position",
-        "scale_fill_strand",
-        "scale_fill_pident"
-      ],
-      "native": false,
-      "defaults": {
-        "layers": "",
-        "scale": ""
-      }
-    },
-    "scale_seq_position": {
-      "usage": "scale_seq_position(\n  name = waiver(), breaks = waiver(), minor_breaks = waiver(),\n  labels = waiver(), coordinates = \"local\",\n  guide = guide_seq_axis()\n)",
-      "arguments": [
-        [
-          "name"
-        ],
-        [
-          "breaks"
-        ],
-        [
-          "minor_breaks"
-        ],
-        [
-          "labels"
-        ],
-        [
-          "coordinates"
-        ],
-        [
-          "guide"
-        ]
-      ],
-      "roles": [],
-      "examples": "ggchord(data = seqs) + geom_seq() +\n  scale_seq_position(\n    breaks = scales::breaks_width(200),\n    labels = scales::label_number(suffix = \" bp\")\n  ) + coord_collinear()",
-      "related": [
-        "guide_seq_axis",
-        "layout_sequences",
-        "coord_collinear",
-        "annotation_seq_scalebar"
-      ],
-      "native": false,
-      "defaults": {
-        "name": "waiver()",
-        "breaks": "waiver()",
-        "minor_breaks": "waiver()",
-        "labels": "waiver()",
-        "coordinates": "\"local\"",
-        "guide": "guide_seq_axis()"
-      }
-    },
-    "scale_track_value": {
-      "usage": "scale_track_value(\n  track = \"default\", name = waiver(), limits = NULL,\n  breaks = waiver(), labels = waiver(), transform = \"identity\",\n  oob = scales::censor, unit = NULL, domain = \"shared\",\n  guide = guide_track_axis()\n)",
-      "arguments": [
-        [
-          "track"
-        ],
-        [
-          "name"
-        ],
-        [
-          "limits"
-        ],
-        [
-          "breaks"
-        ],
-        [
-          "labels"
-        ],
-        [
-          "transform"
-        ],
-        [
-          "oob"
-        ],
-        [
-          "unit"
-        ],
-        [
-          "domain"
-        ],
-        [
-          "guide"
-        ]
-      ],
-      "roles": [],
-      "examples": "ggchord(data = seqs) +\n  track_band(\"signal\", thickness = 6) +\n  geom_track_line(data = signal, aes(x = pos, y = value), track = \"signal\") +\n  scale_track_value(\"signal\", limits = c(0, 6), breaks = c(0, 3, 6),\n                    name = \"Signal\", unit = \"a.u.\") +\n  coord_collinear()",
-      "related": [
-        "track_band",
-        "guide_track_axis",
+        "layout_track",
         "track_limits",
-        "scale_for",
-        "stat_coverage"
+        "scale_seq_continuous"
       ],
       "native": false,
       "defaults": {
-        "track": "\"default\"",
-        "name": "waiver()",
-        "limits": "NULL",
-        "breaks": "waiver()",
-        "labels": "waiver()",
-        "transform": "\"identity\"",
-        "oob": "scales::censor",
-        "unit": "NULL",
-        "domain": "\"shared\"",
-        "guide": "guide_track_axis()"
+        "scale": "",
+        "layers": "NULL",
+        "tracks": "NULL",
+        "by": "\"shared\""
       }
     },
     "scale_fill_residue": {
@@ -3718,7 +3608,7 @@
       }
     },
     "track_limits": {
-      "usage": "track_limits(plots, tracks = \"default\")",
+      "usage": "track_limits(plots, tracks = NULL)",
       "arguments": [
         [
           "plots"
@@ -3728,16 +3618,16 @@
         ]
       ],
       "roles": [],
-      "examples": "p1 <- ggchord(data = seqs) +\n  geom_track_line(data = signal, aes(x = pos, y = value)) + coord_collinear()\nsignal2 <- transform(signal, value = value * 2)\np2 <- ggchord(data = seqs) +\n  geom_track_line(data = signal2, aes(x = pos, y = value)) + coord_collinear()\nrng <- track_limits(list(first = p1, second = p2))\np1 + scale_track_value(limits = rng$limits[[1]])\np2 + scale_track_value(limits = rng$limits[[1]])",
+      "examples": "p1 <- ggchord(data = seqs) +\n  geom_track_line(data = signal, aes(x = pos, y = value)) + coord_collinear()\nsignal2 <- transform(signal, value = value * 2)\np2 <- ggchord(data = seqs) +\n  geom_track_line(data = signal2, aes(x = pos, y = value)) + coord_collinear()\nrng <- track_limits(list(first = p1, second = p2))\np1 + scale_y_continuous(limits = rng$limits[[1]])\np2 + scale_y_continuous(limits = rng$limits[[1]])",
       "related": [
-        "scale_track_value",
+        "track_limits",
         "ggchord_fusion",
         "export_ggchord_layout"
       ],
       "native": false,
       "defaults": {
         "plots": "",
-        "tracks": "\"default\""
+        "tracks": "NULL"
       }
     },
     "guide_seq_axis": {
@@ -3760,9 +3650,9 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(data = seqs) + geom_seq() +\n  scale_seq_position(breaks = scales::breaks_width(200),\n    guide = guide_seq_axis(sequences = \"A\", side = \"negative\",\n      theme = theme(axis.text = element_text(size = 8)))) +\n  coord_collinear()",
+      "examples": "ggchord(data = seqs) + geom_seq() +\n  scale_seq_continuous(breaks = scales::breaks_width(200),\n    guide = guide_seq_axis(sequences = \"A\", side = \"negative\",\n      theme = theme(axis.text = element_text(size = 8)))) +\n  coord_collinear()",
       "related": [
-        "scale_seq_position",
+        "scale_seq_continuous",
         "theme_ggchord",
         "guide_track_axis"
       ],
@@ -3795,10 +3685,10 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(data = seqs) + track_band(\"signal\") +\n  geom_track_line(data = signal, aes(x = pos, y = value), track = \"signal\") +\n  scale_track_value(\"signal\", guide = guide_track_axis(\n    position = \"end\", sequences = \"A\", angle = 0)) +\n  coord_collinear()",
+      "examples": "ggchord(data = seqs) + layout_track(\"signal\") +\n  geom_track_line(data = signal, aes(x = pos, y = value), track = \"signal\") +\n  scale_y_continuous(guide = guide_track_axis(\n    position = \"end\", sequences = \"A\", angle = 0)) +\n  coord_collinear()",
       "related": [
-        "scale_track_value",
-        "track_band",
+        "track_limits",
+        "layout_track",
         "guide_seq_axis",
         "theme_ggchord"
       ],
@@ -3825,7 +3715,7 @@
         ]
       ],
       "roles": [],
-      "examples": "p_basic + theme_ggchord(base_size = 12,\n  legend.position = \"bottom\",\n  ggchord.axis.text = element_text(colour = \"#40545A\"))",
+      "examples": "p_basic + theme_ggchord(base_size = 12) +\n  theme(legend.position = \"bottom\", ggchord.axis.text = element_text(colour = \"#40545A\"))",
       "related": [
         "theme_ggchord_minimal",
         "theme_ggchord_dark",
@@ -6056,7 +5946,7 @@
       "usage": "auto_id()",
       "arguments": [],
       "roles": [],
-      "examples": "ggchord(seqs) +\n  geom_seq(aes(colour = accver)) +\n  geom_gene(aes(colour = strand), data = genes)\n\nggchord(seqs) +\n  geom_seq(aes(colour = accver), id = NULL) +\n  geom_gene(aes(colour = strand), data = genes, id = NA)",
+      "examples": "ggchord(seqs) + geom_seq(id = auto_id())",
       "related": [
         "layer_id",
         "scale_for",
@@ -6079,6 +5969,341 @@
       ],
       "native": false,
       "defaults": {}
+    },
+    "layout_track": {
+      "usage": "layout_track(id = NULL, side = NULL, order = NULL, thickness = NULL, gap = NULL)",
+      "arguments": [
+        [
+          "id"
+        ],
+        [
+          "side"
+        ],
+        [
+          "order"
+        ],
+        [
+          "thickness"
+        ],
+        [
+          "gap"
+        ]
+      ],
+      "roles": [],
+      "examples": "ggchord(data = seqs) + geom_seq() +\n  geom_track_line(aes(x = pos, y = value), data = signal) +\n  layout_track(thickness = 5, gap = 2) +\n  scale_y_continuous(name = \"Signal\") + coord_collinear()",
+      "related": [
+        "add_track",
+        "geom_track",
+        "scale_for"
+      ],
+      "native": false,
+      "defaults": {
+        "id": "NULL",
+        "side": "NULL",
+        "order": "NULL",
+        "thickness": "NULL",
+        "gap": "NULL"
+      }
+    },
+    "scale_seq_continuous": {
+      "usage": "scale_seq_continuous(\n  name = waiver(), breaks = waiver(), minor_breaks = waiver(),\n  labels = waiver(), coordinates = \"local\",\n  guide = guide_seq_axis()\n)",
+      "arguments": [
+        [
+          "name"
+        ],
+        [
+          "breaks"
+        ],
+        [
+          "minor_breaks"
+        ],
+        [
+          "labels"
+        ],
+        [
+          "coordinates"
+        ],
+        [
+          "guide"
+        ]
+      ],
+      "roles": [],
+      "examples": "ggchord(data = seqs) + geom_seq() +\n  scale_seq_continuous(\n    breaks = scales::breaks_width(200),\n    labels = scales::label_number(suffix = \" bp\")\n  ) + coord_collinear()",
+      "related": [
+        "guide_seq_axis",
+        "layout_sequences",
+        "coord_collinear",
+        "annotation_seq_scalebar"
+      ],
+      "native": false,
+      "defaults": {
+        "name": "waiver()",
+        "breaks": "waiver()",
+        "minor_breaks": "waiver()",
+        "labels": "waiver()",
+        "coordinates": "\"local\"",
+        "guide": "guide_seq_axis()"
+      }
+    },
+    "add_track": {
+      "usage": "add_track(..., id = auto_id(), side = NULL, order = NULL, thickness = NULL, gap = NULL)",
+      "arguments": [
+        [
+          "..."
+        ],
+        [
+          "id"
+        ],
+        [
+          "side"
+        ],
+        [
+          "order"
+        ],
+        [
+          "thickness"
+        ],
+        [
+          "gap"
+        ]
+      ],
+      "roles": [],
+      "examples": "ggchord(data = seqs) + geom_seq() +\n  add_track(\n    geom_track_col(aes(x = pos, y = value), data = signal, width = 50),\n    geom_track_line(aes(x = pos, y = value), data = signal), thickness = 6\n  ) +\n  scale_y_continuous() + coord_collinear()",
+      "related": [
+        "layout_track",
+        "geom_track"
+      ],
+      "native": false,
+      "defaults": {
+        "...": "",
+        "id": "auto_id()",
+        "side": "NULL",
+        "order": "NULL",
+        "thickness": "NULL",
+        "gap": "NULL"
+      }
+    },
+    "scales_ggchord": {
+      "usage": "scales_ggchord(roles = \"auto\")",
+      "arguments": [
+        [
+          "roles"
+        ]
+      ],
+      "roles": [],
+      "examples": "ggchord(seq_data_example) + geom_seq(aes(colour = accver)) + scales_ggchord()",
+      "related": [],
+      "native": false,
+      "defaults": {
+        "roles": "\"auto\""
+      }
+    },
+    "pal_ggchord": {
+      "usage": "pal_ggchord(n)",
+      "arguments": [
+        [
+          "n"
+        ]
+      ],
+      "roles": [],
+      "examples": "pal_ggchord(6)",
+      "related": [],
+      "native": false,
+      "defaults": {
+        "n": ""
+      }
+    },
+    "pal_sequence": {
+      "usage": "pal_sequence(ids)",
+      "arguments": [
+        [
+          "ids"
+        ]
+      ],
+      "roles": [],
+      "examples": "pal_sequence(c(\"A\", \"B\"))",
+      "related": [],
+      "native": false,
+      "defaults": {
+        "ids": ""
+      }
+    },
+    "pal_strand": {
+      "usage": "pal_strand()",
+      "arguments": [],
+      "roles": [],
+      "examples": "pal_strand()",
+      "related": [],
+      "native": false,
+      "defaults": {}
+    },
+    "pal_feature_type": {
+      "usage": "pal_feature_type(types)",
+      "arguments": [
+        [
+          "types"
+        ]
+      ],
+      "roles": [],
+      "examples": "pal_feature_type(c(\"CDS\", \"tRNA\"))",
+      "related": [],
+      "native": false,
+      "defaults": {
+        "types": ""
+      }
+    },
+    "pal_plasmid": {
+      "usage": "pal_plasmid()",
+      "arguments": [],
+      "roles": [],
+      "examples": "head(pal_plasmid())",
+      "related": [],
+      "native": false,
+      "defaults": {}
+    },
+    "pal_pident": {
+      "usage": "pal_pident()",
+      "arguments": [],
+      "roles": [],
+      "examples": "pal_pident()",
+      "related": [],
+      "native": false,
+      "defaults": {}
+    },
+    "pal_link_pident": {
+      "usage": "pal_link_pident()",
+      "arguments": [],
+      "roles": [],
+      "examples": "pal_link_pident()",
+      "related": [],
+      "native": false,
+      "defaults": {}
+    },
+    "pal_signal": {
+      "usage": "pal_signal()",
+      "arguments": [],
+      "roles": [],
+      "examples": "pal_signal()",
+      "related": [],
+      "native": false,
+      "defaults": {}
+    },
+    "pal_residue": {
+      "usage": "pal_residue(alphabet = \"DNA\", values = NULL)",
+      "arguments": [
+        [
+          "alphabet"
+        ],
+        [
+          "values"
+        ]
+      ],
+      "roles": [],
+      "examples": "pal_residue(\"DNA\")",
+      "related": [],
+      "native": false,
+      "defaults": {
+        "alphabet": "\"DNA\"",
+        "values": "NULL"
+      }
+    },
+    "scale_colour_ggchord": {
+      "usage": "scale_colour_ggchord(..., aesthetics = \"colour\")",
+      "arguments": [
+        [
+          "..."
+        ],
+        [
+          "aesthetics"
+        ]
+      ],
+      "roles": [],
+      "examples": "scale_colour_ggchord()$aesthetics",
+      "related": [],
+      "native": false,
+      "defaults": {
+        "...": "",
+        "aesthetics": "\"colour\""
+      }
+    },
+    "scale_fill_ggchord": {
+      "usage": "scale_fill_ggchord(..., aesthetics = \"fill\")",
+      "arguments": [
+        [
+          "..."
+        ],
+        [
+          "aesthetics"
+        ]
+      ],
+      "roles": [],
+      "examples": "scale_fill_ggchord()$aesthetics",
+      "related": [],
+      "native": false,
+      "defaults": {
+        "...": "",
+        "aesthetics": "\"fill\""
+      }
+    },
+    "scale_fill_plasmid": {
+      "usage": "scale_fill_plasmid(...)",
+      "arguments": [
+        [
+          "..."
+        ]
+      ],
+      "roles": [],
+      "examples": "scale_fill_plasmid()$aesthetics",
+      "related": [],
+      "native": false,
+      "defaults": {
+        "...": ""
+      }
+    },
+    "scale_colour_link_pident": {
+      "usage": "scale_colour_link_pident(...)",
+      "arguments": [
+        [
+          "..."
+        ]
+      ],
+      "roles": [],
+      "examples": "scale_colour_link_pident()$aesthetics",
+      "related": [],
+      "native": false,
+      "defaults": {
+        "...": ""
+      }
+    },
+    "scale_fill_signal": {
+      "usage": "scale_fill_signal(...)",
+      "arguments": [
+        [
+          "..."
+        ]
+      ],
+      "roles": [],
+      "examples": "scale_fill_signal()$aesthetics",
+      "related": [],
+      "native": false,
+      "defaults": {
+        "...": ""
+      }
+    },
+    "scale_colour_signal": {
+      "usage": "scale_colour_signal(...)",
+      "arguments": [
+        [
+          "..."
+        ]
+      ],
+      "roles": [],
+      "examples": "scale_colour_signal()$aesthetics",
+      "related": [],
+      "native": false,
+      "defaults": {
+        "...": ""
+      }
     }
   },
   "setup": "library(ggplot2)\nlibrary(ggchord)\n\nseqs <- data.frame(\n  accver = c(\"A\", \"B\"), length = c(1000, 800),\n  sequence_unit = \"bp\", topology = \"linear\"\n)\none_seq <- seqs[1, , drop = FALSE]\ngenes <- data.frame(\n  accver = c(\"A\", \"A\", \"B\"), feature_id = c(\"g1\", \"g2\", \"g3\"),\n  start = c(100, 400, 150), end = c(240, 620, 380),\n  strand = c(\"+\", \"-\", \"+\"), label = c(\"g1\", \"g2\", \"g3\"),\n  type = c(\"CDS\", \"tRNA\", \"CDS\")\n)\nlinks <- data.frame(\n  qaccver = \"A\", saccver = \"B\", qstart = c(100, 400),\n  qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),\n  qstrand = \"+\", sstrand = c(\"+\", \"-\"),\n  pident = c(98, 90), link_id = c(\"l1\", \"l2\")\n)\npoints <- data.frame(qaccver = \"A\", qpos = 200, saccver = \"B\", spos = 220)\nsites <- data.frame(accver = \"A\", pos = 300, site_id = \"s1\", label = \"EcoRI\")\nsignal <- data.frame(accver = rep(c(\"A\", \"B\"), each = 3),\n  pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))\nunordered_signal <- signal[c(1, 3, 2, 4, 6, 5), ]\nintervals <- genes[c(\"accver\", \"start\", \"end\")]\nstates <- genes[c(\"accver\", \"start\", \"end\", \"type\")]\ngene_colours <- c(CDS = \"#187B77\", tRNA = \"#CC7D3A\")\nwindows <- data.frame(accver = \"A\", start = 1, end = 500, window_id = \"w1\")\np_basic <- ggchord(seqs) + geom_seq() +\n  geom_gene(data = genes) + coord_collinear()\n\nlabel_seq <- data.frame(accver = \"A\", length = 1000, sequence_unit = \"bp\")\ncrowded_genes <- data.frame(\n  accver = \"A\",\n  feature_id = c(\"g1\", \"g2\", \"g3\"),\n  start = c(425, 478, 531),\n  end = c(467, 520, 573),\n  strand = \"+\",\n  label = c(\"Gene alpha\", \"Gene beta\", \"Gene gamma\")\n)\nlabel_plot <- ggchord(label_seq) +\n  geom_seq() +\n  geom_gene(data = crowded_genes, fill = \"#187B77\") +\n  coord_collinear()",
@@ -6144,8 +6369,8 @@
     "geom_track": {
       "related": [
         "stat_coverage",
-        "track_band",
-        "scale_track_value",
+        "layout_track",
+        "track_limits",
         "guide_track_axis"
       ]
     },

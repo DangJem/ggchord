@@ -18,6 +18,6 @@
 
 调色板中的名称使重新排序或筛选后的类别仍对应原来的颜色。要调整字体或移动图例，可使用 `theme()`。调整不同序列的半径、偏移或宽度，请继续看[灵活参数](parameters.md)。要用高度表示实测值，可试画 [GC 轨道](tracks.md)。
 
-序列标识可用 `scale_colour_sequence()` 着色，链方向用 `scale_fill_strand()`，注释类型用 `scale_fill_feature_type()`，比对一致性百分比用 `scale_fill_pident()`。当基因和连带都映射 `fill` 时，给基因层指定 `id = "genes"`，再加上 `scale_for("genes", scale_fill_strand())`。基因图例显示链方向，连带保留自己的百分比色标。
+用 `scale_colour_sequence()` 为参考 ID 配色，用 `scale_fill_strand()` 为链方向配色，用 `scale_fill_feature_type()` 为注释类型配色，用 `scale_fill_pident()` 为百分比一致性配色。基因与连带都映射填色时，为基因层设置 `id = "genes"`，再添加 `scale_for(scale_fill_strand(), layers = "genes")`。使用 `scales_ggchord()` 可为识别到的映射启用传统配色。
 
 默认画布为暖白色。需要纯白绘图区时可使用 `theme_ggchord_publication()`。连带默认带有细绿色描边，在连带图层设置 `colour = NA` 即可隐藏描边。

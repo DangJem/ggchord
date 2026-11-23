@@ -313,7 +313,6 @@ prepare_ggchord_plot <- function(plot) {
   sc$scales <- ggchord_infer_visual_scales(plot, layout, sc$scales)
   plot <- attach_ggchord_scales(plot, sc$scales)
   plot <- ggchord_add_link_scales(plot)
-  if (exists("ggchord_add_track_scales", mode = "function")) plot <- ggchord_add_track_scales(plot)
   axis_labels <- NULL
   if (!isTRUE(ggchord_plot_settings(plot)$axis$hidden) &&
       (nrow(layout$axis_lines %||% data.frame()) > 0L ||

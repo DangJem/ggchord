@@ -12,7 +12,7 @@ stat_coverage(
   binwidth = NULL,
   windows = NULL,
   bounds = "error",
-  track = "default",
+  track = NULL,
   ...,
   na.rm = FALSE,
   show.legend = NA,
@@ -22,7 +22,7 @@ stat_coverage(
 }
 \arguments{
 \item{mapping, data}{Standard layer input. Supply accver and source positions
-through x/pos, or interval start/end. Map y/track_value for identity values.
+through x/pos, or interval start/end. Map y or supply the value column.
 Start-stage expressions read the layer's source columns, including the
 original accession when \code{accver} is mapped. A zero-row input must still
 provide the columns used by these expressions.}
@@ -42,9 +42,7 @@ Supply exactly one of \code{binwidth} and \code{windows}.}
 records its contributing interval rows. Window coordinates refer to the
 input reference, including the local coordinates of a focused reference.}
 
-\item{bounds}{Coordinate error/clip policy.}
-
-\item{track}{Character ID declared with \code{\link[=track_band]{track_band()}}. Omit for the shared default band.}
+\item{track}{Character ID declared with \code{\link[=layout_track]{layout_track()}}. Omit to create an individual band.}
 
 \item{...}{Track geometry parameters, including fixed styles.}
 
@@ -95,9 +93,9 @@ genes <- data.frame(
 intervals <- genes[c("accver", "start", "end")]
 
 ggchord(data = seqs) + geom_seq() +
-  track_band("coverage", thickness = 5) +
+  layout_track("coverage", thickness = 5) +
   stat_coverage(data = intervals, binwidth = 100, track = "coverage") +
-  scale_track_value("coverage", limits = c(0, 1),
+  scale_y_continuous(limits = c(0, 1),
                     labels = scales::label_percent()) +
   coord_collinear()
 

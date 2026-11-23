@@ -24,7 +24,7 @@ guide_track_axis(
 \item{theme}{Optional local axis theme.}
 }
 \value{
-A guide for \code{\link[=scale_track_value]{scale_track_value()}}.
+A guide for \code{\link[ggplot2:scale_y_continuous]{scale_y_continuous()}}.
 }
 \description{
 Attach a track value guide to a reference path
@@ -40,9 +40,9 @@ seqs <- data.frame(
 signal <- data.frame(accver = rep(c("A", "B"), each = 3),
   pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))
 
-ggchord(data = seqs) + track_band("signal") +
+ggchord(data = seqs) + layout_track("signal") +
   geom_track_line(data = signal, aes(x = pos, y = value), track = "signal") +
-  scale_track_value("signal", guide = guide_track_axis(
+  scale_y_continuous(guide = guide_track_axis(
     position = "end", sequences = "A", angle = 0)) +
   coord_collinear()
 }

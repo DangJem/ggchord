@@ -608,37 +608,6 @@
       "roles": [],
       "example_setup": ""
     },
-    "track_band": {
-      "title": "Declare the physical container for a track",
-      "intro": "Declare the physical container for a track.",
-      "arguments": [
-        {
-          "format": "nonempty character(1); default \"default\"",
-          "description": "Track identifier."
-        },
-        {
-          "format": "character; default \"positive\"",
-          "description": "Positive or negative side of the path."
-        },
-        {
-          "format": "positive integer ; default 1",
-          "description": "Order from the backbone. Tracks on the same side require distinct orders."
-        },
-        {
-          "format": "positive mm / absolute grid unit / flexible specification; default 4",
-          "description": "Band thickness and preceding gap in millimetres or absolute grid units."
-        },
-        {
-          "format": "nonnegative mm / absolute grid unit / flexible specification; default 1",
-          "description": "Band thickness and preceding gap in millimetres or absolute grid units."
-        }
-      ],
-      "value": "A physical band declaration.",
-      "details": "Assign a band ID, side and order. Thickness and gaps use millimetres; the numeric height domain is supplied separately. The implicit default band occupies space when a layer actually uses it.",
-      "errors": "Band names are distinct. Bands on the same side need distinct order values.",
-      "roles": [],
-      "example_setup": ""
-    },
     "geom_seq": {
       "title": "Draw sequence backbones",
       "intro": "Draw sequence backbones.",
@@ -685,7 +654,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -739,7 +708,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -789,7 +758,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -843,7 +812,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -900,7 +869,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -962,7 +931,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1024,7 +993,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1090,7 +1059,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1156,7 +1125,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1221,7 +1190,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1286,7 +1255,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1351,7 +1320,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1416,7 +1385,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1481,7 +1450,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1542,7 +1511,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1603,7 +1572,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1664,7 +1633,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1724,7 +1693,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1780,7 +1749,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1840,7 +1809,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         },
         {
           "format": "numeric / unit / vector",
@@ -1905,7 +1874,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2123,8 +2092,8 @@
           "description": "Native data adjustment such as `\"identity\"`, `\"stack\"` or `ggplot2::position_dodge(width = 10)`. Source x uses sequence units. Feature placement belongs on feature layers."
         },
         {
-          "format": "character(1)",
-          "description": "Character ID declared with [track_band()]. Omit for the shared default band."
+          "format": "character or NULL",
+          "description": "Named track ID. Omit to create a separate band, or use add_track() to group layers."
         },
         {
           "format": "named arguments",
@@ -2144,7 +2113,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer using a shared sequence-local band.",
@@ -2181,8 +2150,8 @@
           "description": "A compatible Position for placement of the layer geometry."
         },
         {
-          "format": "character(1)",
-          "description": "ID of the physical band. The default band is available when first used."
+          "format": "character or NULL",
+          "description": "Named track ID. Omit to create a separate band, or use add_track() to group layers."
         },
         {
           "format": "named arguments",
@@ -2202,7 +2171,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2238,8 +2207,8 @@
           "description": "A compatible Position for placement of the layer geometry."
         },
         {
-          "format": "character(1)",
-          "description": "ID of the physical band. The default band is available when first used."
+          "format": "character or NULL",
+          "description": "Named track ID. Omit to create a separate band, or use add_track() to group layers."
         },
         {
           "format": "named arguments",
@@ -2259,7 +2228,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2295,8 +2264,8 @@
           "description": "A compatible Position for placement of the layer geometry."
         },
         {
-          "format": "character(1)",
-          "description": "ID of the physical band. The default band is available when first used."
+          "format": "character or NULL",
+          "description": "Named track ID. Omit to create a separate band, or use add_track() to group layers."
         },
         {
           "format": "named arguments",
@@ -2316,7 +2285,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2352,8 +2321,8 @@
           "description": "A compatible Position for placement of the layer geometry."
         },
         {
-          "format": "character(1)",
-          "description": "ID of the physical band. The default band is available when first used."
+          "format": "character or NULL",
+          "description": "Named track ID. Omit to create a separate band, or use add_track() to group layers."
         },
         {
           "format": "named arguments",
@@ -2373,7 +2342,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2409,8 +2378,8 @@
           "description": "A compatible Position for placement of the layer geometry."
         },
         {
-          "format": "character(1)",
-          "description": "ID of the physical band. The default band is available when first used."
+          "format": "character or NULL",
+          "description": "Named track ID. Omit to create a separate band, or use add_track() to group layers."
         },
         {
           "format": "named arguments",
@@ -2430,7 +2399,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2466,8 +2435,8 @@
           "description": "A compatible Position for placement of the layer geometry."
         },
         {
-          "format": "character(1)",
-          "description": "ID of the physical band. The default band is available when first used."
+          "format": "character or NULL",
+          "description": "Named track ID. Omit to create a separate band, or use add_track() to group layers."
         },
         {
           "format": "named arguments",
@@ -2487,7 +2456,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2523,8 +2492,8 @@
           "description": "A compatible Position for placement of the layer geometry."
         },
         {
-          "format": "character(1)",
-          "description": "ID of the physical band. The default band is available when first used."
+          "format": "character or NULL",
+          "description": "Named track ID. Omit to create a separate band, or use add_track() to group layers."
         },
         {
           "format": "named arguments",
@@ -2544,7 +2513,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2580,8 +2549,8 @@
           "description": "A compatible Position for placement of the layer geometry."
         },
         {
-          "format": "character(1)",
-          "description": "ID of the physical band. The default band is available when first used."
+          "format": "character or NULL",
+          "description": "Named track ID. Omit to create a separate band, or use add_track() to group layers."
         },
         {
           "format": "named arguments",
@@ -2601,7 +2570,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2637,8 +2606,8 @@
           "description": "A compatible Position for placement of the layer geometry."
         },
         {
-          "format": "character(1)",
-          "description": "ID of the physical band. The default band is available when first used."
+          "format": "character or NULL",
+          "description": "Named track ID. Omit to create a separate band, or use add_track() to group layers."
         },
         {
           "format": "named arguments",
@@ -2658,7 +2627,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2905,8 +2874,8 @@
           "description": "Coordinate error/clip policy."
         },
         {
-          "format": "character(1); default \"default\"",
-          "description": "Character ID declared with `track_band()`. Omit for the shared default band."
+          "format": "character or NULL",
+          "description": "Named track ID. Omit to create a separate band, or use add_track() to group layers."
         },
         {
           "format": "Parameters and fixed aesthetics for the selected Geom",
@@ -2926,7 +2895,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A track layer. Exported statistics include `window_id`, local `window_start` and `window_end`, original `source_accver`, `source_start`, `source_end`, `sequence_unit`, and the actual window length `denominator`. `covered` counts the interval union, `depth_sum` counts overlapping lengths with multiplicity, and `source_rows` indexes the layer source table. Dividing the two counts by `denominator` gives `coverage` and `mean_depth`. Windows without a hit in an observed group have zero counts.",
@@ -2986,7 +2955,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer whose statistic output retains the original members in `source_members`, with `n_members` and `sum_weight` for each result.",
@@ -3046,7 +3015,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer. Its statistic output retains the source rows and adds `q_bin`, `s_bin`, `bin_weight`, `bin_area`, `density_raw`, `density`, `normalization`, `density_unit` and `source_members`.",
@@ -3060,107 +3029,29 @@
       "example_setup": ""
     },
     "scale_for": {
-      "title": "Give selected layers an independent visual scale",
-      "intro": "Train an ordinary visual scale on one named layer or a group of named layers.",
+      "title": "Scope a scale to layers or tracks",
+      "intro": "The scoped scale takes precedence for the selected mappings. Specify its guide options on the scale.",
       "arguments": [
         {
-          "format": "nonempty character vector",
-          "description": "One or more distinct layer IDs in this plot. In Fusion, select the root ribbon layers. Use `layer_id()` to name a native ggplot2 layer."
+          "format": "ggplot2 scale",
+          "description": "A visual scale or a continuous Y scale for complete tracks."
         },
         {
-          "format": "Ordinary visual Scale object",
-          "description": "An ordinary ggplot2 visual scale for those layers."
+          "format": "character vector or NULL",
+          "description": "Layer names. Omit both selectors to target the current owner."
+        },
+        {
+          "format": "character vector or NULL",
+          "description": "Track names. Supply either layers or tracks."
+        },
+        {
+          "format": "shared or panel",
+          "description": "Train together, or separately by facet panel for track Y."
         }
       ],
-      "value": "A scale declaration for a ggchord plot or a Fusion root.",
-      "details": "A `scale_for()` declaration takes precedence over an ordinary scale for the selected layers and aesthetic, regardless of addition order. Other layers follow the ordinary explicit scale for that aesthetic, or their default `id` policy when no explicit scale is present. Set the independent guide title, breaks and labels on the wrapped scale.\n\nFixed styles bypass scales. Supply a compatible shape scale for feature geometries; ggplot2 point symbols use a different shape vocabulary. In Fusion, the scope applies to root ribbon layers. Set child-plot scales before placing each plot in the composition.",
-      "errors": "Unknown layers, overlapping layer/channel claims, unsupported visual channels and position scales are rejected.",
-      "roles": [],
-      "example_setup": ""
-    },
-    "scale_seq_position": {
-      "title": "Describe the linear sequence position scale",
-      "intro": "Describe the linear sequence position scale.",
-      "arguments": [
-        {
-          "format": "character / expression / NULL / waiver",
-          "description": "Optional axis title."
-        },
-        {
-          "format": "numeric / function / named list / waiver / NULL",
-          "description": "Position vectors, functions or named lists."
-        },
-        {
-          "format": "same as breaks; default waiver",
-          "description": "Position vectors, functions or named lists."
-        },
-        {
-          "format": "character / expression / function / named list / waiver / NULL",
-          "description": "Labels or a labelling function, optionally by source or instance."
-        },
-        {
-          "format": "character; default \"local\"",
-          "description": "Use local or original source coordinates for axis labels."
-        },
-        {
-          "format": "guide_seq_axis object / \"none\"",
-          "description": "A sequence axis guide or `\"none\"`."
-        }
-      ],
-      "value": "A domain scale for use with sequence-path coordinates.",
-      "details": "Choose the coordinate space for labels and supply breaks, labels and the sequence axis guide. The underlying reference positions remain linear.\n\nWhen guide is omitted, circular sequence coordinates are drawn inside the backbone. An explicit positive side selects the outside.\n\nWhen adjacent sequence endpoints meet, automatic overlap checking repositions their tick labels while keeping the ticks at the original positions.",
-      "errors": "Use the sequence axis guide or explicitly suppress the guide. Nonlinear positions belong outside this scale.",
-      "roles": [],
-      "example_setup": ""
-    },
-    "scale_track_value": {
-      "title": "Map values to physical track height",
-      "intro": "Map values to physical track height.",
-      "arguments": [
-        {
-          "format": "character(1); default \"default\"",
-          "description": "Track ID."
-        },
-        {
-          "format": "character / expression / NULL / waiver",
-          "description": "Axis title."
-        },
-        {
-          "format": "numeric(2) / function / NULL",
-          "description": "Continuous scale settings."
-        },
-        {
-          "format": "numeric / function / waiver / NULL",
-          "description": "Continuous scale settings."
-        },
-        {
-          "format": "character / function / waiver / NULL",
-          "description": "Continuous scale settings."
-        },
-        {
-          "format": "transformation name/ object; default \"identity\"",
-          "description": "A continuous transformation name or object. An explicit transformation object must be monotone and invertible over the values used by the track scale."
-        },
-        {
-          "format": "out-of-bounds function; default scales::censor",
-          "description": "Continuous scale settings."
-        },
-        {
-          "format": "character(1) / NULL",
-          "description": "Optional unit of measurement for the shared track."
-        },
-        {
-          "format": "character; default \"shared\"",
-          "description": "Train a shared scale or train separately by panel."
-        },
-        {
-          "format": "guide_track_axis object / \"none\"",
-          "description": "A track axis guide or `\"none\"`."
-        }
-      ],
-      "value": "A numerical height scale for the chosen track.",
-      "details": "Set limits, breaks, labels, transformation, measurement unit and shared or panel-specific training. The band controls its physical thickness. The transformed height is independent of visual fill and colour.",
-      "errors": "A custom transform must be monotone and invertible over the values used by the scale. Invalid baselines, nonlinear stacking and conflicting units are rejected.",
+      "value": "A scoped scale declaration.",
+      "details": "The scoped scale takes precedence for the selected mappings. Specify its guide options on the scale.",
+      "errors": "",
       "roles": [],
       "example_setup": ""
     },
@@ -3208,8 +3099,8 @@
           "description": "A ggchord plot or a list of independent ggchord plots."
         },
         {
-          "format": "character vector; default \"default\"",
-          "description": "IDs of numerical tracks present in every plot."
+          "format": "character vector or NULL",
+          "description": "Track IDs. Omit if each plot has a single numerical track."
         }
       ],
       "value": "A data frame of current limits, units and available measure evidence.",
@@ -3243,7 +3134,7 @@
           "description": "Optional local axis theme."
         }
       ],
-      "value": "A guide for `scale_seq_position()`.",
+      "value": "A guide for `scale_seq_continuous()`.",
       "details": "Use a guide to select where the sequence position scale is explained. Breaks and labels are supplied through the position scale; appearance is controlled by theme elements.\n\nWhen adjacent sequence endpoints meet, automatic overlap checking repositions their tick labels while keeping the ticks at the original positions.\n\nOn a curved Sankey path, automatic labels follow the visible tangent. Tick marks extend perpendicular to the path on the selected side, including at the sequence endpoints.",
       "errors": "Select known reference or instance identities and options compatible with the axis.",
       "roles": [],
@@ -3274,7 +3165,7 @@
           "description": "Optional local axis theme."
         }
       ],
-      "value": "A guide for `scale_track_value()`.",
+      "value": "A guide for `scale_y_continuous()`.",
       "details": "Attach a guide to a track value scale. The scale supplies bounds, breaks, units and title; the guide controls placement and the theme controls style.",
       "errors": "The guide needs a numerical track domain. An interval-only band cannot train it.",
       "roles": [],
@@ -3293,12 +3184,12 @@
           "description": "Base font family."
         },
         {
-          "format": "Explicit theme elements",
-          "description": "Named ggplot2 theme elements, including ggchord sequence and track axis elements. Explicit settings override theme defaults."
+          "format": "empty",
+          "description": "Use theme() to set theme elements."
         }
       ],
       "value": "A ggplot2 theme.",
-      "details": "The default uses a warm ivory (#FFFCF5), borderless panel, charcoal text (#30353A), a centred bold plot title and a right-hand legend. Sequence and track axes use grey lines (#60696F) and 1.2 mm major ticks. Dotplots use the standard ggplot2 axis elements.",
+      "details": "Use the preset for base appearance. Add `theme()` for changes to registered ggchord and ordinary ggplot2 elements.",
       "errors": "Set data colours through aesthetic scales and provide physical layer dimensions through the corresponding layer or layout.",
       "roles": [],
       "example_setup": ""
@@ -3316,12 +3207,12 @@
           "description": "Base font family."
         },
         {
-          "format": "Explicit theme elements",
-          "description": "Named ggplot2 theme elements, including ggchord sequence and track axis elements. Explicit settings override theme defaults."
+          "format": "empty",
+          "description": "Use theme() to set theme elements."
         }
       ],
       "value": "An ordinary ggplot2 theme.",
-      "details": "Apply the minimal appearance preset. Layer data, position scales and reference geometry are preserved.",
+      "details": "Use the preset for base appearance. Add `theme()` for changes to registered ggchord and ordinary ggplot2 elements.",
       "errors": "Use standard theme overrides to refine individual elements.",
       "roles": [],
       "example_setup": ""
@@ -3339,12 +3230,12 @@
           "description": "Base font family."
         },
         {
-          "format": "Explicit theme elements",
-          "description": "Named ggplot2 theme elements, including ggchord sequence and track axis elements. Explicit settings override theme defaults."
+          "format": "empty",
+          "description": "Use theme() to set theme elements."
         }
       ],
       "value": "An ordinary ggplot2 theme.",
-      "details": "A charcoal background (#17191C), pale text (#F1F3F5) and grey axes (#ADB5BD) keep the axis and legend legible. Choose data colours with visual scales.",
+      "details": "Use the preset for base appearance. Add `theme()` for changes to registered ggchord and ordinary ggplot2 elements.",
       "errors": "Check that the chosen scales provide enough contrast for the target background.",
       "roles": [],
       "example_setup": ""
@@ -3362,12 +3253,12 @@
           "description": "Base font family."
         },
         {
-          "format": "Explicit theme elements",
-          "description": "Named ggplot2 theme elements, including ggchord sequence and track axis elements. Explicit settings override theme defaults."
+          "format": "empty",
+          "description": "Use theme() to set theme elements."
         }
       ],
       "value": "An ordinary ggplot2 theme.",
-      "details": "Apply a restrained theme suitable for figure assembly and printing. Set output size explicitly when rendering.",
+      "details": "Use the preset for base appearance. Add `theme()` for changes to registered ggchord and ordinary ggplot2 elements.",
       "errors": "The theme controls appearance; guides and layers retain their own mappings and placement.",
       "roles": [],
       "example_setup": ""
@@ -3385,12 +3276,12 @@
           "description": "Base font family."
         },
         {
-          "format": "Explicit theme elements",
-          "description": "Named ggplot2 theme elements, including ggchord sequence and track axis elements. Explicit settings override theme defaults."
+          "format": "empty",
+          "description": "Use theme() to set theme elements."
         }
       ],
       "value": "An ordinary ggplot2 theme.",
-      "details": "An ivory background (#FFFCF5) separates the annotations from the dark sequence axis. Major ticks are 2.2 mm long, minor ticks 0.8 mm. Coordinate labels follow the sequence, the axis title is hidden, and the legend sits below the map. To omit the sequence guide, use scale_seq_position(guide = \"none\").",
+      "details": "Use the preset for base appearance. Add `theme()` for changes to registered ggchord and ordinary ggplot2 elements.",
       "errors": "The theme does not supply reference topology, feature styles or source annotations.",
       "roles": [],
       "example_setup": ""
@@ -4768,7 +4659,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A component for `ggchord_fusion()`.",
@@ -5133,7 +5024,7 @@
         },
         {
           "format": "auto_id() / character(1) / NULL / NA",
-          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
+          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -5245,11 +5136,11 @@
       "example_setup": ""
     },
     "auto_id": {
-      "title": "Assign a layer ID and train its default visual scales",
-      "intro": "The default `id = auto_id()` assigns an ID within the plot. When two ggchord layers map the same aesthetic, each trains its own scale. In the first example the sequence colours describe accessions and the gene outlines describe strands.",
+      "title": "Assign a plot-local layer ID",
+      "intro": "Leave this ID automatic or supply a unique name for explicit references.",
       "arguments": [],
       "value": "A layer-ID declaration that ggchord resolves during plot construction.",
-      "details": "Set `id = NULL` or `id = NA` on each layer that should share a scale, as in the second example. A character ID lets you refer to a layer by name while retaining its independent defaults.\n\nAn ordinary explicit scale applies to every layer mapping its aesthetic except layers claimed by `scale_for()`. For a custom scale shared by selected layers, name them and pass their IDs together to `scale_for()`. Native Cartesian character panels use ordinary ggplot2 scales.",
+      "details": "Identity is assigned when the layer is added. Ordinary visual scales train together by aesthetic.",
       "errors": "A named ID must be a single nonempty string, unique within the plot.",
       "roles": [],
       "example_setup": ""
@@ -5261,6 +5152,334 @@
       "value": "A label-target declaration resolved against the layers in the same plot.",
       "details": "Gene, primer and site labels look for gene, primer and site layers respectively. A generic feature label can follow any interval feature layer, including genes, primers and regions. The target may appear before or after the labels.\n\nSupplying label data, a non-identity Stat or an explicit Position selects independent placement by default. Set `anchor_layer = NULL` to request independent labels. To label a subset of a target, give that layer a name, pass it to `anchor_layer` and supply a label table keyed to its entities.",
       "errors": "If several layers qualify, the error lists their IDs. Name the intended target and set `anchor_layer` to that name, as in the second example. When there is no compatible layer, supply a target or usable independent label data.",
+      "roles": [],
+      "example_setup": ""
+    },
+    "layout_track": {
+      "title": "Configure track layout",
+      "intro": "Set only the supplied fields. A named declaration may precede or follow its layers. Empty declarations reserve no space.",
+      "arguments": [
+        {
+          "format": "character or NULL",
+          "description": "Track name. Omit to configure the current track."
+        },
+        {
+          "format": "positive or negative",
+          "description": "Side of the reference path."
+        },
+        {
+          "format": "positive integer or NULL",
+          "description": "Order on this side. Automatic bands fill unused orders."
+        },
+        {
+          "format": "positive mm or absolute unit",
+          "description": "Physical band thickness. Defaults to 4 mm."
+        },
+        {
+          "format": "nonnegative mm or absolute unit",
+          "description": "Gap from the previous band or reference. Defaults to 1 mm."
+        }
+      ],
+      "value": "A layout declaration.",
+      "details": "Set only the supplied fields. A named declaration may precede or follow its layers. Empty declarations reserve no space.",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scale_seq_continuous": {
+      "title": "Describe the linear sequence position scale",
+      "intro": "Describe the linear sequence position scale.",
+      "arguments": [
+        {
+          "format": "character / expression / NULL / waiver",
+          "description": "Optional axis title."
+        },
+        {
+          "format": "numeric / function / named list / waiver / NULL",
+          "description": "Position vectors, functions or named lists."
+        },
+        {
+          "format": "same as breaks; default waiver",
+          "description": "Position vectors, functions or named lists."
+        },
+        {
+          "format": "character / expression / function / named list / waiver / NULL",
+          "description": "Labels or a labelling function, optionally by source or instance."
+        },
+        {
+          "format": "character; default \"local\"",
+          "description": "Use local or original source coordinates for axis labels."
+        },
+        {
+          "format": "guide_seq_axis object / \"none\"",
+          "description": "A sequence axis guide or `\"none\"`."
+        }
+      ],
+      "value": "A domain scale for use with sequence-path coordinates.",
+      "details": "Choose the coordinate space for labels and supply breaks, labels and the sequence axis guide. The underlying reference positions remain linear.\n\nWhen guide is omitted, circular sequence coordinates are drawn inside the backbone. An explicit positive side selects the outside.\n\nWhen adjacent sequence endpoints meet, automatic overlap checking repositions their tick labels while keeping the ticks at the original positions.",
+      "errors": "Use the sequence axis guide or explicitly suppress the guide. Nonlinear positions belong outside this scale.",
+      "roles": [],
+      "example_setup": ""
+    },
+    "add_track": {
+      "title": "Combine layers in one track",
+      "intro": "Member layers share one physical band and one Y domain.",
+      "arguments": [
+        {
+          "format": "track layers",
+          "description": "Members in drawing order."
+        },
+        {
+          "format": "character or auto_id()",
+          "description": "Track ID. A named empty declaration can be used."
+        },
+        {
+          "format": "positive or negative",
+          "description": "Side of the reference path."
+        },
+        {
+          "format": "positive integer or NULL",
+          "description": "Order on this side. Automatic bands fill unused orders."
+        },
+        {
+          "format": "positive mm or absolute unit",
+          "description": "Physical band thickness. Defaults to 4 mm."
+        },
+        {
+          "format": "nonnegative mm or absolute unit",
+          "description": "Gap from the previous band or reference. Defaults to 1 mm."
+        }
+      ],
+      "value": "A track layer group.",
+      "details": "Member layers share one physical band and one Y domain.",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scales_ggchord": {
+      "title": "Opt into traditional ggchord palettes",
+      "intro": "Opt into traditional ggchord palettes.",
+      "arguments": [
+        {
+          "format": "character",
+          "description": "Automatic or selected palette roles."
+        }
+      ],
+      "value": "A palette declaration.",
+      "details": "The preset interprets mapped roles when the plot is built. Explicit scoped and ordinary scales take precedence.",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "pal_ggchord": {
+      "title": "Categorical ggchord colours",
+      "intro": "Categorical ggchord colours.",
+      "arguments": [
+        {
+          "format": "number",
+          "description": "Number of colours."
+        }
+      ],
+      "value": "A colour vector.",
+      "details": "Categorical ggchord colours.",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "pal_sequence": {
+      "title": "Sequence identifier colours",
+      "intro": "Sequence identifier colours.",
+      "arguments": [
+        {
+          "format": "character vector",
+          "description": "Sequence IDs in reference order."
+        }
+      ],
+      "value": "A colour vector.",
+      "details": "Sequence identifier colours.",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "pal_strand": {
+      "title": "Strand colours",
+      "intro": "Strand colours.",
+      "arguments": [],
+      "value": "A colour vector.",
+      "details": "Strand colours.",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "pal_feature_type": {
+      "title": "Feature type colours",
+      "intro": "Feature type colours.",
+      "arguments": [
+        {
+          "format": "character vector",
+          "description": "Feature types."
+        }
+      ],
+      "value": "A colour vector.",
+      "details": "Feature type colours.",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "pal_plasmid": {
+      "title": "Plasmid feature colours",
+      "intro": "Plasmid feature colours.",
+      "arguments": [],
+      "value": "A colour vector.",
+      "details": "Plasmid feature colours.",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "pal_pident": {
+      "title": "Ribbon identity colours",
+      "intro": "Ribbon identity colours.",
+      "arguments": [],
+      "value": "A colour vector.",
+      "details": "Ribbon identity colours.",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "pal_link_pident": {
+      "title": "Point-link identity colours",
+      "intro": "Point-link identity colours.",
+      "arguments": [],
+      "value": "A colour vector.",
+      "details": "Point-link identity colours.",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "pal_signal": {
+      "title": "Quantitative signal colours",
+      "intro": "Quantitative signal colours.",
+      "arguments": [],
+      "value": "A colour vector.",
+      "details": "Quantitative signal colours.",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "pal_residue": {
+      "title": "Residue symbol colours",
+      "intro": "Residue symbol colours.",
+      "arguments": [
+        {
+          "format": "DNA, RNA or AA",
+          "description": "Residue alphabet."
+        },
+        {
+          "format": "named colours or NULL",
+          "description": "Symbol-specific colour overrides."
+        }
+      ],
+      "value": "A colour vector.",
+      "details": "Residue symbol colours.",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scale_colour_ggchord": {
+      "title": "Categorical ggchord colour scale",
+      "intro": "Categorical ggchord colour scale.",
+      "arguments": [
+        {
+          "format": "named arguments",
+          "description": "Arguments for the underlying visual scale."
+        },
+        {
+          "format": "character vector",
+          "description": "Aesthetics trained by this scale."
+        }
+      ],
+      "value": "A ggplot2 scale.",
+      "details": "Categorical ggchord colour scale.",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scale_fill_ggchord": {
+      "title": "Categorical ggchord fill scale",
+      "intro": "Categorical ggchord fill scale.",
+      "arguments": [
+        {
+          "format": "named arguments",
+          "description": "Arguments for the underlying visual scale."
+        },
+        {
+          "format": "character vector",
+          "description": "Aesthetics trained by this scale."
+        }
+      ],
+      "value": "A ggplot2 scale.",
+      "details": "Categorical ggchord fill scale.",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scale_fill_plasmid": {
+      "title": "Plasmid feature fill scale",
+      "intro": "Plasmid feature fill scale.",
+      "arguments": [
+        {
+          "format": "named arguments",
+          "description": "Arguments for the underlying visual scale."
+        }
+      ],
+      "value": "A ggplot2 scale.",
+      "details": "Plasmid feature fill scale.",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scale_colour_link_pident": {
+      "title": "Point-link identity colour scale",
+      "intro": "Point-link identity colour scale.",
+      "arguments": [
+        {
+          "format": "named arguments",
+          "description": "Arguments for the underlying visual scale."
+        }
+      ],
+      "value": "A ggplot2 scale.",
+      "details": "Point-link identity colour scale.",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scale_fill_signal": {
+      "title": "Continuous signal fill scale",
+      "intro": "Continuous signal fill scale.",
+      "arguments": [
+        {
+          "format": "named arguments",
+          "description": "Arguments for the underlying visual scale."
+        }
+      ],
+      "value": "A ggplot2 scale.",
+      "details": "Continuous signal fill scale.",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scale_colour_signal": {
+      "title": "Continuous signal colour scale",
+      "intro": "Continuous signal colour scale.",
+      "arguments": [
+        {
+          "format": "named arguments",
+          "description": "Arguments for the underlying visual scale."
+        }
+      ],
+      "value": "A ggplot2 scale.",
+      "details": "Continuous signal colour scale.",
+      "errors": "",
       "roles": [],
       "example_setup": ""
     }
@@ -5278,7 +5497,6 @@
     "facet_null": "Facets",
     "layout_sequences": "Sequence and dot plot layouts",
     "layout_dotplot": "Dotplot axis layout",
-    "track_band": "Track bands",
     "geom_seq": "Sequence backbones",
     "geom_seq_label": "Sequence labels",
     "geom_seq_break": "Marks for sequence breaks",
@@ -5295,10 +5513,8 @@
     "label_layout_fixed": "Label placement",
     "position_offset": "Feature positions",
     "stat_coverage": "Interval coverage",
-    "scale_for": "Layer-specific scales",
+    "scale_for": "Scope a scale to layers or tracks",
     "scale_colour_sequence": "Sequence, feature and identity palettes",
-    "scale_seq_position": "Sequence position scales",
-    "scale_track_value": "Track value scales and limits",
     "scale_fill_residue": "Residue palettes",
     "guide_seq_axis": "Sequence and track axes",
     "theme_ggchord": "Plot themes",
@@ -5322,7 +5538,13 @@
     "fusion_zoom": "Mark a zoom region across views",
     "register_ggchord_alignment": "Alignment registration and positions",
     "view_ggchord": "Plot dimensions and preview",
-    "export_ggchord_layout": "Layout export and inspection"
+    "export_ggchord_layout": "Layout export and inspection",
+    "layout_track": "Configure track layout",
+    "scale_seq_continuous": "Sequence position scales",
+    "track_limits": "Numerical track ranges",
+    "scales_ggchord": "Opt into traditional ggchord palettes",
+    "pal_ggchord": "Categorical ggchord colours",
+    "scale_colour_ggchord": "Categorical ggchord colour scale"
   },
   "articles": {
     "geom_seq": {
@@ -5522,13 +5744,13 @@
         "geom": "Explicit in `geom_track()`. Choose `\"point\"` (default), `\"line\"`, `\"path\"`, `\"step\"`, `\"col\"`, `\"bar\"`, `\"area\"`, `\"tile\"` or `\"interval\"`. Each shortcut selects its corresponding geometry.",
         "stat": "The general entry point uses `NULL` to choose the default for the geometry. Bars default to `\"count\"`; the other shortcuts default to `\"identity\"`. Supply a compatible Stat or supported name such as `\"bin\"`, `\"summary\"`, `\"smooth\"` or `\"coverage\"`. For coverage inputs and computed columns, see [`stat_coverage()`](stat_coverage.html#api-stat_coverage).",
         "position": "The general entry uses `NULL` to choose the default for the geometry. Columns, counting bars and areas default to `\"stack\"`; the others default to `\"identity\"`. A full-height interval with identity Stat requires identity Position.",
-        "track": "Band name. The `\"default\"` band can be implicit. Declare other names with [`track_band()`](track_band.html#api-track_band) before using them.",
+        "track": "Supply the ID of a declared track, or omit to create an individual band. Use add_track() for multiple layers in one band.",
         "...": "Styles and parameters for the selected geometry or Stat. Lines and paths support `closed` for a continuous complete circle; steps use `direction`. Columns, bars and areas accept `baseline`; areas also accept `outline`. Widths along the reference are in source units. Tile heights use the track’s numerical units. Use `measure` to name a numerical quantity and `bounds` to control errors or clipping outside the reference. A nonzero `baseline` requires identity Position. A parameter accepted by both an external Stat and the Geom must be disambiguated.",
         "show.legend": "Defaults to `NA`. Use a logical or named logical vector to control legend keys.",
         "inherit.aes": "Defaults to `TRUE`. Inherit plot mappings and evaluate them on the track data."
       },
-      "roles": "Use `accver` to identify the reference. Map `x` in source units and `y` in measurement units. A counting bar computes `after_stat(count)` and accepts an optional `weight` mapping. Interval layers use `start` and `end` and fill the physical band without training its numeric scale. Use `group` to distinguish series on the same reference. A [track band](track_band.html#api-track_band) controls physical space and [`scale_track_value()`](scale_track_value.html#api-scale_track_value) controls the numerical scale.",
-      "details": "Lines and steps follow source order. Paths preserve input order or the order returned by the selected Stat. Use columns for supplied heights and bars to count observations. The equivalent coverage forms are `stat_coverage(binwidth = 100)` and `geom_track(geom = \"col\", stat = \"coverage\", position = \"identity\", binwidth = 100)`. The wrapper defaults to identity Position, so specify it when translating to the general form. See the [coverage example](stat_coverage.html#ref-examples) for measurement, denominator and computed mappings.\n\nContinuous lines and paths respect missing values and reference, window and group boundaries. An external Stat can report source membership through a `source_rows` list-column whose indices refer to `source_row`. For exported membership and stages, see [`export_ggchord_layout()`](export_ggchord_layout.html#api-export_ggchord_layout).",
+      "roles": "Use `accver` to identify the reference. Map `x` in source units and `y` in measurement units. A counting bar computes `after_stat(count)` and accepts an optional `weight` mapping. Interval layers use `start` and `end` and fill the physical band without training its numeric scale. Use `group` to distinguish series on the same reference. A [track band](layout_track.html#api-layout_track) controls physical space and [`scale_y_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html) controls the numerical scale.",
+      "details": "Each standalone layer creates a band. Set physical placement with `layout_track()` or group layers in one band with `add_track()`. A native `scale_y_*()` configures the current numerical track. Use `scale_for()` to select complete track domains explicitly. Ordinary visual scales train across layers by aesthetic.",
       "example_intro": "Each example uses the same small reference fixture. The examples add measurements, counts or intervals appropriate to the geometry.",
       "examples": {
         "geom_track": {

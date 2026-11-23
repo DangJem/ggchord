@@ -346,7 +346,14 @@ ggchord_fusion_subset_ribbons <- function(plot, ids) {
         !nzchar(e2$id) || e2$id %in% ids)
       ggchord_stop("Fusion: each root layer must have a unique nonempty ID")
     e1[[family]][[e2$id]] <- unclass(e2)
+    e1$active_layer <- e2$id
+  } else if (inherits(e2, "ggchord_palette_preset")) {
+    e1$palette_preset <- e2
   } else if (inherits(e2, "ggchord_scoped_scale")) {
+    if (isTRUE(e2$y) || !is.null(e2$tracks))
+      ggchord_stop("Fusion: scope root visual scales to ribbon layers")
+    e2$layers <- e2$layers %||% e1$active_layer
+    if (is.null(e2$layers)) ggchord_stop("Fusion: add a ribbon first or specify layers")
     e1$scope_scales <- c(e1$scope_scales, list(e2))
   } else if (inherits(e2, "ggchord_layout_policy")) {
     e1$fusion_policy <- unclass(e2)
@@ -562,7 +569,7 @@ ggchord_fusion_build_styles <- function(x) {
     if (inherits(style, "theme")) explicit <- explicit + style
   }
   # Capture user locks separately from the carrier's default right-hand guide.
-  p$ggchord <- list(theme_explicit = explicit)
+  p$ggchord <- list(theme_explicit = explicit, palette_preset = x$palette_preset)
   if (!is.null(x$fusion_policy)) {
     p$ggchord$layout_policy <- x$fusion_policy
     p <- ggchord_apply_adaptive_styles(p)

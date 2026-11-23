@@ -11,8 +11,8 @@ chord_palette_discrete <- c(
 #' qualitative HCL palette rather than interpolating through muddy midpoints.
 #' @param n Number of colors requested
 #' @return A character vector of \code{n} colors
-#' @noRd
-chord_default_palette <- function(n) {
+#' @export
+pal_ggchord <- function(n) {
   if (n <= 0) {
     character(0)
   } else if (n <= length(chord_palette_discrete)) {
@@ -21,6 +21,8 @@ chord_default_palette <- function(n) {
     grDevices::hcl.colors(n, palette = "Dark 3")
   }
 }
+
+chord_default_palette <- pal_ggchord
 
 #' Missing value handling operator
 #'

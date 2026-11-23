@@ -21,6 +21,7 @@ ggchord(reference) +
     label_layout = label_layout_fixed(orientation = "feature", side = "negative", offset = 8)
   ) +
   geom_link_ribbon(aes(fill = pident), data = hit) +
+  scale_fill_pident() +
   layout_sequences(angular_gap = 9) +
   coord_chord() +
   theme_ggchord_minimal()

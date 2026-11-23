@@ -23,7 +23,7 @@ draw_reference_map <- function(reference, overview = FALSE) {
       aes(label = paste0(accver, "\n", comma(length), " bp")),
       size = 3.55, fontface = "bold"
     ) +
-    scale_seq_position(
+    scale_seq_continuous(
       name = NULL, labels = label_comma(),
       guide = guide_seq_axis(side = "negative")
     ) +

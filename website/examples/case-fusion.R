@@ -34,10 +34,11 @@ relationship_view <- function(sequences, links, genes) {
       position = position_strand(1.3), thickness = 1.55, linewidth = 0.17, show.legend = c(fill = TRUE, colour = FALSE)) +
     scale_colour_manual(name = "Sequence", values = sequence_colours,
       limits = names(sequence_colours), drop = FALSE, guide = guide_legend(nrow = 2, order = 2)) +
-    scale_for("genes", scale_fill_manual(name = "Strand", values = strand_colours,
+    scale_fill_pident() +
+    scale_for(scale_fill_manual(name = "Strand", values = strand_colours,
       limits = names(strand_colours), drop = FALSE, guide = guide_legend(nrow = 1, order = 1,
-        override.aes = list(strand = c("+", "-"))))) +
-    scale_seq_position(guide = "none") +
+        override.aes = list(strand = c("+", "-")))), layers = "genes") +
+    scale_seq_continuous(guide = "none") +
     panel_theme +
     # The shared Identity ruler fits its labels without scaling to the full canvas.
     render_policy(mode = "fixed")
@@ -57,7 +58,7 @@ include_endpoints <- function(breaks) {
     sort(unique(c(limits, inner[inner > limits[1] & inner < limits[2]])))
   }
 }
-overview_axis <- scale_seq_position(name = NULL, breaks = include_endpoints(breaks_extended(n = 3)),
+overview_axis <- scale_seq_continuous(name = NULL, breaks = include_endpoints(breaks_extended(n = 3)),
   labels = label_comma(), minor_breaks = NULL, guide = guide_seq_axis(side = "negative"))
 overview_xlim <- c(-1.42, 1.12)
 draw_linear <- function(row_gap) {
@@ -117,7 +118,7 @@ draw_zoom <- function(row_gap, top, axis_text_offset) {
     detail_labels +
     layout_sequences(windows = windows, row_gap = row_gap, align = "center") +
     coord_collinear(ylim = c(-0.92, top), fit = "labels", clip = "off") +
-    scale_seq_position(name = NULL, coordinates = "source",
+    scale_seq_continuous(name = NULL, coordinates = "source",
       breaks = include_endpoints(breaks_width(4000, offset = 2000)), labels = label_comma(),
       minor_breaks = NULL, guide = guide_seq_axis(side = "negative")) +
     theme(panel.border = detail_border,

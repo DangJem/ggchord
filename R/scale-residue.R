@@ -25,6 +25,22 @@ scale_fill_residue <- function(alphabet = "DNA", name = waiver(), values = NULL,
   dots <- list(...)
   ggchord_check_param_names(dots, c("breaks", "labels", "limits", "drop", "na.translate",
     "expand", "call", "super"), "scale_fill_residue()")
+  palette <- pal_residue(alphabet, values)
+  if (!is.character(na.value) || length(na.value) != 1L || is.na(na.value))
+    ggchord_stop("na.value must be one colour")
+  tryCatch(col2rgb(c(palette, na.value)), error = function(e)
+    ggchord_stop("scale_fill_residue(): ", conditionMessage(e)))
+  if (is_waiver(name)) name <- alphabet
+  scale_fill_manual(name = name, values = palette, na.value = na.value, guide = guide, ...)
+}
+
+#' Colours for residue symbols
+#' @inheritParams scale_fill_residue
+#' @return A named vector of colours for the selected alphabet, including gaps.
+#' @export
+pal_residue <- function(alphabet = "DNA", values = NULL) {
+  ggchord_local_console_errors()
+  alphabet <- ggchord_match_choice(alphabet, c("DNA", "RNA", "AA"), "alphabet")
   allowed <- if (alphabet == "AA") c(LETTERS, "*", "-", ".") else
     strsplit(if (alphabet == "RNA") "ACGURYSWKMBDHVN-." else "ACGTRYSWKMBDHVN-.", "")[[1L]]
   palette <- setNames(rep("#B8C1C5", length(allowed)), allowed)
@@ -46,10 +62,7 @@ scale_fill_residue <- function(alphabet = "DNA", name = waiver(), values = NULL,
       ggchord_stop("values must provide colours for distinct valid residue symbols")
     palette[toupper(names(values))] <- values
   }
-  if (!is.character(na.value) || length(na.value) != 1L || is.na(na.value))
-    ggchord_stop("na.value must be one colour")
-  tryCatch(col2rgb(c(palette, na.value)), error = function(e)
-    ggchord_stop("scale_fill_residue(): ", conditionMessage(e)))
-  if (is_waiver(name)) name <- alphabet
-  scale_fill_manual(name = name, values = palette, na.value = na.value, guide = guide, ...)
+  tryCatch(col2rgb(palette), error = function(e)
+    ggchord_stop("pal_residue(): ", conditionMessage(e)))
+  palette
 }

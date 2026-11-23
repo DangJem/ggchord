@@ -1,5 +1,5 @@
 {
-  "source_sha256": "100b3c9ac28d8028d6b2fbcfbb29c814bfc6d81bfd0450e96ac1faea417c989c",
+  "source_sha256": "b38a7dd039ed2aebccc524dfc1f11865389017728965ef6ec0675a8ee9a3388b",
   "blocks": {
     "0": {
       "source_sha256": "441223939bf23846bb93de393b385dedcbc77fb50efc1885f1cad640a2f06432",
@@ -32,9 +32,9 @@
       "translation": "调色板中的名称使重新排序或筛选后的类别仍对应原来的颜色。要调整字体或移动图例，可使用 `theme()`。调整不同序列的半径、偏移或宽度，请继续看[灵活参数](parameters.md)。要用高度表示实测值，可试画 [GC 轨道](tracks.md)。\n"
     },
     "10": {
-      "source_sha256": "a7152ce363e6dd7162bc40c1b954db02f636ba55a86f21ab308d07ac59fa1f3d",
+      "source_sha256": "6e371dda95f3ab87c3f5e161d54265590b84f355deb59d7c3ea1b2c9e63fce78",
       "status": "reviewed",
-      "translation": "序列标识可用 `scale_colour_sequence()` 着色，链方向用 `scale_fill_strand()`，注释类型用 `scale_fill_feature_type()`，比对一致性百分比用 `scale_fill_pident()`。当基因和连带都映射 `fill` 时，给基因层指定 `id = \"genes\"`，再加上 `scale_for(\"genes\", scale_fill_strand())`。基因图例显示链方向，连带保留自己的百分比色标。\n"
+      "translation": "用 `scale_colour_sequence()` 为参考 ID 配色，用 `scale_fill_strand()` 为链方向配色，用 `scale_fill_feature_type()` 为注释类型配色，用 `scale_fill_pident()` 为百分比一致性配色。基因与连带都映射填色时，为基因层设置 `id = \"genes\"`，再添加 `scale_for(scale_fill_strand(), layers = \"genes\")`。使用 `scales_ggchord()` 可为识别到的映射启用传统配色。\n"
     },
     "11": {
       "source_sha256": "8053865451d0d4fde354b7abca89665abb20ec80d30aabe5b55fdb10b39c6f49",

@@ -33,9 +33,10 @@ overview <- ggchord(comparison$seq_data) +
     linewidth = 0.15) +
   scale_colour_manual(name = "Sequence", values = sequence_colours,
     guide = guide_legend(nrow = 1, order = 2)) +
-  scale_for("genes", scale_fill_manual(name = "Strand", values = strand_colours,
+  scale_fill_pident() +
+  scale_for(scale_fill_manual(name = "Strand", values = strand_colours,
     breaks = c("+", "-"),
-    guide = guide_legend(nrow = 1, order = 1))) +
+    guide = guide_legend(nrow = 1, order = 1)), layers = "genes") +
   layout_sequences(
     orientation = comparison$orientation, angular_gap = sector_gap,
     curvature = setNames(c(0, 1, -0.65, 0.75), names(sequence_colours)),
@@ -55,7 +56,7 @@ overview +
       side = "both", offset = 12, padding = 1.2, fit = "wrap_shrink", min_size = 2.65,
       wrap = 24, max_lines = 3), size = 3.3) +
   sequence_labels(size = 4.0, offset = 11) +
-  scale_seq_position(name = NULL, minor_breaks = NULL,
+  scale_seq_continuous(name = NULL, minor_breaks = NULL,
     labels = label_comma()) +
   guides(fill = guide_coloursteps(position = "left", direction = "vertical",
     even.steps = FALSE, show.limits = TRUE,

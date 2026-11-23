@@ -1,5 +1,18 @@
 # ggchord 0.50.0 (development)
 
+- `layout_track()` replaces `track_band()`. It updates the current track or
+  configures a named track before or after its layers. Layer additions assign
+  stable track IDs, and automatic order fills the free positions on each side.
+  `add_track()` places several layers in one band using the same layout rules.
+- Each standalone track layer creates a band by default. Add a native
+  `scale_y_*()` after a track to configure its local height. Use
+  `scale_for(scale, tracks = ids, by = "panel")` for separate facet domains.
+  `scale_seq_continuous()` configures the reference axis.
+- Ordinary visual scales use ggplot2 defaults and train across layers by
+  aesthetic. `scale_for()` takes the scale first and accepts layer or track IDs.
+  Use `scales_ggchord()` or individual palette scales to opt into the
+  traditional colours. Add `theme()` after a theme preset to set theme elements.
+
 - Discrete ggchord legends combine the participating layer glyphs in each
   category key. Compatible glyphs from one scale, or from default scales
   mapping the same categorical column with matching breaks, can make
@@ -70,28 +83,22 @@
 - Standardized feature, label, site, ribbon and track layer families.
   Ordinary ggplot2 visual scales can be scoped to named layers with
   `scale_for()`. Coverage, bundle and density statistics retain source evidence.
-- Layers on a ggchord plot now use `id = auto_id()`. Mapping the same visual
-  aesthetic on two layers trains independent default scales. Set `id = NULL`
-  or `id = NA` on the layers that should share a scale. An ordinary explicit
-  scale covers all layers mapping that aesthetic except those selected by
-  `scale_for()`. A named ID also supports label binding and export.
+- Layers on a ggchord plot use plot-local IDs. Named IDs support label
+  binding, scoped visual scales and layout export.
 - Feature, gene, primer and site labels use `anchor_layer = auto_anchor()`.
   A single compatible layer supplies its entities and displayed positions.
   With several candidates, select one by ID. Providing label data, a
   non-identity Stat or a Position selects independent placement by default.
-- Ribbon fill mapped to `pident` uses the stepped Identity (%) guide with
-  proportional intervals and ticks at 0, 50, 80, 90, 95 and 100. Alignment
-  and point-link colour use line keys at the same percentages. The stepped
-  guide defaults to 2.8 mm on its short edge in either orientation, including
-  in Fusion. Explicit guide dimensions take precedence.
+- `scale_fill_pident()` supplies the stepped Identity (%) guide with
+  proportional intervals and ticks at 0, 50, 80, 90, 95 and 100.
+  `scale_colour_link_pident()` supplies the matching point-link and alignment
+  palette. The stepped guide defaults to 2.8 mm on its short edge in either
+  orientation, including in Fusion. Explicit guide dimensions take precedence.
 - The default theme uses a borderless warm ivory panel (#FFFCF5) and more
   readable legend text. The publication theme retains its white
   background. Dark and plasmid variants retain their own palettes. Plasmid
   maps have labelled sequence axes and separate major and minor ticks. Features have fine dark outlines. Compact glyphs use a lighter
   stroke unless a linewidth is set or mapped.
-- Reference, strand and recognized circular feature-type mappings can reuse
-  the sequence, strand or plasmid palette when they have a colour channel
-  to themselves. Explicit scales and independently scoped scales take priority.
 - `geom_seq()` draws double backbones in circular coordinates and single
   backbones elsewhere. Use `geometry = "line"` to request a single ring.
   `geom_seq_arrow()` adds a closed 2 mm arrow to a single backbone.

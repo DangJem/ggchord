@@ -38,7 +38,7 @@ ggchord_layout_component <- function(layout, type, fallback = data.frame()) {
 compute_chord_geometry <- function(plot) {
   plot <- ggchord_render_inputs(plot)
   if (isTRUE(plot$coordinates$ggchord_dotplot))
-    return(ggchord_cache_layout(plot, ggchord_dotplot_geometry(ggchord_register_layers(plot))))
+    return(ggchord_cache_layout(plot, ggchord_dotplot_geometry(ggchord_prepare_position_scales(ggchord_register_layers(plot)))))
   plot <- ggchord_prepare_geometry_inputs(plot)
   ggchord_cache_layout(plot, compute_chord_geometry_prepared(plot))
 }
@@ -46,7 +46,7 @@ compute_chord_geometry <- function(plot) {
 ggchord_prepare_geometry_inputs <- function(plot, prepare_instances = TRUE) {
   if (any(vapply(plot$layers, function(x) identical(x$ggchord_type, "alignment"), logical(1))))
     ggchord_stop("geom_alignment_segment() requires coord_dotplot()")
-  plot <- ggchord_register_layers(plot)
+  plot <- ggchord_prepare_position_scales(ggchord_register_layers(plot))
   for (layer in plot$layers) {
     if (identical(layer$ggchord_params$seq_style, "auto")) {
       circular <- isTRUE(plot$coordinates$ggchord_circular)
@@ -60,9 +60,6 @@ ggchord_prepare_geometry_inputs <- function(plot, prepare_instances = TRUE) {
       layer$ggchord_params$visual_source <- new.env(parent = emptyenv())
   }
   sequences <- ggchord_sequence_reference_data(plot)
-  track_scales <- lapply(plot$scales$scales, function(scale) scale$ggchord_track_id)
-  unknown <- setdiff(unlist(track_scales), c("default", names(plot$ggchord$track_bands)))
-  if (length(unknown)) ggchord_stop("scale_track_value(): unknown track '", unknown[1L], "'")
   for (scope in ggchord_scale_scopes(plot)) {
     if (!"shape" %in% scope$aesthetics) next
     for (i in scope$selected) if (plot$layers[[i]]$ggchord_type %in% c("gene_poly", "restriction_site"))

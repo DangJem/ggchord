@@ -32,7 +32,7 @@ library(ggplot2)
 
 Start from the complete reference table. Each observation layer takes its own data and evaluates mappings on that table. Add another geom_seq() to draw a second backbone style on the same reference, or omit the backbone while keeping the coordinate frame.
 
-Mapping ribbon fill to `pident` uses the stepped Identity (%) guide from 0 to 100. Supply an ordinary fill scale to customize it.
+Map ribbon fill to `pident` and add `scale_fill_pident()` for the stepped Identity (%) guide from 0 to 100.
 
 ```{r workflow-2}
 refs <- seq_data_example
@@ -40,9 +40,10 @@ relationships <- ribbon_data_example
 
 comparison <- ggchord(refs) +
   geom_link_ribbon(aes(fill = pident), data = relationships) +
+  scale_fill_pident() +
   geom_seq(linewidth = 0.6) +
   geom_seq_label() +
-  scale_seq_position(guide = "none")
+  scale_seq_continuous(guide = "none")
 
 comparison + coord_chord(start_angle = 90)
 ```
@@ -107,9 +108,9 @@ signal <- data.frame(accver = "A", pos = c(50, 250, 450, 650, 850),
 
 ggchord(ref) +
   geom_seq() +
-  track_band("signal", thickness = 6) +
+  layout_track("signal", thickness = 6) +
   geom_track_line(data = signal, track = "signal", colour = "#277A73") +
-  scale_track_value("signal", name = "Signal") +
+  scale_y_continuous(name = "Signal") +
   coord_collinear()
 ```
 

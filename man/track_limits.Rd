@@ -4,12 +4,13 @@
 \alias{track_limits}
 \title{Report shared numerical limits across independent plots}
 \usage{
-track_limits(plots, tracks = "default")
+track_limits(plots, tracks = NULL)
 }
 \arguments{
 \item{plots}{A ggchord plot or a list of independent ggchord plots.}
 
-\item{tracks}{IDs of numerical tracks present in every plot.}
+\item{tracks}{IDs of numerical tracks present in every plot. Omit when each
+plot has just one numerical track.}
 }
 \value{
 A data frame of current limits, units and available measure evidence.
@@ -34,6 +35,6 @@ signal2 <- transform(signal, value = value * 2)
 p2 <- ggchord(data = seqs) +
   geom_track_line(data = signal2, aes(x = pos, y = value)) + coord_collinear()
 rng <- track_limits(list(first = p1, second = p2))
-p1 + scale_track_value(limits = rng$limits[[1]])
-p2 + scale_track_value(limits = rng$limits[[1]])
+p1 + scale_y_continuous(limits = rng$limits[[1]])
+p2 + scale_y_continuous(limits = rng$limits[[1]])
 }

@@ -13,12 +13,12 @@
 
 | 原调用或参数 | 0.50.0 写法 |
 | --- | --- |
-| 原先两个未命名图层共享颜色或填色标度 | 在两层分别写 `id = NULL` 或 `id = NA` 即可共享默认标度。添加普通显式标度也会同时作用于两层。省略 ID 可分别训练标度，通过具名图层和 `scale_for()` 可单独指定标度。 |
+| 各层原先须设 `id = NULL` 或 `id = NA` 才共享标度 | 普通视觉标度默认按映射通道共用。需分域时用 `scale_for(scale_fill_discrete(), layers = "features")`。 |
 | 原先省略 `anchor_layer`，直接使用图级数据放置独立标签 | 设置 `anchor_layer = NULL` 可绘制独立标签。省略时标签跟随唯一兼容目标；有多个候选时，为目标图层命名并在 `anchor_layer` 中填写该名称。 |
 | 特征用 `aes(accver = ref, fill = accver)` 时，填色曾跟随重映射后的序列标识 | 各个起始映射都读取图层源列。保留此式可按原始序列标识着色。若要按绘制所用的参考着色，写 `aes(accver = ref, fill = ref)`。 |
 | 点轨道按类别使用不同形状，或只需隐藏填色图例 | 用 `aes(shape = kind)` 映射类别，再用 `scale_shape_manual(values = c(a = 21, b = 24))` 指定符号。在轨道层设 `show.legend = c(fill = FALSE)` 可隐藏该层对填色图例的贡献。其他图层仍可提供该图例。 |
 | 在同一高度轴混用覆盖率和平均深度 | 两种度量分带绘制。自定义高度可声明 `measure = "read_depth"`。跨图比较时将 `shared_track_limits(p1, p2)` 得出的范围设给各自的轨道标度。 |
-| 分样本观察各面板的局部数值变化 | 使用 `scale_track_value_continuous("depth", facet_domain = "panel")` 并保留局部轴。默认在各样本间使用共同的高度范围。 |
+| 分样本观察各面板的局部数值变化 | 使用 `scale_for(scale_y_continuous(), tracks = "depth", by = "panel")`。 |
 | 按覆盖率给整窗着色 | 使用 `geom_track_tile(aes(fill = after_stat(coverage)), stat = "coverage", binwidth = 4, data = intervals)`。末窗按实际宽度绘制。 |
 | 将双端记录分派到面板 | 原始连接带或点连接可选择源列，例如 `facet_wrap(vars(saccver))`。Dotplot 写明两端，例如 `facet_grid(rows = vars(qaccver), cols = vars(saccver))`。 |
 | 替换骨架表中有重复键，或把两个不同的聚焦区间都命名为 W | 每个参考 ID 保留一行，不同窗口给不同的 `locus_id`。重复显示同一序列用 `layout_sequences(order = c(left = "A", right = "A"))`。 |
@@ -36,12 +36,14 @@
 | `ggchord(seq_data = ref, gene_data = f, ribbon_data = h)` | 从 `ggchord(ref)` 开始，分别加 `geom_feature(data = f, preset = "gene")` 和 `geom_link_ribbon(data = h)`。已有来源分类的主表可写 `ggchord(prepare_ggchord_data(ref, ribbon_data = h, feature_data = f))`。有多张可用的准备表时在图层中指定数据。 |
 | 准备、校验、清洗、聚焦、分段函数的 `gene_data`，以及准备函数的 `mapping$gene` | 0.50.0 的第三个参数为 `feature_data`。自定义列可写 `prepare_ggchord_data(ref, feature_data = f, mapping = list(feature = c(strand = "source_strand")))`。主注释输出、转换记录、校验行数分别读取 `$feature_data`、`$report$conversions$feature` 和 `$data_summary$n_feature`。附加表仍按名称独立保存，例如 `features = list(cds = cds, sites = sites)`。 |
 | 已保存且含非空 `$gene_data` 的准备对象，或将无分类表按第三位置传入并继承基因预设 | 用原输入重建。基因预设继承时，依次查找 `feature_class`、`type`、`role`，按第一个存在的字段选 gene/CDS。原始资料确认所有记录均为基因时，无分类表可写 `feature_data = dplyr::mutate(f, type = "gene")`。要直接绘制有方向且无分类列的基因表，可写 `ggchord(ref) + geom_seq() + geom_feature(data = f, preset = "gene")`。继承记录的来源标识前缀为 `feature:`，显式图层使用该层自己的行标识。 |
-| 用 `position_track("depth", width = w)` 指定物理带 | 加一次 `track_band("depth", width = w)`，在同带各层写 `track = "depth"`。默认带可省略轨道 ID。堆叠、并排和微移交给各层的 `position`。 |
+| `track_band("depth", thickness = w)` | 改用 `layout_track("depth", thickness = w)`，在成员层指定 `track = "depth"`。对于隐式轨带，在图层之后加 `layout_track(thickness = w)`。 |
 | `geom_seq()` 的 `seq_order`、`seq_orientation`、`seq_gap`、`length_mode` | 添加 `layout_sequences(order = ids, orientation = directions, gap = gaps, length_mode = "equal")`。骨架线条与固定样式继续放在 `geom_seq()`。 |
 | `position_plasmid(offset)` 和 `position_feature_stack(side = ...)` | 偏移改用 `position_offset(offset)`。原 `side = "outside"` 用 `base_position = position_offset(-0.1), direction = "inward"`。原 `"inside"` 用 `position_offset(0.1)` 及 `"outward"`。原 `"strand"` 对应默认分道。 |
 | `geom_gene()`、`geom_feature_plasmid()` | 使用 `geom_feature(preset = "gene")` 或 `geom_feature(preset = "plasmid")`，传入相同图层数据。 |
 | `geom_feature_label_repel()` | 使用 `geom_feature_label(placement = "repel")`。原先的放置策略交给 `label_layout`，原 `label_fit` 改为 `overflow`。多个实体层均可匹配时用 `anchor_layer = "features"` 指定目标。 |
-| `scale_seq_position_continuous(sequences = ids)` | 改用 `scale_seq_position_continuous(guide = guide_seq_axis(sequences = ids))`。 |
+| `scale_seq_position()` | 改用 `scale_seq_continuous()`。用 `guide = guide_seq_axis(sequences = ids)` 选择参考轴。 |
+| `scale_track_value("depth", limits = c(0, 1000))` | 在轨道之后加 `scale_y_continuous(limits = c(0, 1000))`，或使用 `scale_for(scale_y_continuous(limits = c(0, 1000)), tracks = "depth")`。 |
+| 隐式启用传统配色或直接给主题预设传入元素 | 使用 `scales_ggchord()` 启用传统配色，通过 `theme(...)` 配置主题元素。 |
 
 使用阶段导出的轨道统计前，先检查 `layer_stage_status$status`。统计成功并返回零行时为
 `available`。Stat 失败时，统计及几何阶段均标为 `failed`，`reason` 保留原因。

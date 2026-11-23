@@ -10,7 +10,7 @@ geom_track(
   geom = "point",
   stat = NULL,
   position = NULL,
-  track = "default",
+  track = NULL,
   ...,
   na.rm = FALSE,
   show.legend = NA,
@@ -22,42 +22,42 @@ geom_track(
 \item{mapping, data}{Standard layer input. Supply accver and source positions
 through x/pos, or interval start/end. Map y or supply the value column.
 Start-stage expressions read the layer's source columns, including the
-original accession when `accver` is mapped. A zero-row input must still
+original accession when \code{accver} is mapped. A zero-row input must still
 provide the columns used by these expressions.}
 
-\item{geom, stat}{Native geometry and statistic names, or `stat = "coverage"`
+\item{geom, stat}{Native geometry and statistic names, or \code{stat = "coverage"}
 for interval coverage. The seven native
 statistics also accept their built-in ggplot2 Stat objects, for example
-`ggplot2::StatBin`. Bar defaults to count, other geoms to identity.
+\code{ggplot2::StatBin}. Bar defaults to count, other geoms to identity.
 A ggplot2 Stat object may also compute positions and values for a track.
-Its input includes `source_row`, an integer index into this layer's source
-table. It can report the contributing indices as a `source_rows` list
+Its input includes \code{source_row}, an integer index into this layer's source
+table. It can report the contributing indices as a \code{source_rows} list
 column (one integer vector per result). Unreported membership is exported
-as NULL with `source_status = "unknown"`. An explicit empty integer vector
+as NULL with \code{source_status = "unknown"}. An explicit empty integer vector
 denotes a known empty set. Reported members must belong to the same
 accession and facet as the result.}
 
-\item{position}{Native data adjustment such as `"identity"`, `"stack"` or
-`ggplot2::position_dodge(width = 10)`. Source x uses sequence units.
+\item{position}{Native data adjustment such as \code{"identity"}, \code{"stack"} or
+\code{ggplot2::position_dodge(width = 10)}. Source x uses sequence units.
 Feature placement belongs on feature layers.}
 
-\item{track}{Character ID declared with [track_band()]. Omit for the shared default band.}
+\item{track}{Character ID declared with \code{\link[=layout_track]{layout_track()}}. Omit to create an individual band.}
 
 \item{...}{Native geom/stat parameters and fixed styles. Coverage requires
-a positive whole `binwidth` in sequence units or explicit `windows`.
-`measure` names the quantity represented by height. Different declared
+a positive whole \code{binwidth} in sequence units or explicit \code{windows}.
+\code{measure} names the quantity represented by height. Different declared
 measures need separate bands. Coverage and mean depth identify their
-measures automatically. `bounds` controls whether out-of-range positions
-fail or are clipped, and a nonzero `baseline` requires identity placement.
-`outline` controls the border drawn by area tracks.
+measures automatically. \code{bounds} controls whether out-of-range positions
+fail or are clipped, and a nonzero \code{baseline} requires identity placement.
+\code{outline} controls the border drawn by area tracks.
 A supplied parameter accepted by both an external Stat and the selected
 Geom raises an error. For example, name a custom Stat's search radius
-`radius` to use it alongside a column Geom's `width`.}
+\code{radius} to use it alongside a column Geom's \code{width}.}
 
 \item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
 
 \item{show.legend}{Standard ggplot2 layer legend selection. A named logical
-vector such as `c(fill = FALSE, colour = TRUE)` controls this layer's
+vector such as \code{c(fill = FALSE, colour = TRUE)} controls this layer's
 contribution to each guide, including guides on named track scales.}
 
 \item{inherit.aes}{Whether to inherit the plot mapping.}
@@ -65,7 +65,7 @@ contribution to each guide, including guides on named track scales.}
 \item{id}{Layer identifier for visual scales and exported rows. See \code{\link[=auto_id]{auto_id()}}.}
 }
 \value{
-A ggplot2 layer using a shared sequence-local band.
+A ggplot2 track layer.
 }
 \description{
 Statistics and data positions are calculated independently within each
@@ -91,12 +91,12 @@ line/path/point, density with line/path/point/area, and ecdf with
 line/path/point/step. Other combinations are explicitly rejected.
 Count counts identical positions; bin requires explicit binwidth or breaks.
 An explicit group mapping or fixed group takes priority over discrete
-style mappings. For example, `group = 1` pools the source observations.
+style mappings. For example, \code{group = 1} pools the source observations.
 A fixed aesthetic overrides the layer or inherited mapping before statistics
 and grouping.
 Point shape categories and their factor order are shared with other point
-layers through the plot's shape scale. Use `scale_shape_manual()` to choose
-symbols by category, or set a fixed `shape` on the layer.
+layers through the plot's shape scale. Use \code{scale_shape_manual()} to choose
+symbols by category, or set a fixed \code{shape} on the layer.
 Missing discrete styles form an implicit group and follow the visual
 scale's missing-value settings. An explicit group must be non-missing.
 When exported track geometry combines factor shape categories and fixed
@@ -110,24 +110,24 @@ and its numerical boundary tolerance, before data positions move the bars.
 Mapping x/y refers to source position/local numerical value, not screen x/y.
 }
 \details{
-Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
+Numerical tracks use \code{x} in sequence units and \code{y} in measurement units. They default to the \code{pos} and \code{value} columns. An interval fills the band across \code{start} and \code{end} without training a numerical height. Track bands set geometry in millimetres.
 }
 \section{Interval coverage}{
 
 Supply one inclusive interval per row with accver, start and end. Endpoint
-columns can be mapped with `aes(start = ..., end = ...)`. Supply the
+columns can be mapped with \code{aes(start = ..., end = ...)}. Supply the
 observation table to the layer. Compound features can declare their actual
-intervals in `segments`. Each accession or focused window
+intervals in \code{segments}. Each accession or focused window
 starts at position 1. With binwidth 4, bins are 1-4, 5-8 and so on.
 The final bin uses its actual length. Cross-bin intervals contribute only
 their intersection with each bin. Missing endpoints are errors. The default
 bounds policy rejects out-of-range intervals; clip intersects them with the
 sequence first. For grouped data, compute a complete grid per observed
 group within each accession. An accession/sample without observations
-has no statistical rows. Explicit windows may overlap; see [stat_coverage()].
+has no statistical rows. Explicit windows may overlap; see \code{\link[=stat_coverage]{stat_coverage()}}.
 
-The default height `after_stat(coverage)` is the fraction covered by the
-union of intervals. `after_stat(mean_depth)` divides the sum of intersection
+The default height \code{after_stat(coverage)} is the fraction covered by the
+union of intervals. \code{after_stat(mean_depth)} divides the sum of intersection
 lengths by bin length, counting overlaps repeatedly. Other computed variables
 are covered (distinct covered units), denominator (actual window length),
 depth_sum (sum of intersection lengths), n_interval (intersecting input rows),
@@ -137,20 +137,21 @@ points/lines/steps use its centre, and tiles fill its full band and
 interval. Coverage layers use identity position.
 }
 
+\section{Track scales}{
+
+Add a continuous ggplot2 \verb{scale_y_*()} after a numerical track to
+configure its height. Limits use the scale's out-of-bounds policy.
+Supply numeric limits when using a Stat that computes new values or
+a Position that adjusts data. Use \code{\link[=add_track]{add_track()}} for multiple layers
+on one band and \code{\link[=scale_for]{scale_for()}} to select complete bands explicitly.
+}
+
 \examples{
 library(ggplot2)
-
-seqs <- data.frame(
-  accver = c("A", "B"), length = c(1000, 800),
-  sequence_unit = "bp", topology = "linear"
-)
-
-signal <- data.frame(accver = rep(c("A", "B"), each = 3),
-  pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))
-
-ggchord(seqs) +
-  geom_seq() +
-  geom_track(aes(x = pos, y = value), data = signal, geom = "line") +
-  scale_track_value(name = "Signal") +
+seqs <- data.frame(accver = "A", length = 100)
+gc_bins <- data.frame(accver = "A", pos = c(20, 50, 80), gc = c(.4, .5, .6))
+ggchord(seqs) + geom_seq() +
+  geom_track_col(aes(x = pos, y = gc), data = gc_bins) +
+  scale_y_continuous(limits = c(0, 1)) +
   coord_collinear()
 }

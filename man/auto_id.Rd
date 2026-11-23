@@ -2,31 +2,17 @@
 % Please edit documentation in R/layer-registry.R
 \name{auto_id}
 \alias{auto_id}
-\title{Choose a layer identifier and default scale scope}
+\title{Assign a plot-local layer identifier automatically}
 \usage{
 auto_id()
 }
 \value{
-A declaration resolved when the layers of a plot are registered.
+A declaration resolved when the layer is added.
 }
 \description{
-In a ggchord plot, layers that map the same visual aesthetic train their
-own scales by default. A character ID gives a layer a stable name for
-\code{\link[=scale_for]{scale_for()}}, label binding and export. An ordinary explicit scale applies
-to all layers mapping its aesthetic except those selected by \code{scale_for()}.
-Use \code{id = NULL} or a scalar \code{NA} on each layer that should share the
-ordinary ggplot2 scale. Fixed styles and position scales are independent
-of this choice. Native ggplot2 plots use their ordinary scales.
+IDs identify layers for \code{\link[=scale_for]{scale_for()}}, label binding and export. Ordinary
+visual scales are shared across layers by aesthetic.
 }
 \examples{
-library(ggplot2)
-seqs <- data.frame(accver = c("A", "B"), length = c(1000, 800))
-genes <- data.frame(accver = c("A", "B"), start = c(100, 150),
-  end = c(240, 380), strand = c("+", "-"), label = c("a", "b"))
-ggchord(seqs) +
-  geom_seq(aes(colour = accver)) +
-  geom_gene(aes(colour = strand), data = genes)
-ggchord(seqs) +
-  geom_seq(aes(colour = accver), id = NULL) +
-  geom_gene(aes(colour = strand), data = genes, id = NA)
+ggchord(seq_data_example) + geom_seq(id = auto_id())
 }

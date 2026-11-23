@@ -26,7 +26,7 @@
 #'   geom_gene(aes(fill = accver), data = gene_data_example)
 scale_colour_sequence <- function(name = waiver(), ..., aesthetics = "colour") {
   ggchord_local_console_errors()
-  scale <- discrete_scale(aesthetics, palette = chord_default_palette, name = name, ...)
+  scale <- discrete_scale(aesthetics, palette = pal_ggchord, name = name, ...)
   scale$ggchord_palette <- "sequence"
   scale
 }
@@ -45,8 +45,7 @@ scale_colour_sequence <- function(name = waiver(), ..., aesthetics = "colour") {
 #'   scale_fill_strand(name = "Strand")
 scale_fill_strand <- function(name = waiver(), ..., aesthetics = "fill") {
   ggchord_local_console_errors()
-  palette <- c(process_strand_colors(NULL), "+/-" = "#795788", "." = "#767B80")
-  scale_fill_manual(name = name, values = palette, aesthetics = aesthetics, ...)
+  scale_fill_manual(name = name, values = pal_strand(), aesthetics = aesthetics, ...)
 }
 
 #' Colour genomic feature types
@@ -73,7 +72,16 @@ scale_fill_feature_type <- function(name = waiver(), ..., aesthetics = "fill") {
 ggchord_feature_type_palette <- function(self, n) {
   keys <- as.character(self$get_limits())
   keys <- keys[!is.na(keys)]
-  palette <- ggchord_plasmid_feature_colours()
+  pal_feature_type(keys)
+}
+
+#' Genomic feature type palette
+#' @param types Feature type names.
+#' @return Named colours in the requested order. Unknown types have stable colours.
+#' @export
+pal_feature_type <- function(types) {
+  keys <- unique(as.character(types[!is.na(types)]))
+  palette <- pal_plasmid()
   extra <- setdiff(keys, names(palette))
   if (length(extra)) {
     hue <- vapply(enc2utf8(extra), function(key) {
@@ -108,8 +116,7 @@ scale_fill_pident <- function(name = "Identity (%)", ..., limits = c(0, 100),
   automatic <- is_waiver(guide)
   if (automatic) guide <- ggchord_identity_guide(aesthetic = "fill")
   scale <- ggplot2::scale_fill_stepsn(name = name,
-    colours = c("#440154", "#482878", "#3E4A89", "#31688E", "#26828E",
-      "#1F9E89", "#35B779", "#6DCD59", "#B4DE2C", "#FDE725"),
+    colours = pal_pident(),
     limits = limits, breaks = breaks, guide = guide, ...)
   if (automatic) scale$ggchord_palette <- "pident"
   scale
@@ -126,7 +133,7 @@ ggchord_prepare_domain_scale <- function(scale, plot) {
       copy$palette <- function(self, n) {
         extra <- setdiff(as.character(stats::na.omit(self$get_limits())), names(palette))
         if (!length(extra)) return(palette)
-        colours <- chord_default_palette(length(palette) + length(extra))
+        colours <- pal_ggchord(length(palette) + length(extra))
         c(palette, setNames(tail(colours, length(extra)), extra))
       }
     }

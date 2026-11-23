@@ -9,7 +9,7 @@ geom_track_interval(
   data = NULL,
   stat = "identity",
   position = "identity",
-  track = "default",
+  track = NULL,
   ...,
   na.rm = FALSE,
   show.legend = NA,
@@ -26,7 +26,7 @@ geom_track_interval(
 
 \item{position}{A compatible Position for placement of the layer geometry.}
 
-\item{track}{ID of the physical band. The default band is available when first used.}
+\item{track}{ID of the physical band. Omit to create an individual band.}
 
 \item{...}{Additional named visual styles and parameters accepted by this layer.}
 
@@ -36,7 +36,7 @@ geom_track_interval(
 
 \item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
 
-\item{id}{Layer identifier. \code{\link[=auto_id]{auto_id()}} assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or \code{NULL} or \code{NA} to share scales.}
+\item{id}{Layer identifier. \code{\link[=auto_id]{auto_id()}} assigns a plot-local ID. Use a name for explicit references.}
 }
 \value{
 A ggplot2 layer for addition to a plot.

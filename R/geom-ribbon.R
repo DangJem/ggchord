@@ -16,7 +16,7 @@
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @param gap Nonnegative clearance in mm between a ribbon front and the edge of
 #'   the sequence or avoided feature. Accepts flexible per-sequence values.
 #' @param avoid Use `"none"` for a constant sequence gap (the default), or `"smooth"`
