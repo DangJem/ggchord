@@ -27,11 +27,12 @@ Custom ggplot2 statistics continue to receive public aesthetic names,
 such as \code{colour}, on scoped layers.
 Each selected layer needs a mapped aesthetic handled by \code{scale}.
 Use a colour scale for \code{aes(colour = ...)} and a fill scale for
-\code{aes(fill = ...)}. Different scoped palettes have separate legends
-even when their titles and labels match.
-When independent scales share a discrete guide, their symbols occupy
-separate slots in each category key. Symbols from one scale can use
-schematic contact points that represent the legend layout only.
+\code{aes(fill = ...)}. Scope controls scale training. Discrete colour and fill
+scales can share a guide and compose their glyphs when the genomic layers
+map the same category column and the trained breaks, labels, order and
+guide settings agree. Each glyph keeps its own trained and fixed styles.
+Other independently scoped palettes can display separate guides. Symbols
+that share a guide without a verified category use separate slots within it.
 }
 \examples{
 library(ggplot2)
@@ -64,4 +65,9 @@ ggchord(data = seqs) + geom_seq() +
   scale_for(scale_fill_gradient(limits = c(0, 100), name = "Identity (\%)"),
     layers = "matches") +
   coord_chord()
+
+ggchord(seqs) +
+  geom_seq(aes(colour = accver)) +
+  scale_for(scale_colour_viridis_d()) +
+  geom_gene(aes(fill = accver), data = genes, alpha = 0.5)
 }

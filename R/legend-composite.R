@@ -5,6 +5,17 @@ ggchord_legend_role <- function(layer) {
     restriction_site = "site", link = "link", ribbon = "ribbon", "")
 }
 
+ggchord_legend_builtin <- function(layer, role) {
+  default_geom <- switch(role, seq = GeomChordSeq, gene = feature_geom,
+    feature = feature_geom, primer = feature_geom, site = GeomSequenceSite,
+    link = GeomChordLinkLine, ribbon = GeomRibbonFlow)
+  geom <- layer$ggchord_key_geom %||% layer$geom
+  # Preparation can wrap a Geom to supply defaults. An explicit key_glyph
+  # installs a different underlying method.
+  !is.null(default_geom) &&
+    identical(environment(geom$draw_key)$f, environment(default_geom$draw_key)$f)
+}
+
 ggchord_legend_variable <- function(mapping, columns) {
   expr <- get_expr(ggchord_start_mapping(mapping))
   field <- if (is_symbol(expr)) as_string(expr) else
@@ -15,25 +26,78 @@ ggchord_legend_variable <- function(mapping, columns) {
   if (length(field) && field %in% columns) field else NA_character_
 }
 
-ggchord_legend_default_group <- function(layer, mapping, matched, default_breaks) {
+ggchord_legend_breaks <- function(params) {
+  breaks <- params$key$.value
+  unname(if (is.factor(breaks)) as.character(breaks) else breaks)
+}
+
+ggchord_legend_category_id <- function(field, breaks) {
+  rlang::hash(list(field, breaks))
+}
+
+# Inspect the layers that contributed to scale training before Guides merge
+# drops the original break column of each additional scale.
+ggchord_legend_columns <- function(layers, data) {
+  fields <- Map(function(layer, trained) {
+    if (!NROW(trained)) return(NULL)
+    mapping <- c(layer$computed_mapping, layer$stat$default_aes)
+    channels <- grep("^(ggchord_scope_[0-9]+_)?(colour|fill)$", names(trained), value = TRUE)
+    channels <- setdiff(channels, names(layer$aes_params))
+    if (!length(channels)) return(NULL)
+    builtin <- ggchord_legend_builtin(layer, ggchord_legend_role(layer))
+    columns <- names(layer$ggchord_params$visual_source$data %||% layer$data)
+    vapply(setNames(channels, channels), function(aesthetic) {
+      q <- mapping[[aesthetic]]
+      if (!builtin || ggchord_has_stage(q, "after_stat")) return(NA_character_)
+      ggchord_legend_variable(q, columns)
+    }, character(1))
+  }, layers, data)
+  fields <- unlist(unname(fields))
+  vapply(split(fields, names(fields)), function(x) {
+    if (length(unique(x)) == 1L) x[[1L]] else NA_character_
+  }, character(1))
+}
+
+ggchord_legend_shared_category <- function(params, guides, columns, discrete) {
+  aesthetics <- vapply(params, function(p) {
+    if (length(p$aesthetic) == 1L) p$aesthetic else ""
+  }, character(1))
+  channels <- sub("^ggchord_scope_[0-9]+_", "", aesthetics)
+  pair <- which(channels %in% c("colour", "fill"))
+  if (length(pair) != 2L || anyDuplicated(channels[pair])) return(character())
+  aesthetics <- aesthetics[pair]
+  fields <- unname(columns[aesthetics])
+  if (anyNA(fields) || fields[1L] != fields[2L] || !all(aesthetics %in% discrete) ||
+      !all(vapply(guides[pair], function(g) identical(class(g)[1L], "GuideLegend"),
+        logical(1)))) return(character())
+
+  first <- params[[pair[1L]]]
+  second <- params[[pair[2L]]]
+  layout <- c("position", "direction", "nrow", "ncol", "reverse", "theme")
+  overrides <- intersect(names(first$override.aes), names(second$override.aes))
+  breaks <- ggchord_legend_breaks(first)
+  if (is.null(breaks) || !identical(breaks, ggchord_legend_breaks(second)) ||
+      !identical(first$key$.label, second$key$.label) ||
+      !identical(first[layout], second[layout]) ||
+      !identical(first$override.aes[overrides], second$override.aes[overrides]))
+    return(character())
+  setNames(rep(ggchord_legend_category_id(fields[1L], breaks), 2L), aesthetics)
+}
+
+ggchord_legend_category_group <- function(layer, mapping, matched, default_breaks, shared) {
+  category <- unique(unname(shared[matched]))
+  if (length(category) == 1L && !is.na(category)) return(category)
   if (!all(matched %in% names(default_breaks))) return(NULL)
   data <- layer$ggchord_params$visual_source$data %||% layer$data
   fields <- unique(vapply(mapping[matched], ggchord_legend_variable, character(1), names(data)))
   breaks <- unique(unname(default_breaks[matched]))
   if (length(fields) == 1L && !is.na(fields) && length(breaks) == 1L)
-    rlang::hash(list(fields, breaks[[1L]]))
+    ggchord_legend_category_id(fields, breaks[[1L]])
 }
 
-ggchord_legend_layer <- function(layer, matched, sources, default_breaks) {
+ggchord_legend_layer <- function(layer, matched, sources, default_breaks, shared) {
   role <- ggchord_legend_role(layer)
-  default_geom <- switch(role, seq = GeomChordSeq, gene = feature_geom,
-    feature = feature_geom, primer = feature_geom, site = GeomSequenceSite,
-    link = GeomChordLinkLine, ribbon = GeomRibbonFlow)
-  geom <- layer$ggchord_key_geom %||% layer$geom
-  # Compare the underlying method. Plot preparation can wrap the same Geom
-  # to supply defaults, and an explicit key_glyph installs its own method.
-  builtin <- !is.null(default_geom) &&
-    identical(environment(geom$draw_key)$f, environment(default_geom$draw_key)$f)
+  builtin <- ggchord_legend_builtin(layer, role)
   mapping <- c(layer$computed_mapping, layer$stat$default_aes)
   fixed_key <- FALSE
   if (builtin && isTRUE(layer$show.legend) && !length(matched)) {
@@ -43,14 +107,14 @@ ggchord_legend_layer <- function(layer, matched, sources, default_breaks) {
   matched <- matched[vapply(mapping[matched], ggchord_trains_visual_scale, logical(1))]
   ids <- sources[matched]
   source <- if (length(ids) && all(lengths(ids) == 1L)) unique(unlist(ids, use.names = FALSE))
-  default_group <- if (builtin && length(source))
-    ggchord_legend_default_group(layer, mapping, matched, default_breaks)
+  category <- if (builtin && length(source))
+    ggchord_legend_category_group(layer, mapping, matched, default_breaks, shared)
   head_length <- if ("head_length" %in% layer$ggchord_params$head_args)
     layer$ggchord_params$head_length_mm
   aliases <- layer$ggchord_key_aliases
   styled <- c(matched, names(layer$aes_params))
   styled <- c(styled, names(aliases)[aliases %in% styled])
-  list(role = role, builtin = builtin, source = source, default_group = default_group,
+  list(role = role, builtin = builtin, source = source, category = category,
     fixed_key = fixed_key,
     aliases = aliases, route = layer$ggchord_params$route$route,
     alpha_fixed = any(c("alpha", "ribbon_alpha", "feature_alpha") %in% styled),
@@ -58,11 +122,12 @@ ggchord_legend_layer <- function(layer, matched, sources, default_breaks) {
     head_length = head_length)
 }
 
-ggchord_composite_guide <- function(parent, sources, explicit, default_breaks) {
+ggchord_composite_guide <- function(parent, sources, explicit, default_breaks, shared) {
   force(parent)
   force(sources)
   force(explicit)
   force(default_breaks)
+  force(shared)
   ggproto(NULL, parent,
     get_layer_key = function(params, layers, data, theme = NULL) {
       domain <- vapply(layers, function(layer) nzchar(ggchord_legend_role(layer)), logical(1))
@@ -81,7 +146,7 @@ ggchord_composite_guide <- function(parent, sources, explicit, default_breaks) {
       out <- parent$get_layer_key(params, observed, data, theme)
       if (!length(out$decor) || length(out$decor) != length(layers)) return(out)
       contributions <- Map(function(layer, aes)
-        ggchord_legend_layer(layer, aes, sources, default_breaks),
+        ggchord_legend_layer(layer, aes, sources, default_breaks, shared),
         layers, matched)
       for (i in seq_along(out$decor)) {
         aliases <- contributions[[i]]$aliases

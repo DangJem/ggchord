@@ -24,8 +24,9 @@ including layers displaying a subset of references. On a plain ggplot
 colours follow the scale limits.
 }
 \details{
-With default scales, mapping both backbone colour and feature fill to
-\code{accver} composes their glyphs in each shared legend key. Use
+Mapping both backbone colour and feature fill to \code{accver} composes their
+glyphs when the discrete scales train the same ordered category keys and
+their guides are compatible. Each channel keeps its own palette. Use
 \code{aesthetics = c("colour", "fill")} to supply one explicit scale for both
 channels, for example to set a common title or limits.
 }

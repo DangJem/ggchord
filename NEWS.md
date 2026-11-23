@@ -14,10 +14,11 @@
   traditional colours. Add `theme()` after a theme preset to set theme elements.
 
 - Discrete ggchord legends combine the participating layer glyphs in each
-  category key. Compatible glyphs from one scale, or from default scales
-  mapping the same categorical column with matching breaks, can make
-  schematic contact. Explicitly separate scales in a shared guide use
-  separate slots, and different scoped palettes retain separate guides.
+  category key. Independent colour and fill scales for genomic layers can
+  compose their glyphs in one guide when they map the same category column
+  with matching ordered breaks, labels and compatible guide settings. Each
+  channel keeps its palette, including with `scale_for()`. Independent
+  sources whose categories cannot be matched keep separate slots or guides.
   Equivalent glyphs within one scale collapse after legend overrides.
   Custom glyphs and explicit key sizes are
   respected. Crowded keys keep their glyphs and warn once per render if the
@@ -27,8 +28,7 @@
   paths. Compatible seven-role keys can keep those contacts at the default
   key size.
 - Default discrete genomic keys measure 8 × 6.4 mm. Symbols in separate
-  slots use the space around their own shapes, making the backbone and
-  arrow easier to distinguish when colour and fill share a guide.
+  slots use the space around their own shapes to stay readable.
 - Fixed-style genomic glyphs included by `show.legend = TRUE` can use
   the composite template when the key has one compatible mapped group.
 - `scale_for()` reports a selected layer without a matching mapped aesthetic

@@ -217,6 +217,11 @@ ggchord_geometry_guides <- function(parent, explicit, composite, explicit_aes) {
   force(composite)
   force(explicit_aes)
   ggproto(NULL, parent,
+    build = function(self, scales, layers, labels, layer_data, theme = NULL) {
+      guides <- if (composite) ggproto(NULL, self,
+        ggchord_legend_columns = ggchord_legend_columns(layers, layer_data)) else self
+      ggproto_parent(parent, guides)$build(scales, layers, labels, layer_data, theme)
+    },
     train = function(self, scales, labels) {
       if (composite) {
         # Guides$build repeats each scale once per aesthetic in registry order.
@@ -235,24 +240,34 @@ ggchord_geometry_guides <- function(parent, explicit, composite, explicit_aes) {
         # each scale's own ordered breaks before that information is lost.
         defaults <- Filter(function(p) length(p$aesthetic) == 1L &&
           p$aesthetic %in% automatic && !is.null(p$key$.value), params)
-        self$ggchord_default_key_breaks <- setNames(lapply(defaults, function(p) {
-          breaks <- p$key$.value
-          unname(if (is.factor(breaks)) as.character(breaks) else breaks)
-        }), vapply(defaults, `[[`, character(1), "aesthetic"))
+        self$ggchord_default_key_breaks <- setNames(lapply(defaults, ggchord_legend_breaks),
+          vapply(defaults, `[[`, character(1), "aesthetic"))
       }
       groups <- split(seq_along(params), vapply(params, function(p)
         paste(p$order, p$hash), character(1)))
+      shared <- character()
       for (rows in groups) {
-        if (length(rows) < 2L || !any(vapply(params[rows], function(p)
-          any(startsWith(p$aesthetic, "ggchord_scope_")), logical(1)))) next
-        palettes <- lapply(params[rows], ggchord_legend_palette)
-        colour <- which(lengths(palettes) > 0L)
-        if (length(unique(palettes[colour])) < 2L) next
-        for (i in colour) {
-          at <- rows[i]
-          params[[at]]$hash <- paste0(params[[at]]$hash, "_", rlang::hash(palettes[[i]]))
+        if (length(rows) < 2L) next
+        group <- params[rows]
+        scoped <- any(vapply(group, function(p)
+          any(startsWith(p$aesthetic, "ggchord_scope_")), logical(1)))
+        palettes <- if (scoped) lapply(group, ggchord_legend_palette)
+        coloured <- which(lengths(palettes) > 0L)
+        split_palettes <- length(unique(palettes[coloured])) > 1L
+        # Keep ambiguous sets of independently scoped palette guides separate.
+        pair <- if (composite && (!split_palettes || length(coloured) == 2L))
+          ggchord_legend_shared_category(group, self$guides[rows],
+            self$ggchord_legend_columns, self$ggchord_discrete_aes)
+        shared <- c(shared, pair)
+        if (split_palettes) for (i in coloured) {
+          p <- group[[i]]
+          suffix <- if (length(p$aesthetic) == 1L && p$aesthetic %in% names(pair)) {
+            paste0("category_", pair[[p$aesthetic]])
+          } else rlang::hash(palettes[[i]])
+          params[[rows[i]]]$hash <- paste0(p$hash, "_", suffix)
         }
       }
+      self$ggchord_shared_categories <- shared
       self$params <- params
     },
     process_layers = function(self, layers, data = NULL, theme = NULL) {
@@ -263,7 +278,7 @@ ggchord_geometry_guides <- function(parent, explicit, composite, explicit_aes) {
         if (!identical(class(guide)[1L], "GuideLegend") ||
             !all(self$params[[i]]$aesthetic %in% self$ggchord_discrete_aes)) next
         self$guides[[i]] <- ggchord_composite_guide(guide, self$ggchord_key_sources,
-          explicit, self$ggchord_default_key_breaks)
+          explicit, self$ggchord_default_key_breaks, self$ggchord_shared_categories)
       }
       ggproto_parent(parent, self)$process_layers(layers, data, theme)
       for (i in seq_along(self$params)) {

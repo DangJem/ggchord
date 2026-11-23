@@ -24,17 +24,17 @@ ggchord_legend_slots <- function(n, size) {
 
 ggchord_legend_groups <- function(parts) {
   sources <- lapply(parts, function(part) if (part$builtin) part$source)
-  automatic <- vapply(parts, function(part) part$default_group %||% "", character(1))
+  categories <- vapply(parts, function(part) part$category %||% "", character(1))
   # Keep a genuinely shared scale together when its layers map different
-  # columns. It can join another default scale only if its mapping agrees
+  # columns. It can join another scale only if its category agrees
   # across all the participating glyphs.
-  by_source <- split(rep(automatic, lengths(sources)), unlist(sources, use.names = FALSE))
+  by_source <- split(rep(categories, lengths(sources)), unlist(sources, use.names = FALSE))
   compatible <- vapply(by_source, function(keys) nzchar(keys[1L]) &&
     all(keys == keys[1L]), logical(1))
   ids <- vapply(seq_along(parts), function(i) {
     source <- sources[[i]]
-    if (nzchar(automatic[i]) && all(compatible[as.character(source)]))
-      return(paste0("default:", automatic[i]))
+    if (nzchar(categories[i]) && all(compatible[as.character(source)]))
+      return(paste0("category:", categories[i]))
     if (length(source) == 1L) as.character(source) else paste0("part:", i)
   }, character(1))
   # A fixed glyph admitted by show.legend has no scale of its own. Place
