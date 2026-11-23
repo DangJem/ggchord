@@ -6091,7 +6091,7 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(seq_data_example) + geom_seq(aes(colour = accver)) + scales_ggchord()",
+      "examples": "p <- ggchord(seq_data_example) + geom_seq(aes(colour = accver))\np + labs(title = \"ggplot2 default colours\")\np + scales_ggchord() + labs(title = \"Traditional ggchord colours\")",
       "related": [],
       "native": false,
       "defaults": {

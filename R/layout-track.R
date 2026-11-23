@@ -217,6 +217,7 @@ ggchord_train_track_scale <- function(plot, id, values) {
 
 ggchord_track_fraction <- function(scale, values) {
   if (!length(values)) return(numeric())
+  if (is.null(scale$ggchord_track_range)) return(rep(NA_real_, length(values)))
   scale$rescale(scale$map(values), range = scale$ggchord_track_range)
 }
 

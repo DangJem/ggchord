@@ -149,6 +149,14 @@ theme_ggchord_plasmid <- function(base_size = 11, base_family = "", ...) {
   ggchord_make_theme(base_size, base_family, "plasmid")
 }
 
+ggchord_check_theme_elements <- function(theme) {
+  keys <- names(theme)
+  unknown <- setdiff(keys[startsWith(keys, "ggchord.")],
+    names(ggplot2::get_element_tree()))
+  if (length(unknown))
+    ggchord_stop("theme(): unknown ggchord element '", unknown[1L], "'")
+}
+
 ggchord_check_theme_arguments <- function(...) {
   if (...length())
     ggchord_stop("Add + theme(...) to set theme elements. Presets accept base_size and base_family.")

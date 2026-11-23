@@ -490,13 +490,24 @@ track_limits <- function(plots, tracks = NULL) {
         "'. Available tracks: ", paste(names(plot$ggchord$track_quantities), collapse = ", "))
       group <- ggchord_track_y_scale(plot, resolved)$ggchord_track_group %||% resolved
       selected <- unlist(lapply(group, function(owner) owners_for(plot, owner)), recursive = FALSE)
-      values <- unlist(lapply(selected, function(l)
-        ggchord_track_domain_values(ggchord_resolve_layer_input(l), l$ggchord_params)), use.names = FALSE)
-      scale <- ggchord_train_track_scale(plot, resolved, values)
-      if (!scale$has_domain) ggchord_stop("No numerical domain in track '", id, "'")
-      sc <- scale$scale
+      source <- lapply(selected, ggchord_resolve_layer_input)
+      panelwise <- identical(ggchord_track_y_scale(plot, resolved)$ggchord_facet_domain, "panel")
+      panels <- if (panelwise) plot$ggchord$source_facet_setup$panels$PANEL
+      train <- function(panel = NULL) {
+        values <- Map(function(data, layer) {
+          if (!is.null(panel) && ".ggchord_stat_panel" %in% names(data))
+            data <- data[data$.ggchord_stat_panel %in% panel, , drop = FALSE]
+          ggchord_track_domain_values(data, layer$ggchord_params)
+        }, source, selected)
+        ggchord_train_track_scale(plot, resolved, unlist(values, use.names = FALSE))
+      }
+      scales <- if (length(panels)) lapply(as.integer(panels), train) else list(train())
+      scales <- lapply(Filter(function(domain) domain$has_domain, scales), `[[`, "scale")
+      if (!length(scales)) ggchord_stop("No numerical domain in track '", id, "'")
+      sc <- scales[[1L]]
+      fitted <- lapply(scales, function(scale) scale$get_transformation()$inverse(scale$get_limits()))
       measures <- vapply(owners, function(l) l$ggchord_params$measure %||% NA_character_, character(1))
-      list(limits = sort(sc$get_transformation()$inverse(sc$get_limits())),
+      list(limits = range(unlist(fitted, use.names = FALSE)),
         transform = sc$get_transformation()$name,
         unit = sc$ggchord_track_unit %||% NA_character_, measure = compatible(measures, "measure"))
     })

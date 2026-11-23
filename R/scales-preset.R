@@ -10,8 +10,9 @@
 #' @export
 #' @examples
 #' library(ggplot2)
-#' ggchord(seq_data_example) +
-#'   geom_seq(aes(colour = accver)) + scales_ggchord()
+#' p <- ggchord(seq_data_example) + geom_seq(aes(colour = accver))
+#' p + labs(title = "ggplot2 default colours")
+#' p + scales_ggchord() + labs(title = "Traditional ggchord colours")
 scales_ggchord <- function(roles = "auto") {
   ggchord_local_console_errors()
   ggchord_id_vector(roles, "roles")

@@ -42,6 +42,8 @@ The table covers removed calls and changes in behaviour in 0.50.0. Later section
 | `geom_gene()`, `geom_feature_plasmid()` | Use `geom_feature(preset = "gene")` or `geom_feature(preset = "plasmid")`, with the original layer data. |
 | `geom_feature_label_repel()` | Use `geom_feature_label(placement = "repel")`. Move the old placement policy to `label_layout` and the old `label_fit` to `overflow`. Supply `anchor_layer = "features"` when several feature layers could own the labels. |
 | `scale_seq_position()` | Use `scale_seq_continuous()`. Select reference axes with `guide = guide_seq_axis(sequences = ids)`. |
+| `scale_for("genes", scale_fill_strand())` | Use `scale_for(scale_fill_strand(), layers = "genes")`. |
+| Several track layers shared the implicit default band | Wrap the layers in `add_track(...)`, or declare `layout_track("depth")` and give each layer `track = "depth"`. |
 | `scale_track_value("depth", limits = c(0, 1000))` | Add `scale_y_continuous(limits = c(0, 1000))` after the track, or use `scale_for(scale_y_continuous(limits = c(0, 1000)), tracks = "depth")`. |
 | Traditional default colours or theme elements supplied to a preset | Add `scales_ggchord()` for the palettes and `theme(...)` for theme elements. |
 

@@ -648,7 +648,8 @@ def build(root):
             for languages in [('en',), ('zh',), LOCALES]:
                 prefix = languages[0] if len(languages) == 1 else ''
                 destination = mapping['']
-                if not (root/languages[0]/destination.split('#')[0]).is_file():
+                target = Path(languages[0]) / destination.split('#', 1)[0]
+                if not (stage/target).is_file() and not (root/target).is_file():
                     destination = 'reference/index.html'
                 write_reference_redirect(stage, stage/prefix/name, destination, languages)
         write_json(stage/'legacy-routes.json', routes)

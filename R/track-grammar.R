@@ -966,14 +966,14 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
       native$stat <- ggchord_track_x_stat(native$stat)
     failures <- capture %||% new.env(parent = emptyenv())
     native <- ggchord_track_source_layer(native, failures, implicit_group, interval_x, p$bounds)
-    # A normal identity scale converts factors to character in map().
-    # Keep their level order for the final plot's shared point-shape scale.
-    shape_scale <- ggplot2::scale_discrete_identity(aesthetics = "shape")
-    shape_scale$map <- identity
-    q <- ggplot() + native + scale_fill_identity() +
-      ggplot2::scale_colour_identity() + ggplot2::scale_alpha_identity() +
-      ggplot2::scale_size_identity() + ggplot2::scale_linewidth_identity() + shape_scale +
-      ggplot2::scale_continuous_identity(aesthetics=".ggchord_stat_x")
+    # Preserve source types through the temporary ggplot build. Only the
+    # final plot trains these data-driven visual scales.
+    visual <- ggplot2::scale_discrete_identity(
+      aesthetics = c("fill", "colour", "linetype", "shape"))
+    visual$map <- identity
+    q <- ggplot() + native + visual +
+      ggplot2::scale_continuous_identity(
+        aesthetics = c("alpha", "size", "linewidth", "stroke", ".ggchord_stat_x"))
     if (!is.null(value_transform)) {
       # Preserve native transform and OOB order in the source build.
       native_y <- value_scale$clone()

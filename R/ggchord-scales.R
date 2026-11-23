@@ -570,7 +570,8 @@ ggchord_drawing_scopes <- function(plot, scopes = plot$ggchord$scoped_scales) {
       selected <- selected[eligible]
       if (!length(selected)) next
       # One variable keeps one scope among layers choosing the same palette.
-      kinds <- vapply(palette[eligible], function(scale) scale$ggchord_preset_role, character(1))
+      kinds <- vapply(palette[eligible], function(scale)
+        paste(scale$ggchord_preset_role, scale$is_discrete()), character(1))
       for (indices in split(seq_along(selected), kinds)) {
         index <- length(specs) + 1L
         specs[[index]] <- list(selected = selected[indices], aesthetics = key,
@@ -755,7 +756,12 @@ ggchord_apply_scoped_scales <- function(plot, specs = ggchord_drawing_scopes(plo
 # Obtain the already-evaluated column without running user mappings twice.
 ggchord_scale_column <- function(layer, aesthetic, role) {
   columns <- layer$ggchord_params$visual_columns
-  column <- if (aesthetic %in% names(columns)) unname(columns[aesthetic]) else role
+  column <- if (aesthetic %in% names(columns)) columns[[aesthetic]]
+  if (is.null(column)) {
+    mapping <- ggchord_start_mapping(layer$mapping[[aesthetic]])
+    expr <- get_expr(mapping)
+    column <- if (is_symbol(expr)) as_string(expr) else role
+  }
   if (is.na(column) || !column %in% names(layer$data)) return(NULL)
   layer$data[[column]]
 }

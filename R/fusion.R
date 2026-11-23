@@ -358,6 +358,7 @@ ggchord_fusion_subset_ribbons <- function(plot, ids) {
   } else if (inherits(e2, "ggchord_layout_policy")) {
     e1$fusion_policy <- unclass(e2)
   } else if (inherits(e2, c("Scale", "theme", "Guides", "ggplot2::labels"))) {
+    if (inherits(e2, "theme")) ggchord_check_theme_elements(e2)
     if (inherits(e2, "Scale") && any(e2$aesthetics %in% c("x", "y")))
       ggchord_stop("Fusion: root scales map visual aesthetics")
     e1$styles <- c(e1$styles, list(e2))

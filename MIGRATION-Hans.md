@@ -42,6 +42,8 @@
 | `geom_gene()`、`geom_feature_plasmid()` | 使用 `geom_feature(preset = "gene")` 或 `geom_feature(preset = "plasmid")`，传入相同图层数据。 |
 | `geom_feature_label_repel()` | 使用 `geom_feature_label(placement = "repel")`。原先的放置策略交给 `label_layout`，原 `label_fit` 改为 `overflow`。多个实体层均可匹配时用 `anchor_layer = "features"` 指定目标。 |
 | `scale_seq_position()` | 改用 `scale_seq_continuous()`。用 `guide = guide_seq_axis(sequences = ids)` 选择参考轴。 |
+| `scale_for("genes", scale_fill_strand())` | 改用 `scale_for(scale_fill_strand(), layers = "genes")`。 |
+| 多个轨道层原先共用默认轨带 | 用 `add_track(...)` 组合，或声明 `layout_track("depth")` 并在各层写 `track = "depth"`。 |
 | `scale_track_value("depth", limits = c(0, 1000))` | 在轨道之后加 `scale_y_continuous(limits = c(0, 1000))`，或使用 `scale_for(scale_y_continuous(limits = c(0, 1000)), tracks = "depth")`。 |
 | 隐式启用传统配色或直接给主题预设传入元素 | 使用 `scales_ggchord()` 启用传统配色，通过 `theme(...)` 配置主题元素。 |
 

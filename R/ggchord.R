@@ -212,6 +212,7 @@ layer_id <- function(layer, id) {
 
   old_settings <- attr(e1$theme, "ggchord.settings")
   new_settings <- if (inherits(e2, "theme")) {
+    ggchord_check_theme_elements(e2)
     attr(e2, "ggchord.settings")
   } else NULL
   if (inherits(e2, "theme") && is.null(new_settings) &&
