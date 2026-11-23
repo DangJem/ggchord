@@ -579,11 +579,6 @@ ggchord_resolve_style_defaults <- function(layer, mapping) {
         names(defaults)[names(defaults) == nm] <- role
       }
     }
-    old_key <- layer$geom$draw_key
-    layer$geom <- make_ribbon_geom(
-      outline = "ribbon_colour" %in% names(user),
-      linetype = "ribbon_linetype" %in% names(user))
-    layer$geom$draw_key <- old_key
   }
   mapped_defaults <- intersect(names(defaults)[defaults], names(user))
   layer$aes_params[mapped_defaults] <- NULL

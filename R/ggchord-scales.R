@@ -384,6 +384,9 @@ ggchord_infer_visual_scales <- function(plot, layout, scales) {
 #' Use a colour scale for `aes(colour = ...)` and a fill scale for
 #' `aes(fill = ...)`. Different scoped palettes have separate legends
 #' even when their titles and labels match.
+#' When independent scales share a discrete guide, their symbols occupy
+#' separate slots in each category key. Symbols from one scale can use
+#' schematic contact points that represent the legend layout only.
 #'
 #' @param layers One or more explicitly named layer IDs.
 #' @param scale An ordinary ggplot2 visual scale for those layers.
@@ -596,6 +599,8 @@ ggchord_scope_layer <- function(layer, aliases, plot_mapping) {
     x
   }
   copy <- ggproto(NULL, layer)
+  copy$ggchord_key_geom <- geom
+  copy$ggchord_key_aliases <- aliases
   mapping <- layer$mapping %||% aes()
   if (isTRUE(layer$inherit.aes)) {
     for (key in setdiff(names(plot_mapping), names(mapping))) mapping[[key]] <- plot_mapping[[key]]
@@ -868,6 +873,7 @@ ggchord_add_visual_scales <- function(plot) {
     parent <- plot$guides
     plot$guides <- ggproto(NULL, parent, guides = guides)
   }
-  plot$guides <- ggchord_geometry_guides(plot$guides)
+  plot$guides <- ggchord_geometry_guides(plot$guides, plot$ggchord$theme_explicit,
+    inherits(plot, "ggchord") && !isTRUE(plot$coordinates$ggchord_dotplot))
   plot
 }

@@ -126,4 +126,3 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL, stat = "identity",
 # Rendering hooks used during layer assembly. Ribbons use the standard
 # aesthetic dictionary in both endpoint and solid modes.
 ggchord_inherit_ribbon_linetype <- function(layer, mapping) layer
-make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) GeomRibbonFlow

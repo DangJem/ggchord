@@ -151,7 +151,7 @@ key_glyph_feature <- function(data, params, size) {
   head_ratio <- key$head_ratio %||%
     if (fixed && identical(key$style, "shouldered")) ggchord_circular_arrow_head_ratio else 1
   parts <- ggchord_feature_geometry(shape, .1, .9, 1, .52, 1, NULL,
-    arrow_head_length = .28, arrow_head_width = head_ratio,
+    arrow_head_length = key$length %||% .28, arrow_head_width = head_ratio,
     arrow_head_style = key$style, short_feature = "shrink", draw_head = strand != ".",
     draw_start_head = identical(strand, "+/-"), bidirectional = identical(strand, "+/-"),
     fixed_body_width = fixed)

@@ -30,6 +30,15 @@ ggchord_fusion_decoration <- function(x) {
 
 ggchord_build_fusion <- function(x, on_error = NULL) {
   ggchord_local_console_errors()
+  previous <- .ggchord_render_state$composite_fusion
+  .ggchord_render_state$composite_fusion <- TRUE
+  on.exit(.ggchord_render_state$composite_fusion <- previous)
+  result <- ggchord_build_decorated_fusion(x, on_error)
+  if (!isTRUE(previous) && ggchord_legend_crowded(result$grob)) ggchord_legend_warning()
+  result
+}
+
+ggchord_build_decorated_fusion <- function(x, on_error) {
   if (!ggchord_fusion_has_decoration(x)) return(ggchord_build_fusion_core(x, on_error))
   previous <- last_plot()
   on.exit(set_last_plot(previous))

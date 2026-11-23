@@ -30,6 +30,9 @@ Each selected layer needs a mapped aesthetic handled by \code{scale}.
 Use a colour scale for \code{aes(colour = ...)} and a fill scale for
 \code{aes(fill = ...)}. Different scoped palettes have separate legends
 even when their titles and labels match.
+When independent scales share a discrete guide, their symbols occupy
+separate slots in each category key. Symbols from one scale can use
+schematic contact points that represent the legend layout only.
 }
 \examples{
 library(ggplot2)

@@ -73,14 +73,25 @@ ggchord_guide_candidates <- function(guide, params, theme, source) {
         default_guide <- ggchord_fusion_identity_guide(source, list(source$ggchord$theme_explicit), direction = orientation)
         p$theme <- default_guide$params$theme
       }
-      grob <- guide$draw(theme=theme, position=where, direction=orientation, params=p)
-      size <- ggchord_guide_size(grob)
-      if (any(!is.finite(size))) next
       changed <- as.integer(where != position) * 2 + as.integer(orientation != direction) +
         as.integer(!isTRUE(all.equal(column,params$ncol)))
-      candidates[[length(candidates)+1L]] <- list(params=p,grob=grob,size=size,
-        position=where,direction=orientation,change=changed,locks=locks,
-        requested_position=position,known=known)
+      composite <- isTRUE(params$ggchord_composite)
+      can_expand <- composite && any(lengths(ggchord_legend_requested_size(p,
+        source$ggchord$theme_explicit)) == 0L)
+      if (composite) p$ggchord_key_expand <- FALSE
+      repeat {
+        grob <- guide$draw(theme=theme, position=where, direction=orientation, params=p)
+        size <- ggchord_guide_size(grob)
+        if (any(!is.finite(size))) break
+        crowded <- composite && ggchord_legend_crowded(grob)
+        if (isTRUE(p$ggchord_key_expand) && crowded &&
+            identical(size, candidates[[length(candidates)]]$size)) break
+        candidates[[length(candidates)+1L]] <- list(params=p,grob=grob,size=size,
+          position=where,direction=orientation,change=changed,locks=locks,
+          requested_position=position,known=known,crowded=crowded)
+        if (!crowded || !can_expand || isTRUE(p$ggchord_key_expand)) break
+        p$ggchord_key_expand <- TRUE
+      }
     }
   }
   candidates
@@ -145,6 +156,7 @@ ggchord_guide_joint_layout <- function(built, source, evaluate = NULL, positions
       sum(pmax(.4-remaining/canvas,0))
     extra <- if (is.null(evaluate)) list(penalty = 0, feasible = TRUE) else evaluate(sizes)
     list(score=overflow*1e4+extra$penalty+sum(vapply(choices,`[[`,numeric(1),"change"))*.01+
+        sum(vapply(choices,`[[`,logical(1),"crowded"))*.1+
         sum(sizes[,1]*sizes[,2])/prod(canvas)*.001,
       budget_ok=overflow<=1e-10 && extra$feasible,remaining=remaining)
   }
@@ -199,10 +211,21 @@ ggchord_guide_joint_layout <- function(built, source, evaluate = NULL, positions
       data.frame(position=x$position,direction=x$direction,
         width_mm=unname(x$size[1]),height_mm=unname(x$size[2])))))))
 }
-ggchord_geometry_guides <- function(parent) {
+ggchord_geometry_guides <- function(parent, explicit, composite) {
   force(parent)
+  force(explicit)
+  force(composite)
   ggproto(NULL, parent,
     train = function(self, scales, labels) {
+      if (composite) {
+        # Guides$build repeats each scale once per aesthetic in registry order.
+        # Record that identity before native merge, including multi-channel scales.
+        first <- vapply(scales, function(scale) scale$aesthetics[1L], character(1))
+        source <- cumsum(self$aesthetics == first)
+        self$ggchord_key_sources <- split(source, self$aesthetics)
+        self$ggchord_discrete_aes <- self$aesthetics[vapply(scales,
+          function(scale) scale$is_discrete(), logical(1))]
+      }
       ggproto_parent(parent, self)$train(scales, labels)
       params <- self$params
       groups <- split(seq_along(params), vapply(params, function(p)
@@ -221,10 +244,21 @@ ggchord_geometry_guides <- function(parent) {
       self$params <- params
     },
     process_layers = function(self, layers, data = NULL, theme = NULL) {
+      originals <- self$guides
+      roles <- if (composite) vapply(layers, ggchord_legend_role, character(1))
+      if (any(nzchar(roles))) for (i in seq_along(originals)) {
+        guide <- originals[[i]]
+        if (!identical(class(guide)[1L], "GuideLegend") ||
+            !all(self$params[[i]]$aesthetic %in% self$ggchord_discrete_aes)) next
+        self$guides[[i]] <- ggchord_composite_guide(guide, self$ggchord_key_sources, explicit)
+      }
       ggproto_parent(parent, self)$process_layers(layers, data, theme)
       for (i in seq_along(self$params)) {
-        if (inherits(self$guides[[i]], "GuideLegend"))
+        if (isTRUE(self$params[[i]]$ggchord_composite)) next
+        self$guides[[i]] <- originals[[names(self$guides)[i]]]
+        if (inherits(self$guides[[i]], "GuideLegend")) {
           self$params[[i]]$decor <- ggchord_legend_separate_keys(self$params[[i]]$decor)
+        }
       }
     })
 }

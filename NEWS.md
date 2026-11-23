@@ -1,8 +1,12 @@
 # ggchord 0.50.0 (development)
 
-- Legend keys reflect the geometry of backbones, features, ribbons, sites
-  and tracks. Layers that share a legend keep their glyphs visible in each
-  key. Different scoped palettes have separate legends even with equal labels.
+- Discrete ggchord legends combine the participating layer glyphs in each
+  category key. Compatible glyphs from one scale can make schematic contact.
+  Independent scales in a shared guide use separate slots, and different
+  scoped palettes retain separate guides. Equivalent glyphs within one scale
+  collapse after legend overrides. Custom glyphs and explicit key sizes are
+  respected. Crowded keys keep their glyphs and warn once per render if the
+  available space is too small.
 - `scale_for()` reports a selected layer without a matching mapped aesthetic
   and suggests the matching colour or fill scale where applicable.
 

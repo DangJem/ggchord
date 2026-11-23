@@ -284,6 +284,7 @@ ggchord_render_table <- function(built, force = FALSE) {
   attr(table, "ggchord_render_context") <- context
   attr(table, "ggchord_render_layout") <- layout
   attr(table, "ggchord_render_built") <- built
+  if (!isTRUE(.ggchord_render_state$composite_fusion)) ggchord_warn_composite_keys(table)
   table
 }
 
