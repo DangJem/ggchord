@@ -39,7 +39,8 @@ source grouping and reuse during rendering.}
 \item{show.legend}{Logical or named logical controlling legend participation
 as in ggplot2. The default \code{NA} uses the layer's mappings, and \code{FALSE}
 omits the layer from guides. \code{TRUE} can include a fixed-style gene key in
-an existing discrete guide trained by another layer.}
+an existing discrete guide trained by another layer. A fixed-style arrow
+can float above the backbone when it joins one compatible legend group.}
 
 \item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
 

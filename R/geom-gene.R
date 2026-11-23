@@ -16,7 +16,8 @@
 #' @param show.legend Logical or named logical controlling legend participation
 #'   as in ggplot2. The default `NA` uses the layer's mappings, and `FALSE`
 #'   omits the layer from guides. `TRUE` can include a fixed-style gene key in
-#'   an existing discrete guide trained by another layer.
+#'   an existing discrete guide trained by another layer. A fixed-style arrow
+#'   can float above the backbone when it joins one compatible legend group.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
 #' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.

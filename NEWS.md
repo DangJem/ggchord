@@ -16,6 +16,8 @@
 - Default discrete genomic keys measure 8 × 6.4 mm. Symbols in separate
   slots use the space around their own shapes, making the backbone and
   arrow easier to distinguish when colour and fill share a guide.
+- Fixed-style genomic glyphs included by `show.legend = TRUE` can use
+  the composite template when the key has one compatible mapped group.
 - `scale_for()` reports a selected layer without a matching mapped aesthetic
   and suggests the matching colour or fill scale where applicable.
 

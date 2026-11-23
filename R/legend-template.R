@@ -37,6 +37,13 @@ ggchord_legend_groups <- function(parts) {
       return(paste0("default:", automatic[i]))
     if (length(source) == 1L) as.character(source) else paste0("part:", i)
   }, character(1))
+  # A fixed glyph admitted by show.legend has no scale of its own. Place
+  # it in the template only when the key offers one unambiguous mapped group.
+  mapped <- unique(ids[lengths(sources) > 0L])
+  if (length(mapped) == 1L && !startsWith(mapped, "part:")) {
+    fixed <- vapply(parts, function(part) isTRUE(part$fixed_key), logical(1))
+    ids[fixed] <- mapped
+  }
   split(parts, match(ids, unique(ids)))
 }
 

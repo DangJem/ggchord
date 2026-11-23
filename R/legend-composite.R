@@ -35,6 +35,11 @@ ggchord_legend_layer <- function(layer, matched, sources, default_breaks) {
   builtin <- !is.null(default_geom) &&
     identical(environment(geom$draw_key)$f, environment(default_geom$draw_key)$f)
   mapping <- c(layer$computed_mapping, layer$stat$default_aes)
+  fixed_key <- FALSE
+  if (builtin && isTRUE(layer$show.legend) && !length(matched)) {
+    visual <- mapping[setdiff(intersect(names(mapping), names(sources)), names(layer$aes_params))]
+    fixed_key <- !any(vapply(visual, ggchord_trains_visual_scale, logical(1)))
+  }
   matched <- matched[vapply(mapping[matched], ggchord_trains_visual_scale, logical(1))]
   ids <- sources[matched]
   source <- if (length(ids) && all(lengths(ids) == 1L)) unique(unlist(ids, use.names = FALSE))
@@ -46,6 +51,7 @@ ggchord_legend_layer <- function(layer, matched, sources, default_breaks) {
   styled <- c(matched, names(layer$aes_params))
   styled <- c(styled, names(aliases)[aliases %in% styled])
   list(role = role, builtin = builtin, source = source, default_group = default_group,
+    fixed_key = fixed_key,
     aliases = aliases, route = layer$ggchord_params$route$route,
     alpha_fixed = any(c("alpha", "ribbon_alpha", "feature_alpha") %in% styled),
     site_shape_fixed = isTRUE(layer$ggchord_params$fixed_shape),
