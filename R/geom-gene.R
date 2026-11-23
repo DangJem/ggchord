@@ -13,7 +13,10 @@
 #' @param position A compatible Position for placement of the layer geometry.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
-#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param show.legend Logical or named logical controlling legend participation
+#'   as in ggplot2. The default `NA` uses the layer's mappings, and `FALSE`
+#'   omits the layer from guides. `TRUE` can include a fixed-style gene key in
+#'   an existing discrete guide trained by another layer.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
 #' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.

@@ -36,7 +36,10 @@ source grouping and reuse during rendering.}
 
 \item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
 
-\item{show.legend}{Logical or named logical indicating whether the layer contributes legend keys.}
+\item{show.legend}{Logical or named logical controlling legend participation
+as in ggplot2. The default \code{NA} uses the layer's mappings, and \code{FALSE}
+omits the layer from guides. \code{TRUE} can include a fixed-style gene key in
+an existing discrete guide trained by another layer.}
 
 \item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
 
