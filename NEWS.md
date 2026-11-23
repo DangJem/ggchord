@@ -1,10 +1,12 @@
 # ggchord 0.50.0 (development)
 
 - Discrete ggchord legends combine the participating layer glyphs in each
-  category key. Compatible glyphs from one scale can make schematic contact.
-  Independent scales in a shared guide use separate slots, and different
-  scoped palettes retain separate guides. Equivalent glyphs within one scale
-  collapse after legend overrides. Custom glyphs and explicit key sizes are
+  category key. Compatible glyphs from one scale, or from default scales
+  mapping the same categorical column with matching breaks, can make
+  schematic contact. Explicitly separate scales in a shared guide use
+  separate slots, and different scoped palettes retain separate guides.
+  Equivalent glyphs within one scale collapse after legend overrides.
+  Custom glyphs and explicit key sizes are
   respected. Crowded keys keep their glyphs and warn once per render if the
   available space is too small.
 - The V3 legend templates use short floating annotations, curved primer

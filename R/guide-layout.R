@@ -211,10 +211,11 @@ ggchord_guide_joint_layout <- function(built, source, evaluate = NULL, positions
       data.frame(position=x$position,direction=x$direction,
         width_mm=unname(x$size[1]),height_mm=unname(x$size[2])))))))
 }
-ggchord_geometry_guides <- function(parent, explicit, composite) {
+ggchord_geometry_guides <- function(parent, explicit, composite, explicit_aes) {
   force(parent)
   force(explicit)
   force(composite)
+  force(explicit_aes)
   ggproto(NULL, parent,
     train = function(self, scales, labels) {
       if (composite) {
@@ -228,6 +229,17 @@ ggchord_geometry_guides <- function(parent, explicit, composite) {
       }
       ggproto_parent(parent, self)$train(scales, labels)
       params <- self$params
+      if (composite) {
+        automatic <- setdiff(self$ggchord_discrete_aes, explicit_aes)
+        # GuideLegend keeps only one .value column after merge. Remember
+        # each scale's own ordered breaks before that information is lost.
+        defaults <- Filter(function(p) length(p$aesthetic) == 1L &&
+          p$aesthetic %in% automatic && !is.null(p$key$.value), params)
+        self$ggchord_default_key_breaks <- setNames(lapply(defaults, function(p) {
+          breaks <- p$key$.value
+          unname(if (is.factor(breaks)) as.character(breaks) else breaks)
+        }), vapply(defaults, `[[`, character(1), "aesthetic"))
+      }
       groups <- split(seq_along(params), vapply(params, function(p)
         paste(p$order, p$hash), character(1)))
       for (rows in groups) {
@@ -250,7 +262,8 @@ ggchord_geometry_guides <- function(parent, explicit, composite) {
         guide <- originals[[i]]
         if (!identical(class(guide)[1L], "GuideLegend") ||
             !all(self$params[[i]]$aesthetic %in% self$ggchord_discrete_aes)) next
-        self$guides[[i]] <- ggchord_composite_guide(guide, self$ggchord_key_sources, explicit)
+        self$guides[[i]] <- ggchord_composite_guide(guide, self$ggchord_key_sources,
+          explicit, self$ggchord_default_key_breaks)
       }
       ggproto_parent(parent, self)$process_layers(layers, data, theme)
       for (i in seq_along(self$params)) {

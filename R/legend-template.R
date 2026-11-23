@@ -22,13 +22,27 @@ ggchord_legend_slots <- function(n, size) {
     y = 1 - (row + .5) / nrow, width = .90 / ncol, height = .90 / nrow)
 }
 
+ggchord_legend_groups <- function(parts) {
+  sources <- lapply(parts, function(part) if (part$builtin) part$source)
+  automatic <- vapply(parts, function(part) part$default_group %||% "", character(1))
+  # Keep a genuinely shared scale together when its layers map different
+  # columns. It can join another default scale only if its mapping agrees
+  # across all the participating glyphs.
+  by_source <- split(rep(automatic, lengths(sources)), unlist(sources, use.names = FALSE))
+  compatible <- vapply(by_source, function(keys) nzchar(keys[1L]) &&
+    all(keys == keys[1L]), logical(1))
+  ids <- vapply(seq_along(parts), function(i) {
+    source <- sources[[i]]
+    if (nzchar(automatic[i]) && all(compatible[as.character(source)]))
+      return(paste0("default:", automatic[i]))
+    if (length(source) == 1L) as.character(source) else paste0("part:", i)
+  }, character(1))
+  split(parts, match(ids, unique(ids)))
+}
+
 ggchord_legend_plan <- function(parts, size) {
   if (!length(parts)) return(list(groups = list(), crowded = FALSE))
-  ids <- vapply(seq_along(parts), function(i) {
-    part <- parts[[i]]
-    if (part$builtin && length(part$source) == 1L) part$source else -i
-  }, integer(1))
-  groups <- split(parts, match(ids, unique(ids)))
+  groups <- ggchord_legend_groups(parts)
   outer <- if (length(groups) == 1L) matrix(c(.5, .5, 1, 1), nrow = 1L) else
     ggchord_legend_slots(length(groups), size)
   layouts <- lapply(seq_along(groups), function(i) {

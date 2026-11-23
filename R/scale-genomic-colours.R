@@ -5,9 +5,10 @@
 #' including layers displaying a subset of references. On a plain ggplot
 #' colours follow the scale limits.
 #'
-#' Use `aesthetics = c("colour", "fill")` to share one scale between a
-#' backbone mapped with `aes(colour = accver)` and features mapped with
-#' `aes(fill = accver)`. Their glyphs can then form one composition per category.
+#' With default scales, mapping both backbone colour and feature fill to
+#' `accver` composes their glyphs in each shared legend key. Use
+#' `aesthetics = c("colour", "fill")` to supply one explicit scale for both
+#' channels, for example to set a common title or limits.
 #' @param name Legend title.
 #' @param ... Additional arguments for the underlying ggplot2 discrete scale,
 #'   such as `limits`, `breaks`, `labels`, `na.value`, or `guide`.
@@ -22,8 +23,7 @@
 #'
 #' ggchord(seq_data_example) +
 #'   geom_seq(aes(colour = accver)) +
-#'   geom_gene(aes(fill = accver), data = gene_data_example) +
-#'   scale_colour_sequence(name = "Sequence", aesthetics = c("colour", "fill"))
+#'   geom_gene(aes(fill = accver), data = gene_data_example)
 scale_colour_sequence <- function(name = waiver(), ..., aesthetics = "colour") {
   ggchord_local_console_errors()
   scale <- discrete_scale(aesthetics, palette = chord_default_palette, name = name, ...)

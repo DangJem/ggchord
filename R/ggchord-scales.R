@@ -830,7 +830,7 @@ ggchord_strand_guide <- function(guide) {
   })
 }
 
-ggchord_add_visual_scales <- function(plot) {
+ggchord_add_visual_scales <- function(plot, explicit_aes = character()) {
   # Use local copies for the plot-dependent reference palette and identity guide.
   plot$scales <- plot$scales$clone()
   for (i in seq_along(plot$scales$scales)) {
@@ -874,6 +874,6 @@ ggchord_add_visual_scales <- function(plot) {
     plot$guides <- ggproto(NULL, parent, guides = guides)
   }
   plot$guides <- ggchord_geometry_guides(plot$guides, plot$ggchord$theme_explicit,
-    inherits(plot, "ggchord") && !isTRUE(plot$coordinates$ggchord_dotplot))
+    inherits(plot, "ggchord") && !isTRUE(plot$coordinates$ggchord_dotplot), explicit_aes)
   plot
 }

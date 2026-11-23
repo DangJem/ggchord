@@ -5,7 +5,26 @@ ggchord_legend_role <- function(layer) {
     restriction_site = "site", link = "link", ribbon = "ribbon", "")
 }
 
-ggchord_legend_layer <- function(layer, matched, sources) {
+ggchord_legend_variable <- function(mapping, columns) {
+  expr <- get_expr(ggchord_start_mapping(mapping))
+  field <- if (is_symbol(expr)) as_string(expr) else
+    if (is_call(expr, c("$", "[["), n = 2L) && is_symbol(expr[[2L]], ".data")) {
+      key <- expr[[3L]]
+      if (is_string(key)) key else if (is_call(expr, "$") && is_symbol(key)) as_string(key)
+    }
+  if (length(field) && field %in% columns) field else NA_character_
+}
+
+ggchord_legend_default_group <- function(layer, mapping, matched, default_breaks) {
+  if (!all(matched %in% names(default_breaks))) return(NULL)
+  data <- layer$ggchord_params$visual_source$data %||% layer$data
+  fields <- unique(vapply(mapping[matched], ggchord_legend_variable, character(1), names(data)))
+  breaks <- unique(unname(default_breaks[matched]))
+  if (length(fields) == 1L && !is.na(fields) && length(breaks) == 1L)
+    rlang::hash(list(fields, breaks[[1L]]))
+}
+
+ggchord_legend_layer <- function(layer, matched, sources, default_breaks) {
   role <- ggchord_legend_role(layer)
   default_geom <- switch(role, seq = GeomChordSeq, gene = feature_geom,
     feature = feature_geom, primer = feature_geom, site = GeomSequenceSite,
@@ -19,22 +38,25 @@ ggchord_legend_layer <- function(layer, matched, sources) {
   matched <- matched[vapply(mapping[matched], ggchord_trains_visual_scale, logical(1))]
   ids <- sources[matched]
   source <- if (length(ids) && all(lengths(ids) == 1L)) unique(unlist(ids, use.names = FALSE))
+  default_group <- if (builtin && length(source))
+    ggchord_legend_default_group(layer, mapping, matched, default_breaks)
   head_length <- if ("head_length" %in% layer$ggchord_params$head_args)
     layer$ggchord_params$head_length_mm
   aliases <- layer$ggchord_key_aliases
   styled <- c(matched, names(layer$aes_params))
   styled <- c(styled, names(aliases)[aliases %in% styled])
-  list(role = role, builtin = builtin, source = source,
+  list(role = role, builtin = builtin, source = source, default_group = default_group,
     aliases = aliases, route = layer$ggchord_params$route$route,
     alpha_fixed = any(c("alpha", "ribbon_alpha", "feature_alpha") %in% styled),
     site_shape_fixed = isTRUE(layer$ggchord_params$fixed_shape),
     head_length = head_length)
 }
 
-ggchord_composite_guide <- function(parent, sources, explicit) {
+ggchord_composite_guide <- function(parent, sources, explicit, default_breaks) {
   force(parent)
   force(sources)
   force(explicit)
+  force(default_breaks)
   ggproto(NULL, parent,
     get_layer_key = function(params, layers, data, theme = NULL) {
       domain <- vapply(layers, function(layer) nzchar(ggchord_legend_role(layer)), logical(1))
@@ -52,7 +74,8 @@ ggchord_composite_guide <- function(parent, sources, explicit) {
       names(observed) <- names(layers)
       out <- parent$get_layer_key(params, observed, data, theme)
       if (!length(out$decor) || length(out$decor) != length(layers)) return(out)
-      contributions <- Map(function(layer, aes) ggchord_legend_layer(layer, aes, sources),
+      contributions <- Map(function(layer, aes)
+        ggchord_legend_layer(layer, aes, sources, default_breaks),
         layers, matched)
       for (i in seq_along(out$decor)) {
         aliases <- contributions[[i]]$aliases

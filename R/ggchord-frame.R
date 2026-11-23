@@ -387,9 +387,14 @@ ggplot_build.ggchord <- function(plot, ...) {
   plot$ggchord$ref <- new.env(parent = emptyenv())
   plot <- prepare_ggchord_plot(plot)
   plot$ggchord$ref$layout$adaptive_layout <- plot$ggchord$adaptive_report
-  plot <- ggchord_apply_scoped_scales(plot)
+  scopes <- ggchord_drawing_scopes(plot)
+  user_scales <- Filter(function(scale) !isTRUE(scale$ggchord_managed), plot$scales$scales)
+  user_scopes <- Filter(function(scope) !isTRUE(scope$automatic), scopes)
+  explicit_aes <- c(unlist(lapply(user_scales, `[[`, "aesthetics"), use.names = FALSE),
+    unlist(lapply(user_scopes, `[[`, "aliases"), use.names = FALSE))
+  plot <- ggchord_apply_scoped_scales(plot, scopes)
   plot <- ggchord_track_mapping_titles(plot)
-  plot <- ggchord_add_visual_scales(plot)
+  plot <- ggchord_add_visual_scales(plot, explicit_aes)
   class(plot) <- setdiff(class(plot), "ggchord")
   built <- ggchord_branch_built(ggplot_build(plot))
   ggchord_cache_layout(source, built$plot$ggchord$ref$layout)
