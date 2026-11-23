@@ -53,6 +53,7 @@ ggchord_legend_columns <- function(layers, data) {
     }, character(1))
   }, layers, data)
   fields <- unlist(unname(fields))
+  if (!length(fields)) return(character())
   vapply(split(fields, names(fields)), function(x) {
     if (length(unique(x)) == 1L) x[[1L]] else NA_character_
   }, character(1))
