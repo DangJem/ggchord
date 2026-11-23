@@ -219,6 +219,13 @@ def prepare_examples(structure):
     return scripts
 
 
+def prune_example_downloads(folder, keep):
+    for pattern in ('*.R', '*-[0-9][0-9].png'):
+        for path in folder.glob(pattern):
+            if path.name not in keep:
+                path.unlink()
+
+
 def render_examples(assets, structure):
     scripts = prepare_examples(structure)
     with TemporaryDirectory(prefix='ggchord-reference-examples-') as temporary:
@@ -235,9 +242,7 @@ def render_examples(assets, structure):
         for name, source in scripts.items():
             write(folder / f'{name}.R', source)
         figures = {figure for entry in results['topics'].values() for figure in entry['figures']}
-        for obsolete in folder.glob('*-[0-9][0-9].png'):
-            if obsolete.name not in figures:
-                obsolete.unlink()
+        prune_example_downloads(folder, figures | {f'{name}.R' for name in scripts})
         for figure in figures:
             shutil.copy2(generated / figure, folder / figure)
     return results
@@ -667,10 +672,7 @@ def build(root, write_package_download):
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(source, dest)
         generated = stage/'assets/reference-examples'
-        for image in (root/'assets/reference-examples').glob('*-[0-9][0-9].png'):
-            if not (generated/image.name).exists():
-                image.unlink()
-        (root/'assets/reference-examples/setup.R').unlink(missing_ok=True)
+        prune_example_downloads(root/'assets/reference-examples', {path.name for path in generated.iterdir()})
     print(f'Built {len(manifest["topics"])} API entries in {len(manifest["families"])} families per language at {root}')
 
 
