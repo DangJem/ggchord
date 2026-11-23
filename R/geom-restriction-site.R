@@ -91,6 +91,8 @@ ggchord_site_layer <- function(mapping, data, shape, fixed_shape, size, fixed_si
 #' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Site data supplies `accver` and a one-based `pos`. A double-strand cut uses `cut_top` and `cut_bottom` as interbase positions. Add site labels separately or bind them to the site layer.
+#' In a discrete ggchord legend, the default Site tick uses a diamond-headed
+#' stem. Explicit or mapped Site shapes keep their own symbols.
 #' @examples
 #' library(ggplot2)
 #'

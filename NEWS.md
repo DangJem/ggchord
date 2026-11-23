@@ -7,6 +7,10 @@
   collapse after legend overrides. Custom glyphs and explicit key sizes are
   respected. Crowded keys keep their glyphs and warn once per render if the
   available space is too small.
+- The V3 legend templates use short floating annotations, curved primer
+  arrows, diamond-headed default site stems and role-specific connection
+  paths. Compatible seven-role keys can keep those contacts at the default
+  key size.
 - `scale_for()` reports a selected layer without a matching mapped aesthetic
   and suggests the matching colour or fill scale where applicable.
 

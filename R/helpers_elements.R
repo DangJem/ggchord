@@ -130,13 +130,18 @@ key_glyph_ribbon <- function(data, params, size) {
 #' Key glyph for generic genomic features
 #' @keywords internal
 #' @noRd
-key_glyph_feature <- function(data, params, size) {
+ggchord_feature_key_shape <- function(data, params) {
   key <- params$arrow_key %||% list(style = "flush")
   mapped <- as.character(data$shape)[1L]
   fallback <- data$feature_shape %||% "arrow"
   if (identical(fallback, "arrow")) fallback <- key$shape %||% fallback
   shape <- if (mapped %in% ggchord_feature_shapes) mapped else as.character(fallback)[1L]
-  if (!shape %in% ggchord_feature_shapes) shape <- key$shape %||% "arrow"
+  if (!shape %in% ggchord_feature_shapes) key$shape %||% "arrow" else shape
+}
+
+key_glyph_feature <- function(data, params, size) {
+  key <- params$arrow_key %||% list(style = "flush")
+  shape <- ggchord_feature_key_shape(data, params)
   strand <- as.character(data$strand %||% "+")[1L]
   opacity <- data$alpha %||% 1
   colour <- scales::alpha(data$colour %||% "#353A3E", opacity)

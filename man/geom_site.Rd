@@ -50,6 +50,8 @@ Draw source point annotations
 }
 \details{
 Site data supplies \code{accver} and a one-based \code{pos}. A double-strand cut uses \code{cut_top} and \code{cut_bottom} as interbase positions. Add site labels separately or bind them to the site layer.
+In a discrete ggchord legend, the default Site tick uses a diamond-headed
+stem. Explicit or mapped Site shapes keep their own symbols.
 }
 \examples{
 library(ggplot2)

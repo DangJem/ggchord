@@ -21,8 +21,13 @@ ggchord_legend_layer <- function(layer, matched, sources) {
   source <- if (length(ids) && all(lengths(ids) == 1L)) unique(unlist(ids, use.names = FALSE))
   head_length <- if ("head_length" %in% layer$ggchord_params$head_args)
     layer$ggchord_params$head_length_mm
+  aliases <- layer$ggchord_key_aliases
+  styled <- c(matched, names(layer$aes_params))
+  styled <- c(styled, names(aliases)[aliases %in% styled])
   list(role = role, builtin = builtin, source = source,
-    aliases = layer$ggchord_key_aliases, route = layer$ggchord_params$route$route,
+    aliases = aliases, route = layer$ggchord_params$route$route,
+    alpha_fixed = any(c("alpha", "ribbon_alpha", "feature_alpha") %in% styled),
+    site_shape_fixed = isTRUE(layer$ggchord_params$fixed_shape),
     head_length = head_length)
 }
 
@@ -60,9 +65,20 @@ ggchord_composite_guide <- function(parent, sources, explicit) {
         }
       }
       draws <- lapply(out$decor, function(part) part$data$.draw %||% rep(TRUE, nrow(out$key)))
-      out$ggchord_composite <- any(Reduce(`+`, draws) > 1L & Reduce(`|`, draws[domain]),
-        na.rm = TRUE)
-      if (out$ggchord_composite) out$ggchord_key_layers <- contributions
+      builtin <- vapply(contributions, `[[`, logical(1), "builtin")
+      out$ggchord_composite <- (any(builtin) && any(Reduce(`|`, draws[builtin]), na.rm = TRUE)) ||
+        any(Reduce(`+`, draws) > 1L & Reduce(`|`, draws[domain]), na.rm = TRUE)
+      if (out$ggchord_composite) {
+        for (i in seq_along(contributions)) {
+          aliases <- contributions[[i]]$aliases
+          override <- names(out$override.aes)
+          contributions[[i]]$alpha_fixed <- contributions[[i]]$alpha_fixed ||
+            any(c("alpha", "ribbon_alpha", aliases[c("alpha", "ribbon_alpha")]) %in% override)
+          contributions[[i]]$site_shape_fixed <- contributions[[i]]$site_shape_fixed ||
+            any(c("shape", aliases["shape"]) %in% override)
+        }
+        out$ggchord_key_layers <- contributions
+      }
       out
     },
     build_decor = function(decor, grobs, elements, params) {
@@ -106,14 +122,21 @@ ggchord_legend_parts <- function(decor, layers, row) {
     part$params <- dec$params
     part$data <- data
     if (part$builtin) {
-      if (!is.null(part$head_length)) part$params$arrow_key$length <-
-        min(.55, .28 * part$head_length / 2)
-      glyph <- part$draw(data, part$params, c(6.5, 5.2))
-      part$glyph <- glyph
       part$style <- ggchord_alias_aes(data, setNames(names(part$aliases), part$aliases))
+      part$site_marker <- part$role == "site" && !part$site_shape_fixed &&
+        identical(part$params$site_key_shape, "tick") &&
+        !any(part$style$shape %in% c("tick", "point", "cut"))
+      if (part$role %in% c("gene", "feature", "primer")) {
+        part$shape <- ggchord_feature_key_shape(part$style, part$params)
+        if (identical(part$shape, "arrow"))
+          part$params$arrow_key$length <- min(.55, .16 * (part$head_length %||% 2) / 2)
+      }
+      part$glyph <- part$draw(data, part$params, c(6.5, 5.2))
     }
     signature <- if (part$builtin && length(part$source) == 1L)
-      list(part$source, part$role, part$route, isTRUE(part$params$flow),
+      list(part$source, part$role, part$route, part$shape, isTRUE(part$params$flow),
+        if (part$site_marker) part$style$size %||% 2,
+        part$alpha_fixed && part$role %in% c("gene", "feature", "ribbon"),
         ggchord_legend_signature(part$glyph))
     if (!is.null(signature)) {
       hash <- rlang::hash(signature)
