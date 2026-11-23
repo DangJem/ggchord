@@ -1,5 +1,5 @@
 {
-  "source_sha256": "ee90389f0f535c936e167f6f5447873d49ff5e9365b631c8e7c1b0f9a3e3d982",
+  "source_sha256": "d5de63adac690a7db6516b7ff82575a0cfe7abf8facaccab98a630cb2c5d39fa",
   "description": "按绘图问题或函数查阅 API。索引每行对应一篇主题文档，并列出该文档涵盖的函数。",
   "groups": {
     "construct": {
@@ -16,7 +16,7 @@
     },
     "layout": {
       "title": "参考布局与轨带",
-      "intro": "声明顺序、方向、显示窗口和物理间距。"
+      "intro": "设置序列顺序、方向和显示窗口，或放置轨带并组合带内图层。"
     },
     "geom": {
       "title": "几何对象与快捷家族",
@@ -40,11 +40,11 @@
     },
     "scale": {
       "title": "映射与作用域",
-      "intro": "管理视觉通道、序列位置与轨道高度的训练域。"
+      "intro": "跨图层共享视觉标度或显式限定训练范围。配置序列位置轴、轨带 Y 数值域及配色。"
     },
     "guide": {
       "title": "局部轴说明",
-      "intro": "说明已训练的序列位置或轨道数值标度。"
+      "intro": "放置序列位置轴与轨带数值轴。共享和分域视觉图例见标度参考。"
     },
     "theme": {
       "title": "共同外观",
@@ -90,7 +90,7 @@
         }
       ],
       "value": "一个可与 Geom、Stat、Layout、Coord、Scale、Facet、Theme 等通过 + 组合的 ggchord 图对象。创建空对象本身不触发绘图或统计。",
-      "details": "1. 图级非空 data 是唯一权威参考。geom_seq 的局部表只能复用它或选择一致子集，不能改变长度、单位、来源身份和拓扑。\n\n2. 无图级 data 时，先收集所有 geom_seq 的显式规范表。仅一份完整参考或规范后完全等价的重复声明可用；不同集合不自动并集。先解析参考后渲染，因此声明不依赖图层添加顺序。\n\n3. geom_seq 提供参考时，不把该表回填为 plot$data。普通观察层 data=NULL 仍只继承图级 data；没有可用数据或必需字段时明确报错。\n\n4. 全局 mapping 不自动连接参考元数据。不同观察表缺少所继承的映射列时，应在该层覆盖 mapping 或设置 inherit.aes=FALSE。\n\n5. 多次 geom_seq() 是复用参考的多次绘制，不是多次建坐标。默认显示排序稳定地按 accver，指定排列使用 layout_sequences(order=...)。\n\n6. 默认 Coord 为 Chord；正式示例建议显式写 coord_*。序列实体身份、源单位和完整范围不因换 Coord 改变。\n\n多个图层映射同一视觉通道时，默认各自训练标度。在需要共享的图层上写 `id = NULL` 或 `id = NA` 即可共用默认标度，也可显式添加普通标度。给指定图层配置标度时用 `scale_for()`。",
+      "details": "1. 图级非空 data 是唯一权威参考。geom_seq 的局部表只能复用它或选择一致子集，不能改变长度、单位、来源身份和拓扑。\n\n2. 无图级 data 时，先收集所有 geom_seq 的显式规范表。仅一份完整参考或规范后完全等价的重复声明可用；不同集合不自动并集。先解析参考后渲染，因此声明不依赖图层添加顺序。\n\n3. geom_seq 提供参考时，不把该表回填为 plot$data。普通观察层 data=NULL 仍只继承图级 data；没有可用数据或必需字段时明确报错。\n\n4. 全局 mapping 不自动连接参考元数据。不同观察表缺少所继承的映射列时，应在该层覆盖 mapping 或设置 inherit.aes=FALSE。\n\n5. 多次 geom_seq() 是复用参考的多次绘制，不是多次建坐标。默认显示排序稳定地按 accver，指定排列使用 layout_sequences(order=...)。\n\n6. 默认 Coord 为 Chord；正式示例建议显式写 coord_*。序列实体身份、源单位和完整范围不因换 Coord 改变。\n\n普通视觉标度遵循 ggplot2，按美学通道跨图层共同训练。图层 ID 用于引用和导出。指定图层或轨带的训练范围时使用 `scale_for()`，启用传统色板时使用 `scales_ggchord()`。",
       "errors": "- 最终构建时没有完整参考。\n\n- 不同声明的参考集合、长度、单位、拓扑或登记元数据不一致。\n\n- 将 genes/links/多表容器直接传作全局参考而不满足规范。",
       "roles": [],
       "example_setup": ""
@@ -3031,7 +3031,7 @@
     },
     "scale_for": {
       "title": "为指定图层或轨带设定标度",
-      "intro": "选定映射优先采用该标度。图例选项写在标度上。",
+      "intro": "在指定图层或轨带上训练 ggplot2 标度。",
       "arguments": [
         {
           "format": "ggplot2 标度",
@@ -3039,22 +3039,22 @@
         },
         {
           "format": "字符向量或 NULL",
-          "description": "图层名。两个选择器都省略时使用最近的对象。"
+          "description": "图层 ID。两个选择器都省略时，添加标度时就近绑定到最近加入的图层或轨带。"
         },
         {
           "format": "字符向量或 NULL",
-          "description": "轨带名，与 layers 二选一。"
+          "description": "轨带 ID，与 `layers` 二选一。传入原生连续 Y 标度时，所选范围是整条轨带。"
         },
         {
           "format": "shared 或 panel",
-          "description": "共用训练域，或对轨带 Y 按分面独立训练。"
+          "description": "`\"shared\"` 在所选范围内使用同一个训练域。`\"panel\"` 在各分面内独立训练，仅用于轨带 Y 标度。"
         }
       ],
       "value": "带作用域的标度声明。",
-      "details": "选定映射优先采用该标度。图例选项写在标度上。",
-      "errors": "",
+      "details": "所选映射优先使用分域标度。其他图层仍按美学通道共同训练普通标度。Guide 设置写在分域标度上。自定义 Stat 仍接收 `colour` 等公开美学名称。\n\n作用域决定训练范围。两种离散 colour 和 fill 映射使用同一分类列，且训练后的断点、顺序、标签及 Guide 设置兼容时，基因组图层可以共用一个图例。每个类别的键可以组合两个图元，各自保留映射色板和固定样式。其他独立分域色板可以分别显示图例。如果原生 Guide 已合并，但类别身份无法确认，图元各用一个槽位。\n\n轨带 Y 使用原生连续标度。一次声明可以为多条轨带设置共用数值域，也可用 `by = \"panel\"` 在各分面中分别训练所选轨带的数值域。",
+      "errors": "选定的各图层都需要有该标度能够处理的映射。`aes(colour = ...)` 配色用 colour 标度，`aes(fill = ...)` 配色用 fill 标度。目标不存在，或显式作用域在同一图层和通道上重叠时，构建会报错。",
       "roles": [],
-      "example_setup": ""
+      "example_setup": "第一例为具名基因图层指定 fill 标度。随后两例对比分域和普通 Viridis 色标。两例都只显示一个图例，A、B 各有一个键，键中组合 Viridis 色骨架与独立填色、透明度为 0.5 的基因箭头。最后一例在各样本分面内分别训练信号轨带的 Y 数值域。"
     },
     "scale_fill_residue": {
       "title": "残基字符的普通填充色板快捷式",
@@ -3167,7 +3167,7 @@
         }
       ],
       "value": "轨道值Guide，交给scale_y_continuous(guide=...)。从该Scale获取范围、breaks、labels和标题。",
-      "details": "1. 不同参考上复用同一个已训练数值域。scale_for(..., by = \"panel\")时每个面板显示各自的域，不能因轴外观相同而宣称跨面板数值高度可直接比较。\n\n2. 圆形路径的start/end依据显示开口/起点与direction定位；完整圆两端几何相邻但来源身份不同，仍使用明确选择而非任意角度猜测。\n\n3. axis.ticks.length等物理外观使用grid单位；文字size沿用theme的pt。Position和layout_track参数不通过局部theme传入。",
+      "details": "在轨带的原生 `scale_y_*()` 上设置此 Guide，也可将设置后的标度放进 `scale_for()`，应用到具名轨带。标度提供范围、断点、单位和标题，Guide 将它们放到参考路径上，主题设置其外观。轨带尺寸由 `layout_track()` 配置。",
       "errors": "- 挂载参考/实例不存在、position非start/end。\n\n- 没有数值层却要求局部数值轴。\n\n- 把文字angle误用作数据布局参数。",
       "roles": [],
       "example_setup": ""
@@ -5054,7 +5054,7 @@
         }
       ],
       "value": "一个 ggplot2 视觉标度。",
-      "details": "将标度直接加到图中可共享映射，也可用 scale_for() 为选定图层独立训练。",
+      "details": "直接添加此标度可跨图层共享映射，用 `scale_for()` 包装时可对指定图层独立训练。骨架 colour 和特征 fill 都映射到 `accver` 时，如果类别、顺序和 Guide 设置一致，可在同一图例键中组合两个图元，各通道保留自己的色板。需要两种通道共用颜色值、范围或标题时，可用 `aesthetics = c(\"colour\", \"fill\")` 让一个标度管理两者。",
       "errors": "",
       "roles": [],
       "example_setup": ""
@@ -5158,7 +5158,7 @@
     },
     "layout_track": {
       "title": "配置轨带布局",
-      "intro": "仅覆盖提供了值的字段。具名声明可放在图层之前或之后。空声明不占空间。",
+      "intro": "设置轨带所在侧、顺序、厚度或前置间隙。",
       "arguments": [
         {
           "format": "字符串或 NULL",
@@ -5182,10 +5182,10 @@
         }
       ],
       "value": "一个轨带布局声明。",
-      "details": "仅覆盖提供了值的字段。具名声明可放在图层之前或之后。空声明不占空间。",
-      "errors": "",
+      "details": "省略 `id` 时更新最近的轨带。指定 ID 后，可以在添加相应图层的前后声明布局。多次配置按字段合并，`NULL` 保留该字段的已有值。尚无图层的声明不占空间。\n\n轨带默认在正侧，厚 4 mm，前置间隙 1 mm。两侧独立排序，先保留显式序号，再按每条轨带首次加入图层的顺序，依次填入最小可用正整数。序号 1 最靠近参考路径。\n\n添加原生 `scale_y_*()` 可配置最近轨带的数值域。布局、主题和坐标设置不改变这个绑定。用 `scale_for(..., tracks = ids)` 可指定一个或多个具名轨带。",
+      "errors": "使用省略 ID 的写法前须先添加轨带，也可以直接提供 ID。同侧两条已有图层的轨带不得使用同一显式序号。",
       "roles": [],
-      "example_setup": ""
+      "example_setup": "第一例配置自动编号的轨带。第二例为具名折线轨带预留第 2 位，独立添加的点轨带自动填入第 1 位。"
     },
     "scale_seq_continuous": {
       "title": "定义线性序列位置的刻度与说明",
@@ -5224,7 +5224,7 @@
     },
     "add_track": {
       "title": "将多个图层放入同一轨带",
-      "intro": "成员共用一条物理轨带及一个 Y 数值域。",
+      "intro": "将多个轨道图层放入同一轨带，并按传入顺序绘制。",
       "arguments": [
         {
           "format": "轨道图层",
@@ -5232,7 +5232,7 @@
         },
         {
           "format": "字符串或 auto_id()",
-          "description": "轨带 ID，可使用预先声明的空轨带。"
+          "description": "轨带 ID。默认 `auto_id()` 在添加轨带时分配稳定 ID。显式名称可引用先前声明的轨带。"
         },
         {
           "format": "positive 或 negative",
@@ -5252,7 +5252,7 @@
         }
       ],
       "value": "一个轨道图层组合。",
-      "details": "成员共用一条物理轨带及一个 Y 数值域。",
+      "details": "成员共用轨带的物理空间和 Y 数值域。可在这里或用 `layout_track()` 配置布局，两处都只更新显式提供的字段。组合添加后用原生 `scale_y_*()` 设置其数值域。普通视觉映射仍使用全图标度，也可用 `scale_for()` 限定范围。",
       "errors": "",
       "roles": [],
       "example_setup": ""
@@ -5267,7 +5267,7 @@
         }
       ],
       "value": "一个配色预设声明。",
-      "details": "构建绘图时按已映射角色启用配色。显式作用域标度和普通标度优先。",
+      "details": "普通 ggplot2 色板是默认值。添加此预设后，绘图构建时可按映射角色启用传统色板。显式分域标度在所选映射中优先，显式普通标度在相应通道上优先于预设。外观通过主题预设之后的 `theme()` 配置。",
       "errors": "",
       "roles": [],
       "example_setup": ""
@@ -5751,7 +5751,7 @@
         "inherit.aes": "默认 `TRUE`。继承图级映射，并在轨道数据中求值。"
       },
       "roles": "使用 `accver` 标识参考。`x` 映射为源单位下的位置，`y` 映射为测量单位下的值。计数柱计算 `after_stat(count)`，可另设 `weight` 映射。全带区间使用 `start` 和 `end`，占满物理轨带且不参与数值标度训练。用 `group` 区分同一参考上的数据系列。[轨带声明](layout_track.html#api-layout_track)控制物理空间，[`scale_y_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html)控制数值标度。",
-      "details": "每个独立轨道层创建一个轨带。使用 `layout_track()` 配置物理布局，使用 `add_track()` 将多层放入同一带。原生 `scale_y_*()` 配置最近的数值轨带。用 `scale_for()` 可显式选择完整的轨带数值域。普通视觉标度按映射通道跨层训练。",
+      "details": "每个独立添加的轨道图层创建一条轨带，并获得稳定的自动轨带 ID。要共享一条轨带，可为多个图层指定同一个 `track` 名称，或用 `add_track()` 组合它们。用 `layout_track()` 配置轨带的物理位置。\n\n在序列路径坐标系中，原生 `scale_y_*()` 配置最近轨带的数值域。用 `scale_for()` 可指定具名轨带，`by = \"panel\"` 则按分面独立训练。轨道 X 使用序列位置。Dotplot 的原生 X、Y 标度用于全图。普通视觉标度按美学通道共同训练。",
       "example_intro": "各示例共用一组小型参考序列，并加入与几何相应的测量、计数或区间数据。",
       "examples": {
         "geom_track": {

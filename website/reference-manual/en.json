@@ -15,7 +15,7 @@
     },
     "layout": {
       "title": "Reference layouts and track bands",
-      "intro": "Set order, orientation, display windows and physical spacing."
+      "intro": "Set sequence order, orientation and display windows, or place and group track bands."
     },
     "geom": {
       "title": "Geometry and layer families",
@@ -39,11 +39,11 @@
     },
     "scale": {
       "title": "Scales and scope",
-      "intro": "Train visual scales, sequence positions and numeric track heights."
+      "intro": "Share visual scales across layers or scope them explicitly. Configure the sequence axis, track Y domains and palettes."
     },
     "guide": {
       "title": "Local axis guides",
-      "intro": "Explain a trained sequence position or track value scale."
+      "intro": "Place sequence and track axes. See the scale references for shared and scoped visual legends."
     },
     "theme": {
       "title": "Shared appearance",
@@ -89,7 +89,7 @@
         }
       ],
       "value": "A ggchord object (inherits from ggplot) to which geom_* layers can be added with +",
-      "details": "Supply one complete reference at plot level or register it with a complete explicit `geom_seq(data = ...)` table. A backbone layer may reuse all or part of a plot reference. Observation layers use their own data or the plot data under ggplot2 inheritance rules.\n\nLayers mapping the same aesthetic use independent default visual scales. Set `id = NULL` or `id = NA` on the layers to share a default, or supply an ordinary explicit scale. Use `scale_for()` for a named override.",
+      "details": "Supply one complete reference at plot level or declare it with a complete explicit `geom_seq(data = ...)` table. With a plot-level reference, a backbone may reuse all or a consistent subset of it. Without one, repeated backbone declarations must describe the same complete reference. The reference is resolved before drawing.\n\nObservation layers use their own data or inherit the plot-level data. A reference supplied only through a backbone does not become the plot data. Inherited mappings are evaluated in each layer's data. Use `layout_sequences(order = ...)` to change the default reference order. The default coordinate projection is Chord.\n\nOrdinary visual scales train together across layers by aesthetic, following ggplot2. Layer IDs identify the layers for references and export. Use `scale_for()` to train a scale on selected layers or tracks, and `scales_ggchord()` to use the traditional palettes.",
       "errors": "Conflicting reference lengths, units or topology are errors. A graph without a complete reference cannot infer lengths from feature or link positions.",
       "roles": [],
       "example_setup": ""
@@ -3030,7 +3030,7 @@
     },
     "scale_for": {
       "title": "Scope a scale to layers or tracks",
-      "intro": "The scoped scale takes precedence for the selected mappings. Specify its guide options on the scale.",
+      "intro": "Train a ggplot2 scale on selected layers or track bands.",
       "arguments": [
         {
           "format": "ggplot2 scale",
@@ -3038,22 +3038,22 @@
         },
         {
           "format": "character vector or NULL",
-          "description": "Layer names. Omit both selectors to target the current owner."
+          "description": "Layer IDs. If both selectors are omitted, the most recently added layer or track supplies the scope."
         },
         {
           "format": "character vector or NULL",
-          "description": "Track names. Supply either layers or tracks."
+          "description": "Track IDs. Supply this or `layers`. For a native continuous Y scale, target complete track bands."
         },
         {
           "format": "shared or panel",
-          "description": "Train together, or separately by facet panel for track Y."
+          "description": "`\"shared\"` uses one domain for the selected scope. `\"panel\"` trains a separate domain in each facet and applies to track Y scales."
         }
       ],
       "value": "A scoped scale declaration.",
-      "details": "The scoped scale takes precedence for the selected mappings. Specify its guide options on the scale.",
-      "errors": "",
+      "details": "The scoped scale takes precedence on the selected mappings. Other layers keep training together by aesthetic under the ordinary scale. Put Guide settings on the scoped scale. Custom Stats still receive public aesthetic names such as `colour`.\n\nScope controls training. Compatible discrete colour and fill guides for genomic layers can use one legend when both map the same category column and the trained breaks, order, labels and Guide settings agree. Each category key can compose both glyphs with their own mapped palettes and fixed styles. Other independently scoped palettes can have separate guides. If a native shared Guide has no verified common category identity, the glyphs use separate slots.\n\nFor track Y, use a native continuous scale. One declaration can give several tracks a common domain, or train that selection separately in each facet with `by = \"panel\"`.",
+      "errors": "Each selected layer needs a mapped aesthetic handled by the scale. Use a colour scale for `aes(colour = ...)` and a fill scale for `aes(fill = ...)`. Unknown targets and overlapping explicit scopes for the same aesthetic raise an error.",
       "roles": [],
-      "example_setup": ""
+      "example_setup": "First assign a fill scale to a named gene layer. The next two plots compare a scoped Viridis colour scale and an ordinary Viridis colour scale. Both show one legend with an A key and a B key, each containing a Viridis backbone and a half-transparent, independently filled gene arrow. The last plot trains one signal band's Y domain independently in each sample facet."
     },
     "scale_fill_residue": {
       "title": "Choose an alphabet palette for residue cells",
@@ -3166,7 +3166,7 @@
         }
       ],
       "value": "A guide for `scale_y_continuous()`.",
-      "details": "Attach a guide to a track value scale. The scale supplies bounds, breaks, units and title; the guide controls placement and the theme controls style.",
+      "details": "Set the guide on the band's native `scale_y_*()`, or set it on that scale within `scale_for()` for named tracks. The scale supplies limits, breaks, units and title. The guide places them on the reference path and the theme sets their appearance. Change band dimensions with `layout_track()`.",
       "errors": "The guide needs a numerical track domain. An interval-only band cannot train it.",
       "roles": [],
       "example_setup": ""
@@ -5053,7 +5053,7 @@
         }
       ],
       "value": "A ggplot2 visual scale.",
-      "details": "Add the scale to the plot to share one mapping, or wrap it in scale_for() to train selected layers independently.",
+      "details": "Add the scale directly to share a mapping across layers, or wrap it in `scale_for()` to train selected layers independently. Mapping backbone colour and feature fill to `accver` can compose them in one legend when the ordered categories and Guide settings agree. Each channel retains its own palette. Use `aesthetics = c(\"colour\", \"fill\")` to supply one scale for both channels when you want common colour values, limits or a title.",
       "errors": "",
       "roles": [],
       "example_setup": ""
@@ -5157,7 +5157,7 @@
     },
     "layout_track": {
       "title": "Configure track layout",
-      "intro": "Set only the supplied fields. A named declaration may precede or follow its layers. Empty declarations reserve no space.",
+      "intro": "Set the side, order, thickness or gap of a track band.",
       "arguments": [
         {
           "format": "character or NULL",
@@ -5181,10 +5181,10 @@
         }
       ],
       "value": "A layout declaration.",
-      "details": "Set only the supplied fields. A named declaration may precede or follow its layers. Empty declarations reserve no space.",
-      "errors": "",
+      "details": "Omit `id` to update the latest track. With an explicit ID, declare its layout before or after its layers. Multiple updates apply field by field, and `NULL` leaves an existing field intact. A declaration without layers occupies no space.\n\nTracks default to the positive side, 4 mm thick with a 1 mm preceding gap. On each side, explicit orders reserve their slots. Other tracks take the smallest available positive orders in the order their first layers were added. Order 1 is closest to the reference.\n\nAdd a native `scale_y_*()` to set the latest track's numeric domain. Layout, theme and coordinate settings do not move that binding. Use `scale_for(..., tracks = ids)` to target named tracks.",
+      "errors": "Supply an ID or add a track before using the implicit target. Two occupied tracks on the same side cannot have the same explicit order.",
       "roles": [],
-      "example_setup": ""
+      "example_setup": "First modify an automatically identified band. Then reserve order 2 for the named line band and let the independently added point band fill order 1."
     },
     "scale_seq_continuous": {
       "title": "Describe the linear sequence position scale",
@@ -5223,7 +5223,7 @@
     },
     "add_track": {
       "title": "Combine layers in one track",
-      "intro": "Member layers share one physical band and one Y domain.",
+      "intro": "Place several track layers in one band and draw them in the supplied order.",
       "arguments": [
         {
           "format": "track layers",
@@ -5231,7 +5231,7 @@
         },
         {
           "format": "character or auto_id()",
-          "description": "Track ID. A named empty declaration can be used."
+          "description": "Track ID. The default `auto_id()` assigns a stable ID when the band is added. A name can select a band declared earlier."
         },
         {
           "format": "positive or negative",
@@ -5251,7 +5251,7 @@
         }
       ],
       "value": "A track layer group.",
-      "details": "Member layers share one physical band and one Y domain.",
+      "details": "Members share the band's physical space and Y domain. Configure the band here or with `layout_track()`; both apply only supplied layout fields. Add a native `scale_y_*()` after the group to set its numeric domain. Ordinary visual aesthetics still follow the plot's scales unless scoped with `scale_for()`.",
       "errors": "",
       "roles": [],
       "example_setup": ""
@@ -5266,7 +5266,7 @@
         }
       ],
       "value": "A palette declaration.",
-      "details": "The preset interprets mapped roles when the plot is built. Explicit scoped and ordinary scales take precedence.",
+      "details": "Ordinary ggplot2 palettes are the default. Add this preset to select traditional palettes for mapped roles when the plot is built. An explicit scoped scale takes precedence for its selected mappings. An ordinary explicit scale takes precedence over the preset for its aesthetic. Use `theme()` after a theme preset to change appearance.",
       "errors": "",
       "roles": [],
       "example_setup": ""
@@ -5750,7 +5750,7 @@
         "inherit.aes": "Defaults to `TRUE`. Inherit plot mappings and evaluate them on the track data."
       },
       "roles": "Use `accver` to identify the reference. Map `x` in source units and `y` in measurement units. A counting bar computes `after_stat(count)` and accepts an optional `weight` mapping. Interval layers use `start` and `end` and fill the physical band without training its numeric scale. Use `group` to distinguish series on the same reference. A [track band](layout_track.html#api-layout_track) controls physical space and [`scale_y_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html) controls the numerical scale.",
-      "details": "Each standalone layer creates a band. Set physical placement with `layout_track()` or group layers in one band with `add_track()`. A native `scale_y_*()` configures the current numerical track. Use `scale_for()` to select complete track domains explicitly. Ordinary visual scales train across layers by aesthetic.",
+      "details": "Each standalone track layer creates a band with a stable automatic track ID. Supply the same named `track` to layers that share a band, or group them with `add_track()`. Use `layout_track()` to set physical placement.\n\nOn sequence-path coordinates a native `scale_y_*()` configures the latest band's numerical domain. Use `scale_for()` to select named track domains, with `by = \"panel\"` for per-facet training. Track X uses sequence positions. In Dotplot the native X and Y scales stay global. Ordinary visual scales train together by aesthetic.",
       "example_intro": "Each example uses the same small reference fixture. The examples add measurements, counts or intervals appropriate to the geometry.",
       "examples": {
         "geom_track": {

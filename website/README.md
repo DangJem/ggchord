@@ -51,7 +51,7 @@ python3 tools/check-documentation.py --reference-only
 python3 tools/build-website.py --reference-only
 ```
 
-The local entry is `.site/en/reference/index.html`, with the matching Han entry under `.site/zh/reference/`. The API reference uses the same pkgdown template, navigation and appearance controls as the handbook. The builder runs the downloadable R scripts and adds their plots and console output to both language editions. The example runner uses downlit, ragg, png and the optional reader dependencies rtracklayer, VariantAnnotation, Biopython and MUMmer’s `show-coords`. Set `GGCHORD_PYTHON` or `GGCHORD_SHOW_COORDS` if those tools are installed outside the default search path.
+The local entry is `.site/en/reference/index.html`, with the matching Han entry under `.site/zh/reference/`. The API reference uses the same pkgdown template, navigation and appearance controls as the handbook. The builder runs the downloadable R scripts, adds their plots and console output to both language editions, and refreshes `.site/assets/ggchord-source.zip` from the package sources in the same checkout. The example runner uses downlit, ragg, png and the optional reader dependencies rtracklayer, VariantAnnotation, Biopython and MUMmer’s `show-coords`. Set `GGCHORD_PYTHON` or `GGCHORD_SHOW_COORDS` if those tools are installed outside the default search path.
 
 ## Update function help, package READMEs or offline tutorials
 

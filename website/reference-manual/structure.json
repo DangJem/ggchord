@@ -291,7 +291,9 @@
         "as_ggchord_seq",
         "ggchord_data",
         "layout_sequences",
-        "auto_id"
+        "auto_id",
+        "scale_for",
+        "scales_ggchord"
       ],
       "native": false,
       "defaults": {
@@ -1253,7 +1255,9 @@
         "geom_seq_region",
         "position_strand",
         "position_feature_stack",
-        "geom_gene_label"
+        "geom_gene_label",
+        "scale_for",
+        "scale_colour_sequence"
       ],
       "native": false,
       "defaults": {
@@ -3553,12 +3557,18 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(seqs) +\n  geom_link_ribbon(aes(fill = pident), data = links) +\n  geom_gene(aes(fill = strand), data = genes, id = \"genes\") +\n  scale_for(scale_fill_strand(), layers = \"genes\")",
+      "examples": "ggchord(seqs) +\n  geom_link_ribbon(aes(fill = pident), data = links) +\n  geom_gene(aes(fill = strand), data = genes, id = \"genes\") +\n  scale_for(scale_fill_strand(), layers = \"genes\")\n\nggchord(seqs) +\n  geom_seq(aes(colour = accver)) +\n  scale_for(scale_colour_viridis_d()) +\n  geom_gene(aes(fill = accver), data = genes, alpha = 0.5)\n\nggchord(seqs) +\n  geom_seq(aes(colour = accver)) +\n  scale_colour_viridis_d() +\n  geom_gene(aes(fill = accver), data = genes, alpha = 0.5)\n\nsignal_by_sample <- rbind(\n  transform(signal, sample = \"Control\"),\n  transform(signal, value = 10 * value, sample = \"Treatment\")\n)\n\nggchord(seqs) +\n  geom_seq() +\n  layout_track(\"signal\", thickness = 12, gap = 3) +\n  geom_track_point(aes(x = pos, y = value), data = signal_by_sample, track = \"signal\") +\n  scale_for(\n    scale_y_continuous(name = \"Signal\", n.breaks = 3, guide = guide_track_axis()),\n    tracks = \"signal\",\n    by = \"panel\"\n  ) +\n  scale_seq_continuous(guide = \"none\") +\n  facet_wrap(vars(sample)) +\n  coord_collinear()",
       "related": [
         "auto_id",
         "layout_track",
         "track_limits",
-        "scale_seq_continuous"
+        "scale_seq_continuous",
+        "scale_colour_sequence",
+        "scales_ggchord",
+        "add_track",
+        "geom_seq",
+        "geom_gene",
+        "guide_track_axis"
       ],
       "native": false,
       "defaults": {
@@ -3690,7 +3700,8 @@
         "track_limits",
         "layout_track",
         "guide_seq_axis",
-        "theme_ggchord"
+        "theme_ggchord",
+        "scale_for"
       ],
       "native": false,
       "defaults": {
@@ -3720,7 +3731,9 @@
         "theme_ggchord_minimal",
         "theme_ggchord_dark",
         "theme_ggchord_publication",
-        "guide_seq_axis"
+        "guide_seq_axis",
+        "guide_track_axis",
+        "scales_ggchord"
       ],
       "native": false,
       "defaults": {
@@ -5847,7 +5860,9 @@
       "examples": "ggchord(seqs) +\n  geom_seq_arrow(aes(colour = accver)) +\n  scale_colour_sequence(name = \"Sequence\")",
       "related": [
         "scale_for",
-        "geom_seq"
+        "geom_seq",
+        "geom_gene",
+        "scales_ggchord"
       ],
       "native": false,
       "defaults": {
@@ -5950,7 +5965,9 @@
       "related": [
         "layer_id",
         "scale_for",
-        "auto_anchor"
+        "auto_anchor",
+        "add_track",
+        "layout_track"
       ],
       "native": false,
       "defaults": {}
@@ -5990,11 +6007,13 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(data = seqs) + geom_seq() +\n  geom_track_line(aes(x = pos, y = value), data = signal) +\n  layout_track(thickness = 5, gap = 2) +\n  scale_y_continuous(name = \"Signal\") + coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_line(aes(x = pos, y = value), data = signal) +\n  layout_track(thickness = 5, gap = 2) +\n  scale_y_continuous(name = \"Signal\") +\n  coord_collinear()\n\nggchord(seqs) +\n  geom_seq() +\n  layout_track(\"signal\", order = 2, thickness = 12, gap = 3) +\n  geom_track_line(aes(x = pos, y = value), data = signal, track = \"signal\") +\n  scale_y_continuous(name = \"Signal\", limits = c(0, 6), breaks = c(0, 3, 6)) +\n  geom_track_point(aes(x = pos, y = value), data = signal) +\n  layout_track(thickness = 10, gap = 2) +\n  scale_y_continuous(name = \"Measurements\", limits = c(0, 8), breaks = c(0, 4, 8)) +\n  scale_seq_continuous(guide = \"none\") +\n  coord_collinear()",
       "related": [
         "add_track",
         "geom_track",
-        "scale_for"
+        "scale_for",
+        "auto_id",
+        "guide_track_axis"
       ],
       "native": false,
       "defaults": {
@@ -6071,7 +6090,9 @@
       "examples": "ggchord(data = seqs) + geom_seq() +\n  add_track(\n    geom_track_col(aes(x = pos, y = value), data = signal, width = 50),\n    geom_track_line(aes(x = pos, y = value), data = signal), thickness = 6\n  ) +\n  scale_y_continuous() + coord_collinear()",
       "related": [
         "layout_track",
-        "geom_track"
+        "geom_track",
+        "auto_id",
+        "scale_for"
       ],
       "native": false,
       "defaults": {
@@ -6092,7 +6113,12 @@
       ],
       "roles": [],
       "examples": "p <- ggchord(seq_data_example) + geom_seq(aes(colour = accver))\np + labs(title = \"ggplot2 default colours\")\np + scales_ggchord() + labs(title = \"Traditional ggchord colours\")",
-      "related": [],
+      "related": [
+        "scale_for",
+        "scale_colour_sequence",
+        "scale_colour_ggchord",
+        "theme_ggchord"
+      ],
       "native": false,
       "defaults": {
         "roles": "\"auto\""
@@ -6315,7 +6341,9 @@
         "geom_seq_label",
         "geom_seq_center_label",
         "geom_seq_break",
-        "geom_seq_region"
+        "geom_seq_region",
+        "scale_colour_sequence",
+        "scale_for"
       ]
     },
     "geom_seq_label": {
@@ -6371,7 +6399,8 @@
         "stat_coverage",
         "layout_track",
         "track_limits",
-        "guide_track_axis"
+        "guide_track_axis",
+        "scale_for"
       ]
     },
     "layout_fusion": {

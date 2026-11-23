@@ -614,7 +614,7 @@ def write_family_redirects(root, families):
                       f'<body><a href="{fallback}">{name}()</a></body></html>')
 
 
-def build(root):
+def build(root, write_package_download):
     root = root.resolve()
     pandoc = shutil.which('pandoc')
     if not pandoc:
@@ -625,6 +625,7 @@ def build(root):
         subprocess.run(['Rscript', '--vanilla', 'tools/website/parameter-directory.R', str(ROOT),
                         str(stage/'parameter-directory.json')], cwd=ROOT, check=True)
         pages, searches = prepare(stage, pandoc)
+        write_package_download(stage/'assets')
         render_articles(stage, pages, navigation_site=root)
         manifest = read(stage/'api-reference-manifest.json')
         write_family_redirects(stage, manifest['families'])

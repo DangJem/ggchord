@@ -61,6 +61,10 @@ def copy_source_downloads(assets):
         target = assets/'source'/path.relative_to(source)
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(path, target)
+    write_package_download(assets)
+
+
+def write_package_download(assets):
     # The local manual may describe a checkout newer than the published package.
     # Ship the installable inputs from the same working tree as its examples.
     package = [ROOT / name for name in ('DESCRIPTION', 'NAMESPACE', 'LICENSE', 'LICENSE.md')]
@@ -133,7 +137,7 @@ def main():
     if args.reference_only:
         if args.publication:
             parser.error('--reference-only builds a local preview')
-        build_api_reference(ROOT/'.site')
+        build_api_reference(ROOT/'.site', write_package_download)
         return
     os.environ['TZ'] = 'UTC'
     preview = ROOT / '.site'
