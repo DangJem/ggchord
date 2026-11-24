@@ -76,7 +76,7 @@ ggchord() +
   geom_gene(data = features, fill = "#277A73") +
   geom_feature_label(aes(label = label), label_layout = layout_label_repel()) +
   layout_sequences(angular_gap = 12) +
-  coord_circular(start_angle = 90) +
+  coord_circular() +
   theme_ggchord_plasmid()
 ```
 

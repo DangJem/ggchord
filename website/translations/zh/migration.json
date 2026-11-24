@@ -1,5 +1,5 @@
 {
-  "source_sha256": "bceb2b8e97b52ff6cf29edda99063de36b75bfe7ccfb8a63d03a699f3164f65f",
+  "source_sha256": "e910be4c442c405c9dcd32cb03f2cff03d46393a0c5570ee7b52a1c432ae7ede",
   "blocks": {
     "1": {
       "source_sha256": "3792b6ecb93ad04870dd350af26783b882490b8f0da6a5e689feb909b1e4ce64",
@@ -10,6 +10,16 @@
       "source_sha256": "1f798488b7d4516a521cedbd12581c43b757e0df3c4872f0d4f6841683b179b5",
       "status": "reviewed",
       "translation": "对于 v0.50.0 早期开发快照编写的脚本，请在原标签层的 `label_layout` 中传入 `layout_label_repel()`。固定文字使用 `layout_label_fixed()`，圆心文字使用 `geom_seq_label_center()`。将 `leader` 及 `segment_*` 样式移到标签层。通过 `scale_seq_continuous()` 和 `guide_seq_axis()` 控制序列轴的可见性、间距及文字方向。\n"
+    },
+    "3": {
+      "source_sha256": "936075e10049354c99b8b56cbe64367c48b209a2ef0df20d47b712702ee1b289",
+      "status": "reviewed",
+      "translation": "`coord_circular()` 现在从十二点方向逆时针量取 `start_angle`。将 v0.50.0 早期开发快照的角度减去 90°可保留原朝向。要从三点方向起画，设 `start_angle = -90`。\n"
+    },
+    "4": {
+      "source_sha256": "32df33ccf2406398c3ee7520c9c95c7c4497ef40827a48ce8e60fb720db82997",
+      "status": "reviewed",
+      "translation": "如果早期开发快照在固定注释、`shape_feature()` 或手动形状标度中使用 `\"primer_arc\"`，请改用 `\"arrow_arc\"`。`geom_primer()` 快捷层默认使用改名后的预设。\n"
     }
   }
 }

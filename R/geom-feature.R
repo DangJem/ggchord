@@ -16,12 +16,17 @@ feature_geom_defaults$colour <- "#353A3E"
 feature_geom_defaults$linewidth <- .25
 feature_geom_defaults$shape <- NA_character_
 feature_geom_defaults$feature_shape <- "arrow"
+feature_geom_defaults$.panel_shape <- NA_character_
+feature_geom_defaults$.shape_spec <- NA_character_
+feature_geom_defaults$.shape_part <- NA_character_
+feature_geom_defaults$.shape_paint <- NA_character_
 feature_geom <- ggproto(
   "GeomChordFeature", feature_polygon_geom,
   default_aes = feature_geom_defaults,
   extra_params = c(
     "na.rm", "segment_boundaries", "boundary_colour",
-    "boundary_linewidth", "boundary_linetype", "adaptive_outline", "arrow_key"
+    "boundary_linewidth", "boundary_linetype", "adaptive_outline", "arrow_key",
+    "body_style_explicit"
   ),
   draw_key = function(data, params, size) {
     key_glyph_feature(data, params, size)
@@ -31,7 +36,8 @@ feature_geom <- ggproto(
                         boundary_colour = "#666666",
                         boundary_linewidth = .25,
                         boundary_linetype = "22",
-                        adaptive_outline = TRUE, arrow_key = NULL) {
+                        adaptive_outline = TRUE, arrow_key = NULL,
+                        body_style_explicit = character()) {
     boundary_colour <- boundary_colour %||% (data$colour[1L] %||% "black")
     component <- data$.component %||% rep("polygon", nrow(data))
     polygons <- data[is.na(component) | component == "polygon", , drop = FALSE]
@@ -39,20 +45,33 @@ feature_geom <- ggproto(
     points <- data[component == "point", , drop = FALSE]
     grobs <- list()
     if (nrow(polygons)) {
-      if (isTRUE(adaptive_outline) && "feature_shape" %in% names(polygons)) {
-        small <- polygons$feature_shape %in% c(
-          "compact_arrow", "promoter_arrow", "primer_arrow", "marker",
+      roles <- polygons$.shape_part %||% rep("body", nrow(polygons))
+      roles[is.na(roles)] <- "body"
+      paint <- polygons$.shape_paint %||% rep("full", nrow(polygons))
+      paint[is.na(paint)] <- "full"
+      shape <- polygons$.panel_shape
+      if (isTRUE(adaptive_outline)) {
+        small <- shape %in% c(
+          "diamond",
           "chevron", "lollipop"
         )
         polygons$linewidth[small] <- pmin(polygons$linewidth[small], .18)
       }
-      if ("feature_shape" %in% names(polygons)) {
-        line_only <- polygons$feature_shape %in% "capped_line"
-        polygons$fill[line_only] <- NA
-      }
-      grobs[[length(grobs) + 1L]] <- ggplot2::GeomPolygon$draw_panel(
-        polygons, panel_params, coord
+      line_only <- shape %in% "capped_line"
+      line_only <- line_only & (is.na(polygons$.shape_part) | !"fill" %in% body_style_explicit)
+      polygons$fill[line_only] <- polygons$colour[line_only]
+      polygons <- ggchord_shape_part_styles(polygons, polygons$.shape_spec, roles, body_style_explicit)
+      stems <- shape %in% "lollipop" & roles == "body"
+      polygons$fill[stems] <- polygons$colour[stems]
+      polygons$colour[paint == "fill"] <- NA
+      polygons$fill[paint == "outline"] <- NA
+      paths <- polygons[paint == "path", , drop = FALSE]
+      if (any(paint != "path")) grobs[[length(grobs) + 1L]] <- ggplot2::GeomPolygon$draw_panel(
+        polygons[paint != "path", , drop = FALSE], panel_params, coord
       )
+      if (nrow(paths))
+        grobs[[length(grobs) + 1L]] <- ggplot2::GeomPath$draw_panel(
+          paths, panel_params, coord, lineend = "round", linejoin = "round", na.rm = na.rm)
     }
     if (isTRUE(segment_boundaries) && nrow(boundaries)) {
       boundaries$colour <- boundary_colour
@@ -121,12 +140,11 @@ ggchord_feature_data <- function(data, fixed_shape = "block",
 }
 
 ggchord_feature_shapes <- c(
-  "block", "arrow", "compact_arrow", "promoter_arrow", "primer_arrow",
-  "marker", "capped_line", "primer_arc", "chevron", "lollipop"
+  "block", "arrow", "arrow_flush", "arrow_triangle", "diamond", "capped_line",
+  "arrow_arc", "chevron", "lollipop", "point", "tick", "prototype"
 )
 
-ggchord_feature_heads <- c("arrow", "compact_arrow", "promoter_arrow",
-  "primer_arrow", "primer_arc")
+ggchord_feature_heads <- c("arrow", "arrow_flush", "arrow_triangle", "arrow_arc")
 
 # Convert absolute device units without opening a graphics device. Keep the
 # names in a flexible parameter so layout can resolve them against instances.
@@ -252,33 +270,21 @@ ggchord_run_source_stat <- function(data, specification, roles, caller, facet, l
 
 ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
     stat, position, dots, na.rm, show.legend, inherit.aes, id,
-    default_head_style = "shouldered", feature_role = "feature") {
+    feature_role = "feature") {
   caller <- "geom_feature()"
-  if (!is.character(shape) || length(shape) != 1L || !shape %in% ggchord_feature_shapes)
-    ggchord_stop(caller, ": unknown shape")
+  spec <- ggchord_parse_feature_shape(shape)
+  if (!spec$name %in% ggchord_feature_shapes)
+    ggchord_stop(caller, ": unknown interval shape ", spec$name)
   thickness <- ggchord_physical_mm(thickness, "thickness", nonnegative = TRUE)
   if (any(unlist(thickness, use.names = FALSE) <= 0))
     ggchord_stop(caller, ": thickness must be positive")
   position <- ggchord_as_feature_position(position, caller)
   dots <- ggchord_colour_dots(dots, caller)
-  head_args <- c("head_length", "head_width", "head_style", "short_feature")
   boundary_args <- c("boundary_colour", "boundary_linewidth", "boundary_linetype")
-  custom <- c(head_args, "unknown_strand", "segment_boundaries", boundary_args)
-  explicit_heads <- intersect(head_args, names(dots))
-  if (fixed_shape && length(explicit_heads) && !shape %in% ggchord_feature_heads)
-    ggchord_stop(caller, ": ", explicit_heads[1L], " requires a headed geometry")
+  custom <- c("unknown_strand", "segment_boundaries", boundary_args)
   if (length(intersect(boundary_args, names(dots))) &&
       !isTRUE(dots$segment_boundaries))
     ggchord_stop(caller, ": boundary styles require segment_boundaries = TRUE")
-  head_length <- ggchord_physical_mm(dots$head_length %||% 2, "head_length", TRUE)
-  head_width <- dots$head_width
-  if (!is.null(head_width)) head_width <- ggchord_physical_mm(head_width, "head_width", TRUE)
-  if (length(head_length) != 1L || head_length <= 0 ||
-      (!is.null(head_width) && (length(head_width) != 1L || head_width <= 0)))
-    ggchord_stop(caller, ": head dimensions must be positive scalars")
-  head_style <- ggchord_match_arg(dots$head_style %||% default_head_style,
-    c("shouldered", "flush", "triangle"))
-  short <- ggchord_match_arg(dots$short_feature %||% "shrink", c("shrink", "block", "error"))
   unknown <- ggchord_match_arg(dots$unknown_strand %||% "undirected", c("undirected", "error"))
   geom_dots <- dots[setdiff(names(dots), custom)]
   ggchord_check_geom_params(geom_dots, feature_geom, caller, position, stat)
@@ -287,9 +293,14 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
   if (fixed_shape) mapping$shape <- NULL
   shape_mapped <- "shape" %in% names(mapping)
   if (shape_mapped) names(mapping)[names(mapping) == "shape"] <- "feature_shape"
+  # The panel needs the resolved glyph even when shape is fixed and no
+  # public shape scale is trained.
+  key_thickness <- stats::median(unlist(thickness, use.names = FALSE))
   layer <- ggplot2::layer(
     data = data.frame(x = numeric(), y = numeric(), group = integer()),
-    mapping = aes(x = x, y = y, group = group),
+    mapping = aes(x = x, y = y, group = group, .panel_shape = I(feature_shape),
+      .shape_spec = I(.shape_spec), .shape_part = I(.shape_part),
+      .shape_paint = I(.shape_paint)),
     stat = "identity", geom = feature_geom, position = position,
     show.legend = show.legend, inherit.aes = inherit.aes, check.param = FALSE,
     params = c(list(na.rm = na.rm,
@@ -298,17 +309,13 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
       boundary_linewidth = dots$boundary_linewidth %||% 0.3,
       boundary_linetype = dots$boundary_linetype %||% 1,
       adaptive_outline = is.null(dots$linewidth),
-      arrow_key = list(style = head_style, shape = shape,
-        head_ratio = if (length(head_width) && is.numeric(thickness) && length(thickness) == 1L)
-          head_width / thickness)), geom_params$geom)
+      arrow_key = list(shape = shape, thickness = key_thickness)), geom_params$geom)
   )
   layer$ggchord_type <- "gene_poly"
   layer$ggchord_params <- list(
     type = "gene", id = id, is_feature = TRUE,
     style_defaults = c(feature_shape = !fixed_shape),
     feature_mm = thickness, physical_layout = TRUE,
-    head_length_mm = head_length, head_width_mm = head_width,
-    head_args = explicit_heads, arrow_head_style = head_style, short_feature = short,
     unknown_strand = unknown, feature_position = position,
     gene_color_scheme = "manual", feature_role = feature_role,
     feature_shape_mapped = shape_mapped,
@@ -334,8 +341,14 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
 #' @param location Annotation position type: `"interval"`, `"site"`, `"cut"`, or
 #'   `"auto"` to determine it from the input columns and role mappings.
-#' @param shape Default shape. An explicitly supplied fixed shape takes priority over its mapping.
-#' @param thickness Physical thickness in mm or absolute grid units. Named values select references.
+#' @param shape A preset name or [shape_feature()] specification for the
+#'   chosen location. Omit it to map interval
+#'   categories with `aes(shape = ...)` and [ggplot2::scale_shape_manual()],
+#'   or to use the default listed below. A fixed shape takes priority over
+#'   the mapping.
+#' @param thickness Physical thickness in mm or absolute grid units. Named
+#'   values select references for intervals. For a site, use a single value
+#'   to set the symbol size, as with the `size` argument to [geom_site()].
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #'   A custom Stat works on source intervals. An explicit group takes priority;
 #'   otherwise discrete starting visual aesthetics group the records within each panel.
@@ -347,18 +360,49 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
 #' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
-#' @details Intervals use `accver`, `start` and `end` and default to a block.
-#' Sites use `accver` and one-based `pos` and default to a tick. Cuts also
-#' carry one or both interbase boundaries `cut_top` and `cut_bottom` and use
-#' the cut shape. A cut with unknown boundaries can display its anchor as a tick.
+#' @details Intervals use `accver` and one-based inclusive `start` and `end`.
+#' These interval shapes work in both [coord_collinear()] and
+#' [coord_circular()]:
+#'
+#' - `"block"`: the default. A filled band drawn along the interval.
+#' - `"arrow"`: a filled directional band with a pointed end.
+#' - `"arrow_flush"`: directional band with the head base and shaft equally wide.
+#' - `"arrow_triangle"`: a wedge spanning the whole directional interval.
+#' - `"diamond"` and `"point"`: a diamond or circle at the visible midpoint.
+#' - `"tick"`: a short normal stroke at the visible midpoint.
+#' - `"capped_line"`: a thin stroke with a cap inside each end. Set or map
+#'   `colour` to style both the stroke and the caps.
+#' - `"arrow_arc"`: a slender directional stroke that follows the sequence
+#'   path. A standalone legend shows a straight sample of its outline.
+#' - `"chevron"`: a pointed band with a notched tail.
+#' - `"lollipop"`: a stem from the backbone to a round head at the midpoint
+#'   of the displayed interval or visible segment.
+#'
+#' Use [shape_feature()] to set part dimensions, colours and short-interval
+#' behaviour. Use `shape_feature("prototype", ...)` to assemble an interval
+#' outline from its body, head and tail. A legend uses a representative
+#' sample of the same specification. A bidirectional `"arrow_triangle"`
+#' has two tips across the interval.
+#'
+#' Sites use `accver` and one-based `pos`. Their shapes are `"tick"` (the
+#' default), `"point"`, `"diamond"`, `"lollipop"` and `"block"`. A lollipop
+#' uses the visible midpoint for an interval and `pos` for a site. See
+#' [geom_site()] for the size and placement of site symbols.
+#'
+#' Cuts use `pos` and interbase fields `cut_top` and `cut_bottom`. They use
+#' `"cut"` by default and also support `"block"`, `"point"`, `"diamond"`
+#' and `"lollipop"`. Each known boundary gets its own mark. Cut lollipops
+#' point away from the reference on each chain side. With no known
+#' boundaries, `"cut"` can show a tick at `pos`; the other shapes are
+#' omitted. See [geom_restriction_site()].
+#'
 #' Supply strand `+`, `-`, `+/-` (both directions), or `.` (undirected),
 #' with disjoint segments when applicable. Bidirectional arrow shapes retain
 #' one source entity and use heads at both ends. The gene shortcut defaults to
 #' an arrow and strand placement. The primer shortcut defaults to a directional
 #' narrow path, and the region shortcut defaults to a translucent block.
-#' In circular coordinates, shouldered arrows and their compact and promoter
-#' forms retain the full body thickness. With no explicit `head_width`, their
-#' head is 1.42 times the body thickness.
+#' In circular coordinates, `"arrow"` on feature and gene layers retains the
+#' full body thickness and defaults to a head 1.42 times the body thickness.
 #' @examples
 #' library(ggplot2)
 #'
@@ -388,10 +432,69 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
 #'
 #' sites <- data.frame(accver = "A", pos = 300, site_id = "s1", label = "Site 1")
 #' ggchord(seqs) + geom_seq() +
-#'   geom_feature(data = sites, location = "site", id = "sites") +
+#'   geom_feature(data = sites, shape = "lollipop", id = "sites") +
 #'   geom_feature_label(aes(label = label), anchor_layer = "sites",
-#'     label_layout = layout_label_fixed(offset = 5), leader = "straight") +
+#'     label_layout = layout_label_fixed(offset = 9), leader = "none") +
 #'   coord_collinear()
+#'
+#' # Compare interval shapes on the same reference.
+#' interval_shapes <- c(
+#'   "block", "arrow", "arrow_flush", "arrow_triangle", "diamond",
+#'   "capped_line", "arrow_arc", "chevron", "lollipop", "point", "tick"
+#' )
+#' shape_numbers <- sprintf("%02d", seq_along(interval_shapes))
+#'
+#' shape_reference <- data.frame(
+#'   accver = "demo", length = 2650L, sequence_unit = "bp", topology = "circular"
+#' )
+#' shape_intervals <- data.frame(
+#'   accver = "demo",
+#'   start = seq(45L, by = 240L, length.out = length(interval_shapes)),
+#'   strand = "+",
+#'   label = shape_numbers,
+#'   glyph = factor(interval_shapes, levels = interval_shapes)
+#' )
+#' shape_intervals$end <- shape_intervals$start + 165L
+#'
+#' shape_comparison <- ggchord(shape_reference) +
+#'   geom_seq(geometry = "line", colour = "#89979A", show.legend = FALSE) +
+#'   geom_feature(
+#'     aes(shape = glyph), data = shape_intervals, location = "interval",
+#'     id = "interval_marks", position = position_offset(6), thickness = 3,
+#'     fill = "#77B5AE", colour = "#24474A"
+#'   ) +
+#'   geom_feature_label(
+#'     aes(label = label), anchor_layer = "interval_marks", anchor = "middle",
+#'     label_layout = layout_label_fixed(orientation = "horizontal", offset = 5),
+#'     leader = "none", colour = "#24474A", size = 3.2
+#'   ) +
+#'   scale_shape_manual(
+#'     name = "Interval shape",
+#'     values = stats::setNames(interval_shapes, interval_shapes),
+#'     breaks = interval_shapes,
+#'     labels = paste(shape_numbers, interval_shapes),
+#'     guide = guide_legend(ncol = 4, theme = theme(legend.byrow = TRUE))
+#'   ) +
+#'   scale_seq_continuous(guide = "none") +
+#'   theme_ggchord_minimal() +
+#'   theme(
+#'     legend.position = "bottom",
+#'     legend.title.position = "top",
+#'     legend.key.width = grid::unit(11, "mm"),
+#'     legend.key.height = grid::unit(6, "mm"),
+#'     legend.text = element_text(size = 10),
+#'     plot.margin = margin(9, 12, 9, 12)
+#'   )
+#'
+#' collinear_shapes <- shape_comparison + coord_collinear() +
+#'   labs(title = "Interval shapes in collinear coordinates")
+#' circular_shapes <- shape_comparison + coord_circular(fit = "labels") +
+#'   guides(shape = guide_legend(ncol = 1)) +
+#'   theme(legend.position = "right") +
+#'   labs(title = "Interval shapes in circular coordinates")
+#'
+#' collinear_shapes
+#' circular_shapes
 geom_feature <- function(mapping = NULL, data = NULL, location = "auto", shape = NULL,
     thickness = 2, stat = "identity", position = "identity", ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
@@ -405,6 +508,7 @@ geom_feature <- function(mapping = NULL, data = NULL, location = "auto", shape =
   if (location != "auto")
     return(do.call(ggchord_annotation_layer, c(list(mapping, data, location), args)))
 
+  ggchord_reject_shape_dots(args$dots)
   # Inherited role mappings and data callbacks can reveal the location only
   # at build time. Keep one layer and allocate its ID when it is added.
   layer <- ggplot2::layer(geom = feature_geom, stat = "identity", position = "identity",
@@ -417,23 +521,22 @@ geom_feature <- function(mapping = NULL, data = NULL, location = "auto", shape =
 
 ggchord_annotation_layer <- function(mapping, data, location, shape, fixed_shape,
     thickness, stat, position, dots, na.rm, show.legend, inherit.aes, id,
-    default_head_style = "shouldered", feature_role = "feature", fixed_size = FALSE,
-    strict_shape = TRUE) {
+    feature_role = "feature", fixed_size = FALSE) {
+  ggchord_reject_shape_dots(dots)
   if (location == "interval") {
     layer <- ggchord_feature_layer(mapping, data, shape %||% "block", fixed_shape,
       thickness, stat, position, dots, na.rm, show.legend, inherit.aes, id,
-      default_head_style, feature_role)
+      feature_role)
   } else {
     default <- if (location == "cut") "cut" else "tick"
-    allowed <- if (location == "cut") "cut" else c("tick", "point")
-    if (strict_shape && !is.null(shape) &&
-        (!is.character(shape) || length(shape) != 1L || !shape %in% allowed))
+    allowed <- ggchord_site_location_shapes(location)
+    if (!is.null(shape) && !ggchord_parse_feature_shape(shape)$name %in% allowed)
       ggchord_stop("geom_feature(): ", location, " shape must be ", paste(allowed, collapse = " or "))
     layer <- ggchord_site_layer(mapping, data, shape %||% default, fixed_shape,
       thickness, fixed_size, stat, position, dots, na.rm, show.legend, inherit.aes, id)
+    layer$geom_params$site_key_location <- location
   }
   layer$ggchord_params$annotation_location <- location
-  layer$ggchord_params$strict_annotation_shape <- strict_shape
   layer
 }
 

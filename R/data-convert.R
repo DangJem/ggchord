@@ -470,6 +470,8 @@ as_ggchord_feature <- function(x, columns = NULL, sequence_unit = NULL, location
   conversion$coordinate_system <- switch(location, interval = "1-based-inclusive",
     site = "1-based-residue", cut = c(pos = "1-based-residue", cut_top = "0-based-interbase",
       cut_bottom = "0-based-interbase"))
+  conversion$source_row_declared <- is.data.frame(x) && !is.null(x[[".source_row"]]) &&
+    !identical(conversion$source_conversion$source_row_declared, FALSE)
   attr(out, "ggchord_conversion") <- conversion
   # Check identity field types now. The row-aligned report is generated from
   # the current rows on request, including after filtering or reordering.

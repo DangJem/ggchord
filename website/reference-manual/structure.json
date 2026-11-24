@@ -61,6 +61,7 @@
         "geom_primer_label",
         "geom_site",
         "geom_restriction_site",
+        "shape_feature",
         "geom_site_label",
         "geom_link_line",
         "geom_link_ribbon",
@@ -425,7 +426,7 @@
         ]
       ],
       "roles": [],
-      "examples": "circular_seq <- data.frame(\n  accver = \"A\", length = 1000, sequence_unit = \"bp\", topology = \"circular\"\n)\nggchord(circular_seq) +\n  geom_seq() +\n  geom_seq_label_center(aes(label = accver), size = 5) +\n  layout_sequences(angular_gap = 12) +\n  coord_circular(start_angle = 90)",
+      "examples": "circular_seq <- data.frame(\n  accver = \"A\", length = 1000, sequence_unit = \"bp\", topology = \"circular\"\n)\nggchord(circular_seq) +\n  geom_seq() +\n  geom_seq_label_center(aes(label = accver), size = 5) +\n  layout_sequences(angular_gap = 12) +\n  coord_circular()",
       "related": [
         "geom_seq",
         "geom_gene",
@@ -1184,12 +1185,13 @@
         "`fill, colour, alpha, linewidth, linetype`",
         "`group`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_feature(\n    aes(shape = type, fill = type), data = genes,\n    thickness = c(A = 2.5, B = 1.5)\n  ) +\n  scale_shape_manual(values = c(CDS = \"arrow\", tRNA = \"block\")) +\n  scale_fill_manual(values = gene_colours) +\n  coord_collinear()\n\ncut <- data.frame(accver = \"A\", pos = 300, cut_top = 300, cut_bottom = 304)\nggchord(one_seq) +\n  geom_seq() +\n  geom_feature(data = sites, location = \"site\") +\n  geom_feature(data = cut, location = \"cut\") +\n  coord_circular()",
+      "examples": "interval_shapes <- c(\n  \"block\", \"arrow\", \"arrow_flush\", \"arrow_triangle\", \"diamond\",\n  \"capped_line\", \"arrow_arc\", \"chevron\", \"lollipop\", \"point\", \"tick\"\n)\nshape_numbers <- sprintf(\"%02d\", seq_along(interval_shapes))\n\nshape_reference <- data.frame(\n  accver = \"demo\", length = 2650L, sequence_unit = \"bp\", topology = \"circular\"\n)\nshape_intervals <- data.frame(\n  accver = \"demo\",\n  start = seq(45L, by = 240L, length.out = length(interval_shapes)),\n  strand = \"+\",\n  label = shape_numbers,\n  glyph = factor(interval_shapes, levels = interval_shapes)\n)\nshape_intervals$end <- shape_intervals$start + 165L\n\nshape_comparison <- ggchord(shape_reference) +\n  geom_seq(geometry = \"line\", colour = \"#89979A\", show.legend = FALSE) +\n  geom_feature(\n    aes(shape = glyph), data = shape_intervals, location = \"interval\",\n    id = \"interval_marks\", position = position_offset(6), thickness = 3,\n    fill = \"#77B5AE\", colour = \"#24474A\"\n  ) +\n  geom_feature_label(\n    aes(label = label), anchor_layer = \"interval_marks\", anchor = \"middle\",\n    label_layout = layout_label_fixed(orientation = \"horizontal\", offset = 5),\n    leader = \"none\", colour = \"#24474A\", size = 3.2\n  ) +\n  scale_shape_manual(\n    name = \"Interval shape\",\n    values = stats::setNames(interval_shapes, interval_shapes),\n    breaks = interval_shapes,\n    labels = paste(shape_numbers, interval_shapes),\n    guide = guide_legend(ncol = 4, theme = theme(legend.byrow = TRUE))\n  ) +\n  scale_seq_continuous(guide = \"none\") +\n  theme_ggchord_minimal() +\n  theme(\n    legend.position = \"bottom\",\n    legend.title.position = \"top\",\n    legend.key.width = grid::unit(11, \"mm\"),\n    legend.key.height = grid::unit(6, \"mm\"),\n    legend.text = element_text(size = 10),\n    plot.margin = margin(9, 12, 9, 12)\n  )\n\ncollinear_shapes <- shape_comparison + coord_collinear() +\n  labs(title = \"Interval shapes in collinear coordinates\")\ncircular_shapes <- shape_comparison + coord_circular(fit = \"labels\") +\n  guides(shape = guide_legend(ncol = 1)) +\n  theme(legend.position = \"right\") +\n  labs(title = \"Interval shapes in circular coordinates\")\n\ncollinear_shapes\ncircular_shapes\n\n# Draw a recorded site as a point and mark a staggered cut.\ncut <- data.frame(accver = \"A\", pos = 700, cut_top = 700, cut_bottom = 704)\nggchord(one_seq) +\n  geom_seq() +\n  geom_feature(data = sites, shape = \"lollipop\", colour = \"#187B77\") +\n  geom_feature(data = cut, location = \"cut\", colour = \"#915525\") +\n  coord_circular() +\n  labs(title = \"A site lollipop and a staggered cut\")",
       "related": [
         "geom_gene",
         "geom_primer",
         "geom_feature_label",
-        "scale_for"
+        "scale_for",
+        "shape_feature"
       ],
       "native": false,
       "defaults": {
@@ -1208,7 +1210,7 @@
       }
     },
     "geom_gene": {
-      "usage": "geom_gene(\n  mapping = NULL,\n  data = NULL,\n  shape = \"arrow\",\n  thickness = 2,\n  stat = \"identity\",\n  position = position_strand(),\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
+      "usage": "geom_gene(\n  mapping = NULL,\n  data = NULL,\n  shape = \"arrow_flush\",\n  thickness = 2,\n  stat = \"identity\",\n  position = position_strand(),\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
       "arguments": [
         [
           "mapping"
@@ -1267,7 +1269,7 @@
       "defaults": {
         "mapping": "NULL",
         "data": "NULL",
-        "shape": "\"arrow\"",
+        "shape": "\"arrow_flush\"",
         "thickness": "2",
         "stat": "\"identity\"",
         "position": "position_strand()",
@@ -1279,7 +1281,7 @@
       }
     },
     "geom_primer": {
-      "usage": "geom_primer(\n  mapping = NULL,\n  data = NULL,\n  shape = \"primer_arc\",\n  thickness = 2,\n  stat = \"identity\",\n  position = position_offset(0),\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
+      "usage": "geom_primer(\n  mapping = NULL,\n  data = NULL,\n  shape = \"arrow_arc\",\n  thickness = 2,\n  stat = \"identity\",\n  position = position_offset(0),\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
       "arguments": [
         [
           "mapping"
@@ -1335,7 +1337,7 @@
       "defaults": {
         "mapping": "NULL",
         "data": "NULL",
-        "shape": "\"primer_arc\"",
+        "shape": "\"arrow_arc\"",
         "thickness": "2",
         "stat": "\"identity\"",
         "position": "position_offset(0)",
@@ -1686,7 +1688,7 @@
         "`shape`",
         "`colour, fill, alpha, size, linewidth, linetype`"
       ],
-      "examples": "cut_sites <- transform(sites, cut_top = 300, cut_bottom = 304)\nggchord(one_seq) +\n  geom_seq() +\n  geom_site(data = cut_sites) +\n  geom_site_label(aes(label = label)) +\n  coord_circular()",
+      "examples": "# Site shapes are anchored at recorded residue positions.\nsite_reference <- data.frame(\n  accver = \"demo\", length = 2200L, sequence_unit = \"bp\", topology = \"circular\"\n)\nsite_kinds <- c(\"tick\", \"point\", \"diamond\", \"block\", \"lollipop\")\nposition_sites <- data.frame(\n  accver = \"demo\",\n  pos = c(300L, 700L, 1100L, 1500L, 1900L),\n  kind = factor(site_kinds, levels = site_kinds),\n  label = c(\"300\", \"700\", \"1100\", \"1500\", \"1900\")\n)\nsite_comparison <- ggchord(site_reference) +\n  geom_seq(geometry = \"line\", colour = \"#89979A\", show.legend = FALSE) +\n  geom_site(aes(shape = kind), data = position_sites, id = \"position_marks\", size = 3,\n    colour = \"#24474A\") +\n  geom_site_label(aes(label = label), anchor_layer = \"position_marks\",\n    label_layout = layout_label_fixed(orientation = \"horizontal\", offset = 13),\n    leader = \"none\", size = 3.2) +\n  scale_shape_manual(name = \"Site shape\", values = stats::setNames(site_kinds, site_kinds),\n    breaks = site_kinds, guide = guide_legend(nrow = 1)) +\n  scale_seq_continuous(guide = \"none\") +\n  coord_circular(fit = \"labels\") +\n  theme_ggchord_minimal() +\n  theme(legend.position = \"bottom\", legend.key.size = grid::unit(7, \"mm\"),\n    plot.margin = margin(9, 12, 9, 12)) +\n  labs(title = \"Site shapes anchor at recorded positions\")\nsite_comparison",
       "related": [
         "geom_restriction_site",
         "geom_site_label",
@@ -1751,7 +1753,7 @@
         "`shape`",
         "`colour, fill, alpha, size, linewidth, linetype`"
       ],
-      "examples": "cut_sites <- transform(sites, cut_top = 300, cut_bottom = 304)\nggchord(one_seq) +\n  geom_seq() +\n  geom_restriction_site(data = cut_sites) +\n  geom_site_label(aes(label = label)) +\n  coord_circular()",
+      "examples": "cut_reference <- data.frame(\n  accver = \"A\", length = 2000L, sequence_unit = \"bp\", topology = \"circular\"\n)\ncut_shapes <- c(\"cut\", \"block\", \"point\", \"diamond\", \"lollipop\")\ncuts <- data.frame(\n  accver = \"A\", pos = c(160L, 540L, 920L, 1300L, 1680L),\n  kind = factor(cut_shapes, levels = cut_shapes)\n)\ncuts <- transform(cuts, cut_top = pos, cut_bottom = pos + 60L)\n\nggchord(cut_reference) +\n  geom_seq(geometry = \"line\", show.legend = FALSE) +\n  geom_restriction_site(aes(shape = kind), data = cuts, size = 2.8) +\n  scale_shape_manual(\"Cut shape\", values = stats::setNames(cut_shapes, cut_shapes)) +\n  scale_seq_continuous(guide = \"none\") +\n  theme_ggchord_minimal() +\n  coord_circular()",
       "related": [
         "geom_site",
         "geom_site_label",
@@ -6060,6 +6062,83 @@
       "defaults": {
         "...": ""
       }
+    },
+    "shape_feature": {
+      "usage": "shape_feature(\n  name,\n  head_length = NULL,\n  head_width = NULL,\n  short_feature = NULL,\n  body_width = NULL,\n  body_fill = NULL,\n  body_colour = NULL,\n  body_shape = NULL,\n  head_shape = NULL,\n  tail_shape = NULL,\n  tail_length = NULL,\n  tail_width = NULL,\n  cap_length = NULL,\n  cap_width = NULL,\n  head_fill = NULL,\n  head_colour = NULL,\n  tail_fill = NULL,\n  tail_colour = NULL\n)",
+      "arguments": [
+        [
+          "name"
+        ],
+        [
+          "head_length"
+        ],
+        [
+          "head_width"
+        ],
+        [
+          "short_feature"
+        ],
+        [
+          "body_width"
+        ],
+        [
+          "body_fill",
+          "body_colour"
+        ],
+        [
+          "body_shape"
+        ],
+        [
+          "head_shape",
+          "tail_shape"
+        ],
+        [
+          "tail_length"
+        ],
+        [
+          "tail_width"
+        ],
+        [
+          "cap_length",
+          "cap_width"
+        ],
+        [
+          "head_fill",
+          "head_colour"
+        ],
+        [
+          "tail_fill",
+          "tail_colour"
+        ]
+      ],
+      "roles": [],
+      "examples": "shape_demo_ref <- data.frame(accver = \"A\", length = 1000, sequence_unit = \"bp\")\nshape_demo_intervals <- data.frame(\n  accver = \"A\", start = c(100, 580), end = c(430, 900),\n  strand = \"+\", kind = c(\"short\", \"standard\")\n)\nggchord(shape_demo_ref) +\n  geom_seq() +\n  geom_feature(aes(shape = kind), data = shape_demo_intervals,\n    position = position_offset(4), fill = \"#77B5AE\") +\n  scale_shape_manual(name = \"Arrow geometry\", values = c(\n    short = shape_feature(\"arrow\", head_length = 1),\n    standard = \"arrow\"\n  )) +\n  coord_collinear()\n\nblock_reference <- data.frame(\n  accver = \"A\", length = 1000L, topology = \"circular\", sequence_unit = \"bp\"\n)\nblock_intervals <- data.frame(accver = \"A\", start = 120L, end = 310L, kind = \"Interval\")\nblock_sites <- data.frame(accver = \"A\", pos = 490L, kind = \"Site\")\nblock_cuts <- data.frame(\n  accver = \"A\", pos = 700L, cut_top = 700L, cut_bottom = 810L, kind = \"Cut\"\n)\nprototype <- shape_feature(\"prototype\",\n  body_width = 4, body_fill = \"#7ABCB7\", body_colour = \"#235354\"\n)\n\nblock_plot <- ggchord(block_reference) +\n  geom_seq(geometry = \"line\", colour = \"#89979A\", show.legend = FALSE) +\n  geom_feature(aes(shape = kind), data = block_intervals) +\n  geom_feature(aes(shape = kind), data = block_sites) +\n  geom_feature(aes(shape = kind), data = block_cuts) +\n  scale_shape_manual(\n    name = \"Location type\",\n    values = c(Interval = prototype, Site = prototype, Cut = prototype),\n    breaks = c(\"Interval\", \"Site\", \"Cut\"),\n    guide = guide_legend(nrow = 1)\n  ) +\n  scale_seq_continuous(guide = \"none\") +\n  theme_ggchord_minimal() +\n  theme(\n    legend.position = \"bottom\",\n    legend.key.width = grid::unit(10, \"mm\"),\n    legend.key.height = grid::unit(8, \"mm\"),\n    plot.margin = margin(12, 14, 12, 14)\n  )\n\nblock_plot + coord_collinear() +\n  labs(title = \"One block specification in collinear coordinates\")\nblock_plot + coord_circular(fit = \"labels\") +\n  labs(title = \"One block specification in circular coordinates\")\n\ndouble_cap <- shape_feature(\"prototype\",\n  body_shape = \"line\", head_shape = \"cap\", tail_shape = \"cap\",\n  body_width = 0.4, cap_length = 1, cap_width = 2, tail_width = 3,\n  head_fill = \"#D98245\", tail_fill = \"#5885B2\"\n)\nggchord(shape_demo_ref) +\n  geom_seq() +\n  geom_feature(data = shape_demo_intervals, shape = double_cap,\n    position = position_offset(4)) +\n  coord_collinear()\n\nlollipop <- shape_feature(\"prototype\",\n  body_shape = \"line\", head_shape = \"circle\",\n  body_width = 0.4, body_colour = \"#274F80\",\n  head_width = 3, head_fill = \"#EF9F55\"\n)\nggchord(block_reference) +\n  geom_seq() +\n  geom_feature(data = block_sites, shape = lollipop) +\n  geom_feature(data = block_cuts, shape = lollipop) +\n  coord_circular()",
+      "related": [
+        "geom_feature",
+        "geom_gene",
+        "geom_site"
+      ],
+      "native": false,
+      "defaults": {
+        "name": "",
+        "head_length": "NULL",
+        "head_width": "NULL",
+        "short_feature": "NULL",
+        "body_width": "NULL",
+        "body_fill": "NULL",
+        "body_colour": "NULL",
+        "body_shape": "NULL",
+        "head_shape": "NULL",
+        "tail_shape": "NULL",
+        "tail_length": "NULL",
+        "tail_width": "NULL",
+        "cap_length": "NULL",
+        "cap_width": "NULL",
+        "head_fill": "NULL",
+        "head_colour": "NULL",
+        "tail_fill": "NULL",
+        "tail_colour": "NULL"
+      }
     }
   },
   "setup": "library(ggplot2)\nlibrary(ggchord)\n\nseqs <- data.frame(\n  accver = c(\"A\", \"B\"), length = c(1000, 800),\n  sequence_unit = \"bp\", topology = \"linear\"\n)\none_seq <- seqs[1, , drop = FALSE]\ngenes <- data.frame(\n  accver = c(\"A\", \"A\", \"B\"), feature_id = c(\"g1\", \"g2\", \"g3\"),\n  start = c(100, 400, 150), end = c(240, 620, 380),\n  strand = c(\"+\", \"-\", \"+\"), label = c(\"g1\", \"g2\", \"g3\"),\n  type = c(\"CDS\", \"tRNA\", \"CDS\")\n)\nlinks <- data.frame(\n  qaccver = \"A\", saccver = \"B\", qstart = c(100, 400),\n  qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),\n  qstrand = \"+\", sstrand = c(\"+\", \"-\"),\n  pident = c(98, 90), link_id = c(\"l1\", \"l2\")\n)\npoints <- data.frame(qaccver = \"A\", qpos = 200, saccver = \"B\", spos = 220)\nsites <- data.frame(accver = \"A\", pos = 300, site_id = \"s1\", label = \"EcoRI\")\nsignal <- data.frame(accver = rep(c(\"A\", \"B\"), each = 3),\n  pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))\nunordered_signal <- signal[c(1, 3, 2, 4, 6, 5), ]\nintervals <- genes[c(\"accver\", \"start\", \"end\")]\nstates <- genes[c(\"accver\", \"start\", \"end\", \"type\")]\ngene_colours <- c(CDS = \"#187B77\", tRNA = \"#CC7D3A\")\nwindows <- data.frame(accver = \"A\", start = 1, end = 500, window_id = \"w1\")\np_basic <- ggchord(seqs) + geom_seq() +\n  geom_gene(data = genes) + coord_collinear()\n\nlabel_seq <- data.frame(accver = \"A\", length = 1000, sequence_unit = \"bp\")\ncrowded_genes <- data.frame(\n  accver = \"A\",\n  feature_id = c(\"g1\", \"g2\", \"g3\"),\n  start = c(425, 478, 531),\n  end = c(467, 520, 573),\n  strand = \"+\",\n  label = c(\"Gene alpha\", \"Gene beta\", \"Gene gamma\")\n)\nlabel_plot <- ggchord(label_seq) +\n  geom_seq() +\n  geom_gene(data = crowded_genes, fill = \"#187B77\") +\n  coord_collinear()",
@@ -6089,7 +6168,8 @@
         "as_ggchord_feature",
         "position_strand",
         "position_feature_stack",
-        "scale_for"
+        "scale_for",
+        "shape_feature"
       ]
     },
     "geom_feature_label": {

@@ -238,7 +238,7 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
       pad <- 0
       shape <- as.character(data$.feature_shape[i] %||%
         data$.feature_shape_raw[i] %||% "arrow")
-      if (isTRUE(is.finite(len)) && identical(shape, "marker")) {
+      if (isTRUE(is.finite(len)) && identical(shape, "diamond")) {
         glyph_width <- as.numeric(data$.feature_width[i] %||% 0)
         radius <- max(.1, abs(1 + base[i]))
         display_bp <- glyph_width * 3 / radius / (2 * pi) * len

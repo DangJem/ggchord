@@ -261,6 +261,19 @@ ggchord_validate_layer_link <- function(data, type, reference, caller, allow_mis
   invisible(NULL)
 }
 
+ggchord_validate_layer_point <- function(data, location, reference, caller) {
+  attr(data, "ggchord_annotation_location") <- location
+  enabled <- function(check) check %in% c("schema", "coordinates", "units", "references")
+  add <- function(code, message, row = NA_integer_, column = NA_character_) {
+    if (length(row)) ggchord_stop(caller, ": ", message,
+      ggchord_input_rows(seq_len(nrow(data)) %in% row))
+  }
+  ggchord_data_validate_table(data, "feature", reference, enabled, add)
+  if (identical(location, "cut") && is.null(data$cut_status))
+    data$cut_status <- ggchord_annotation_cut_status(data)
+  data
+}
+
 #' Read and adapt a layer's input before evaluating mappings
 #' @noRd
 ggchord_layer_source <- function(lyr, fallback) {
@@ -486,8 +499,11 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
     data[[role]] <- value
   }
   location <- lyr$ggchord_params$annotation_location
-  if (!is.null(location) && isTRUE(lyr$ggchord_params$strict_annotation_shape))
-    ggchord_annotation_location(data, location, ggchord_layer_input_context(lyr))
+  strict_location <- !is.null(location)
+  strict_point <- strict_location && location %in% c("site", "cut")
+  if (strict_location) ggchord_annotation_location(data, location, ggchord_layer_input_context(lyr))
+  if (strict_point) data <- ggchord_validate_layer_point(data, location,
+    lyr$ggchord_params$reference, ggchord_layer_input_context(lyr))
   reference_ids <- lyr$ggchord_params$reference_ids
   if (!is.null(reference_ids)) {
     fields <- if (type %in% c("link", "ribbon")) c("qaccver", "saccver") else "accver"
@@ -521,6 +537,8 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
       data <- ggchord_run_source_stat(data, source_stat,
         intersect(lyr$ggchord_role_aes, names(data)), ggchord_layer_input_context(lyr),
         lyr$ggchord_params$source_stat_facet, lyr)
+      if (strict_point) data <- ggchord_validate_layer_point(data, location,
+        lyr$ggchord_params$reference, ggchord_layer_input_context(lyr))
       if (!is.null(cache)) cache$data <- data
     }
     ggchord_validate_layer_link(data, type, lyr$ggchord_params$reference,
@@ -635,6 +653,7 @@ ggchord_attach_input_columns <- function(geometry, input) {
     "ribbon_linetype", "gene_fill", "feature_fill", "feature_shape",
     "scale_length", "bp_length", "sequence_unit", ".ggchord_adjacent",
     "feature_label_colour", "feature_label_orientation", "region_fill", ".component",
+    ".shape_spec", ".shape_part", ".shape_paint", ".block_size", "cut_side",
     ".perimeter_callout", ".label_over_feature", ".arc_units", ".leader_crosses_backbone",
     ".leader_crosses_text", "annotation_side", "annotation_class", ".ggchord_composite_label",
     "track_id", "label_text_original", "label_size_requested", "label_size_final",

@@ -18,5 +18,5 @@ ggchord(record$seq_data) +
     aes(label = anno), data = captions, anchor_layer = "features",
     label_layout = layout_label_repel(arrangement = "columns"), size = 4
   ) +
-  coord_circular(start_angle = 90, fit = "labels") +
+  coord_circular(fit = "labels") +
   theme_ggchord_minimal()

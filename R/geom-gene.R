@@ -6,7 +6,7 @@
 #' @export
 #' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
-#' @param shape Default shape. An explicitly supplied fixed shape takes priority over its mapping.
+#' @param shape Preset name or [shape_feature()] specification. A fixed shape takes priority over its mapping.
 #' @param thickness Physical thickness in mm or absolute grid units. Named values select references.
 #' @param stat A compatible ggplot2 Stat or its name. See [geom_feature()] for
 #'   source grouping and reuse during rendering.
@@ -22,7 +22,9 @@
 #' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Provide one-based closed intervals with `accver`, `start` and `end`. A strand or disjoint segments can be supplied where appropriate. The gene shortcut uses strand placement and a shoulderless arrow by default.
-#' Set `head_style = "shouldered"` through `...` to use a wider arrowhead.
+#' Set `shape = "arrow"` to use a wider, shouldered arrowhead.
+#' This shortcut uses the interval shapes listed in [geom_feature()].
+#' Gene arrows use `"arrow_flush"` by default.
 #' @examples
 #' library(ggplot2)
 #'
@@ -45,14 +47,14 @@
 #'   geom_gene(aes(fill = type), data = genes, id = "genes") +
 #'   scale_fill_manual(values = gene_colours) +
 #'   coord_collinear()
-geom_gene <- function(mapping = NULL, data = NULL, shape = "arrow",
+geom_gene <- function(mapping = NULL, data = NULL, shape = "arrow_flush",
     thickness = 2, stat = "identity", position = position_strand(), ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_annotation_layer(mapping, data, "interval", shape, !missing(shape), thickness,
     stat, position, list(...), na.rm, show.legend, inherit.aes, id,
-    default_head_style = "flush", feature_role = "gene")
+    feature_role = "gene")
 }
 
 #' Label gene intervals

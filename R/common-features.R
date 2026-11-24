@@ -305,12 +305,8 @@ ggchord_common_candidate <- function(accver, feature, method, start, end,
     "capped_line"
   } else if (strand == ".") {
     "block"
-  } else if (feature_type == "promoter") {
-    "promoter_arrow"
-  } else if (feature_type == "primer_bind") {
-    "primer_arrow"
-  } else if (feature_type == "protein_bind") {
-    "compact_arrow"
+  } else if (feature_type %in% c("promoter", "primer_bind", "protein_bind")) {
+    shape_feature("arrow", head_length = 1)
   } else "arrow"
   data.frame(
     accver = accver,

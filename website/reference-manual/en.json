@@ -185,7 +185,7 @@
       "arguments": [
         {
           "format": "numeric(1); default 0",
-          "description": "Initial angle in degrees counterclockwise from the right."
+          "description": "Initial angle in degrees counterclockwise from twelve o’clock. Zero places the sequence origin at the top."
         },
         {
           "format": "character; default \"clockwise\"",
@@ -845,7 +845,7 @@
         },
         {
           "format": "character(1)",
-          "description": "When omitted, intervals use `\"block\"`, sites use `\"tick\"` and cuts use `\"cut\"`. A fixed shape overrides its mapping."
+          "description": "Use a preset name or [`shape_feature()`](#api-shape_feature) specification. Map either with `aes(shape = category)` and `scale_shape_manual()`."
         },
         {
           "format": "positive physical size / flexible",
@@ -861,7 +861,7 @@
         },
         {
           "format": "named arguments",
-          "description": "Additional named visual styles and parameters accepted by this layer. Headed shapes accept head_length and head_width in mm (or absolute grid units), head_style, and short_feature. In circular coordinates, head_width = NULL gives shouldered arrows a head 1.42 times their body thickness."
+          "description": "Named visual styles and parameters for the selected Stat. Set arrow dimensions with [`shape_feature()`](#api-shape_feature)."
         },
         {
           "format": "logical",
@@ -881,7 +881,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use `accver`, `start`, `end`, and strand for directional shapes. Compound features may supply segments. The shape scale maps domain shapes, and thickness, heads and placement use physical dimensions. The source feature and its display pieces remain traceable.\n\nFeatures have a dark 0.25 mm outline by default. Small symbols use a finer outline. A fixed or mapped linewidth overrides the adjustment.\n\nUse `+`, `-`, `+/-` or `.` for strand. Bidirectional arrows have heads at both ends and retain one source entity.\n\nIn circular coordinates, thickness sets the body width of arrow, compact_arrow, promoter_arrow and primer_arrow. With head_style = \"shouldered\", the default head extends past both sides of the body. Shorter shapes can have a shorter head while retaining the body width. An explicit head_width sets the physical width of the head. For capped_line, both end caps fit inside the feature interval.",
+      "details": "The `arrow` preset has shoulders, `arrow_flush` has a head base as wide as the shaft and `arrow_triangle` draws the full interval as a wedge. A bidirectional triangle has tips at both ends. Set dimensions and short-interval behaviour with [`shape_feature()`](#api-shape_feature). For a short-headed arrow use `shape_feature(\"arrow\", head_length = 1)`. The legend depicts the same specification on a representative straight interval.",
       "errors": "Incompatible shape and head parameters, invalid interval endpoints, unsupported Stats or Positions, and missing strand where required are errors.",
       "roles": [
         "Reference identity.",
@@ -907,7 +907,7 @@
         },
         {
           "format": "character / mapped aesthetic",
-          "description": "Default shape. An explicitly supplied fixed shape takes priority over its mapping."
+          "description": "Use a preset name or [`shape_feature()`](#api-shape_feature) specification. Map either with `aes(shape = category)` and `scale_shape_manual()`."
         },
         {
           "format": "positive physical size / flexible",
@@ -923,7 +923,7 @@
         },
         {
           "format": "named arguments",
-          "description": "Additional named visual styles and parameters accepted by this layer. Headed shapes accept head_length and head_width in mm (or absolute grid units), head_style, and short_feature. In circular coordinates, head_width = NULL gives shouldered arrows a head 1.42 times their body thickness."
+          "description": "Named visual styles and parameters for the selected Stat. Set arrow dimensions with [`shape_feature()`](#api-shape_feature)."
         },
         {
           "format": "logical",
@@ -943,7 +943,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "This shortcut uses an arrow shape and strand-aware placement unless overridden. The layer draws the supplied features and uses their explicit style mappings.\n\nThe default gene arrow is shoulderless (`head_style = \"flush\"`). Set `head_style = \"shouldered\"` for a wider arrowhead.\n\nIn circular coordinates, thickness sets the body width of arrow, compact_arrow, promoter_arrow and primer_arrow. With head_style = \"shouldered\", the default head extends past both sides of the body. Shorter shapes can have a shorter head while retaining the body width. An explicit head_width sets the physical width of the head.",
+      "details": "The `arrow` preset has shoulders, `arrow_flush` has a head base as wide as the shaft and `arrow_triangle` draws the full interval as a wedge. A bidirectional triangle has tips at both ends. Set dimensions and short-interval behaviour with [`shape_feature()`](#api-shape_feature). For a short-headed arrow use `shape_feature(\"arrow\", head_length = 1)`. The legend depicts the same specification on a representative straight interval.",
       "errors": "Provide directional evidence for directional marks. Shape-specific options must match the effective shape.",
       "roles": [
         "Reference identity.",
@@ -969,7 +969,7 @@
         },
         {
           "format": "character / mapped aesthetic",
-          "description": "Default shape. An explicitly supplied fixed shape takes priority over its mapping."
+          "description": "Use a preset name or [`shape_feature()`](#api-shape_feature) specification. Map either with `aes(shape = category)` and `scale_shape_manual()`."
         },
         {
           "format": "positive physical size / flexible",
@@ -985,7 +985,7 @@
         },
         {
           "format": "named arguments",
-          "description": "Additional named visual styles and parameters accepted by this layer."
+          "description": "Named visual styles and parameters for the selected Stat. Set arrow dimensions with [`shape_feature()`](#api-shape_feature)."
         },
         {
           "format": "logical",
@@ -1005,7 +1005,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use known binding intervals and biological strand. The rendering uses primer-specific geometry with its physical sizing controls. Binding discovery is performed separately.\n\nIn circular coordinates, the primer shortcut keeps its narrow profile for placement between the backbone strokes.",
+      "details": "This shortcut uses the interval presets of geom_feature(). Its default arrow_arc draws a slender directional stroke along the reference path.",
       "errors": "Missing reliable strand and options for an unrelated feature shape are invalid.",
       "roles": [
         "Reference identity.",
@@ -1031,7 +1031,7 @@
         },
         {
           "format": "character / mapped aesthetic",
-          "description": "Default shape. An explicitly supplied fixed shape takes priority over its mapping."
+          "description": "Use a preset name or [`shape_feature()`](#api-shape_feature) specification. Map either with `aes(shape = category)` and `scale_shape_manual()`."
         },
         {
           "format": "positive physical size / flexible",
@@ -1051,7 +1051,7 @@
         },
         {
           "format": "named arguments",
-          "description": "Additional named visual styles and parameters accepted by this layer. Headed shapes accept head_length and head_width in mm (or absolute grid units), head_style, and short_feature. In circular coordinates, head_width = NULL gives shouldered arrows a head 1.42 times their body thickness."
+          "description": "Named visual styles and parameters for the selected Stat. Set arrow dimensions with [`shape_feature()`](#api-shape_feature)."
         },
         {
           "format": "logical",
@@ -1071,7 +1071,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use closed source intervals for regions of interest. The layer adds a visual mark over those intervals. Use Layout windows or a data focus operation when you want a different visible or statistical domain.\n\nIn circular coordinates, thickness sets the body width of arrow, compact_arrow, promoter_arrow and primer_arrow. With head_style = \"shouldered\", the default head extends past both sides of the body. Shorter shapes can have a shorter head while retaining the body width. An explicit head_width sets the physical width of the head.",
+      "details": "This shortcut uses the interval presets of geom_feature(). It defaults to a translucent block spanning the source interval.",
       "errors": "A region should belong to the registered reference and use its source units.",
       "roles": [
         "Reference identity.",
@@ -1093,7 +1093,7 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "An automatically bound label reads the target entities after their Stat. A separate table or callback defines independent labels by default. To select a subset and preserve target placement, name the target in `anchor_layer` and supply matching `feature_id` values. A bound callback receives the target entity table."
+          "description": "An automatically bound label reads target entities after their Stat. A label table can omit coordinates when it supplies a matching entity ID or source file and original row. A table with its own coordinates or a callback is placed independently by default. A callback bound to a named target receives its entity table."
         },
         {
           "format": "Stat / character",
@@ -1101,7 +1101,7 @@
         },
         {
           "format": "auto_anchor() / character(1) / NULL",
-          "description": "The default follows the only compatible interval feature layer. With several candidates, select one by ID. Set `NULL` for independent placement. Supplying label data, a non-identity Stat or an explicit Position makes this layer independent by default."
+          "description": "The default follows a unique compatible annotation layer when coordinates are omitted. With several candidates, give the intended layer ID. Use `NULL` for independent placement. A non-identity Stat or explicit Position also selects independent placement."
         },
         {
           "format": "character(1)",
@@ -1141,7 +1141,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "An independent layer may supply its own label table. An anchored layer follows the target feature layer after its Stat and Position and matches by stable feature identity. The text layout operates around the anchor.\n\nFor a segmented feature, the middle anchor follows the occupied segments. A segment crossing the circular origin keeps its label near the seam.\n\nIn circular coordinates, text outside the sequence ring uses bold type by default. An explicit or mapped fontface takes priority. A filled exterior label has a visible outline, including when it is placed with a fixed layout.\n\nNearby inward callouts can adjust their arc positions and rows together to keep text clear of other leaders.",
+      "details": "An independent layer may supply its own label table. An anchored layer follows the target feature layer after its Stat and Position and matches by a stable entity ID or by a matching source file and original row. The text layout operates around the anchor.\n\nFor a segmented feature, the middle anchor follows the occupied segments. A segment crossing the circular origin keeps its label near the seam.\n\nIn circular coordinates, text outside the sequence ring uses bold type by default. An explicit or mapped fontface takes priority. A filled exterior label has a visible outline, including when it is placed with a fixed layout.\n\nNearby inward callouts can adjust their arc positions and rows together to keep text clear of other leaders.",
       "errors": "Unknown or ambiguous anchors and unsupported Stats on an anchored label are errors.",
       "roles": [
         "Reference identities that locate source observations.",
@@ -1162,7 +1162,7 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "An automatically bound label reads the target entities after their Stat. A separate table or callback defines independent labels by default. To select a subset and preserve target placement, name the target in `anchor_layer` and supply matching `feature_id` values. A bound callback receives the target entity table."
+          "description": "An automatically bound label reads target entities after their Stat. A label table can omit coordinates when it supplies a matching entity ID or source file and original row. A table with its own coordinates or a callback is placed independently by default. A callback bound to a named target receives its entity table."
         },
         {
           "format": "Stat / character",
@@ -1170,7 +1170,7 @@
         },
         {
           "format": "auto_anchor() / character(1) / NULL",
-          "description": "The default follows the only compatible gene layer. With several candidates, select one by ID. Set `NULL` for independent placement. Supplying label data, a non-identity Stat or an explicit Position makes this layer independent by default."
+          "description": "The default follows a unique compatible gene layer when coordinates are omitted. With several candidates, give the intended layer ID. Use `NULL` for independent placement. A non-identity Stat or explicit Position also selects independent placement."
         },
         {
           "format": "character(1)",
@@ -1231,7 +1231,7 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "An automatically bound label reads the target entities after their Stat. A separate table or callback defines independent labels by default. To select a subset and preserve target placement, name the target in `anchor_layer` and supply matching `feature_id` values. A bound callback receives the target entity table."
+          "description": "An automatically bound label reads target entities after their Stat. A label table can omit coordinates when it supplies a matching entity ID or source file and original row. A table with its own coordinates or a callback is placed independently by default. A callback bound to a named target receives its entity table."
         },
         {
           "format": "Stat / character",
@@ -1239,7 +1239,7 @@
         },
         {
           "format": "auto_anchor() / character(1) / NULL",
-          "description": "The default follows the only compatible primer layer. With several candidates, select one by ID. Set `NULL` for independent placement. Supplying label data, a non-identity Stat or an explicit Position makes this layer independent by default."
+          "description": "The default follows a unique compatible primer layer when coordinates are omitted. With several candidates, give the intended layer ID. Use `NULL` for independent placement. A non-identity Stat or explicit Position also selects independent placement."
         },
         {
           "format": "character(1)",
@@ -1292,7 +1292,7 @@
     },
     "geom_site": {
       "title": "Draw points along a reference",
-      "intro": "Draw points along a reference.",
+      "intro": "Draw a symbol at the recorded residue position.",
       "arguments": [
         {
           "format": "aes / NULL",
@@ -1304,7 +1304,7 @@
         },
         {
           "format": "character / mapped aesthetic",
-          "description": "Default shape. An explicitly supplied fixed shape takes priority over its mapping."
+          "description": "Use a preset name or [`shape_feature()`](#api-shape_feature) specification. Map either with `aes(shape = category)` and `scale_shape_manual()`."
         },
         {
           "format": "positive physical size / mapped aesthetic",
@@ -1340,8 +1340,8 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use one-based `pos` for the point anchor. `cut_top` and `cut_bottom` use interbase positions from zero to the reference length. Symbols can be ticks, points or cuts. Each site layer trains its own size scale by default. Add an ordinary size scale to compare sizes across layers.",
-      "errors": "A cut uses bp boundaries. Shape mappings must produce supported symbols, and fill applies to point symbols.",
+      "details": "Provide a reference and one-based `pos`. The tick is a normal stroke. Point, diamond and block draw a circle, diamond and square at `pos`. A lollipop draws a stem in the positive normal direction and places its circular head 1.5 times the layer size from the anchor. `position_offset()` shifts the mark. Use `shape_feature()` for part dimensions and paint.",
+      "errors": "Positions must lie on the reference. Use a supported shape; fill applies to point, diamond, block and lollipop.",
       "roles": [
         "Reference identity. One-based source position.",
         "Stable site identity.",
@@ -1353,7 +1353,7 @@
     },
     "geom_restriction_site": {
       "title": "Draw documented restriction cuts",
-      "intro": "Draw documented restriction cuts.",
+      "intro": "Draw a glyph for each recorded chain boundary.",
       "arguments": [
         {
           "format": "aes / NULL",
@@ -1365,7 +1365,7 @@
         },
         {
           "format": "character / mapped aesthetic",
-          "description": "Default shape. An explicitly supplied fixed shape takes priority over its mapping."
+          "description": "Use a preset name or [`shape_feature()`](#api-shape_feature) specification. Map either with `aes(shape = category)` and `scale_shape_manual()`."
         },
         {
           "format": "positive physical size / mapped aesthetic",
@@ -1401,8 +1401,8 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "This is the cut-oriented shortcut to the site layer. Display a known boundary for each specified strand. When both boundaries are unknown, use the explicit fallback policy.",
-      "errors": "Unknown cut coordinates are handled by `unknown_cut`. Out-of-reference boundaries and incompatible units are errors.",
+      "details": "The `cut` preset draws a separate stroke at each known interbase boundary. The top stroke extends in the positive normal direction and the bottom stroke in the negative direction. Cut legend keys pair the upper-left and lower-right marks. Use `block` for a square on each boundary’s side, `point` or `diamond` for a glyph centred on the boundary, or `lollipop` for a stem and head facing outward. When both boundaries are missing, `cut` draws a tick at `pos` or reports an error according to `unknown_cut`. The other cut shapes omit the mark.",
+      "errors": "Cut boundaries lie in `0..length` on a bp reference. `unknown_cut = \"error\"` errors if the cut stroke has no known boundary.",
       "roles": [
         "Reference identity. One-based source position.",
         "Stable site identity.",
@@ -1422,7 +1422,7 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "An automatically bound label reads the target entities after their Stat. A separate table or callback defines independent labels by default. To select a subset and preserve target placement, name the target in `anchor_layer` and supply matching `site_id` values. A bound callback receives the target entity table."
+          "description": "An automatically bound label reads target entities after their Stat. A label table can omit coordinates when it supplies a matching entity ID or source file and original row. A table with its own coordinates or a callback is placed independently by default. A callback bound to a named target receives its entity table."
         },
         {
           "format": "Stat / character",
@@ -1430,7 +1430,7 @@
         },
         {
           "format": "auto_anchor() / character(1) / NULL",
-          "description": "The default follows the only compatible site layer. With several candidates, select one by ID. Set `NULL` for independent placement. Supplying label data, a non-identity Stat or an explicit Position makes this layer independent by default."
+          "description": "The default follows a unique compatible site layer when coordinates are omitted. With several candidates, give the intended layer ID. Use `NULL` for independent placement. A non-identity Stat or explicit Position also selects independent placement."
         },
         {
           "format": "Position / NULL",
@@ -1710,7 +1710,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Draw symbols, tiles, or both in a Cartesian character panel. Alignment columns identify actual cells; gaps have a column and no source residue position. Display wrapping preserves origin data.",
+      "details": "Draw symbols, tiles, or both in a Cartesian character panel. Alignment columns identify actual cells; gaps have a column and no source residue position. Display wrapping preserves origin data. A visible discrete colour or fill guide shows the actual character when mapped directly to the same column as `label`.",
       "errors": "Cells must be unique within each facet. Non-Cartesian sequence layouts and contradictory gap records are invalid.",
       "roles": [
         "Displayed Cartesian cell column and row.",
@@ -1770,7 +1770,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "This shortcut uses the text representation. An explicit overflow policy controls what happens when the character cannot fit. Text retains the actual alignment column and symbol.",
+      "details": "This shortcut uses the text representation. An explicit overflow policy controls what happens when the character cannot fit. Text retains the actual alignment column and symbol. A visible discrete colour or fill guide shows the actual character when mapped directly to the same column as `label`.",
       "errors": "Use a supported Cartesian position scale and real single-character cells.",
       "roles": [
         "Displayed Cartesian cell column and row.",
@@ -3262,7 +3262,7 @@
         }
       ],
       "value": "A report with section-level availability, operation, inputs, lineage, issues, changes and metadata.",
-      "details": "Inspect the source evidence, issues or transformation report available on a data object. Select named report sections when you need only part of it.",
+      "details": "Inspect the source evidence, issues or transformation report available on a data object. A plain data frame can expose its explicit provenance columns in the lineage section. The available sections are `operation`, `inputs`, `lineage`, `issues`, `changes` and `metadata`.",
       "errors": "",
       "roles": [],
       "example_setup": ""
@@ -4907,7 +4907,7 @@
       "intro": "With `anchor_layer = auto_anchor()`, labels follow the displayed entities of the only compatible layer in the same plot. The first example labels the genes without naming either layer.",
       "arguments": [],
       "value": "A label-target declaration resolved against the layers in the same plot.",
-      "details": "Gene, primer and site labels look for gene, primer and site layers respectively. A generic feature label can follow any interval feature layer, including genes, primers and regions. The target may appear before or after the labels.\n\nSupplying label data, a non-identity Stat or an explicit Position selects independent placement by default. Set `anchor_layer = NULL` to request independent labels. To label a subset of a target, give that layer a name, pass it to `anchor_layer` and supply a label table keyed to its entities.",
+      "details": "Gene, primer and site labels look for gene, primer and site layers respectively. A generic feature label can follow interval, site or cut annotations. The target may appear before or after the labels.\n\nA label table that supplies matching entity IDs or source rows can follow the unique target without supplying coordinates. A table with its own coordinates, a data callback, a non-identity Stat or an explicit Position uses independent placement by default. Set `anchor_layer = NULL` to request independent placement.",
       "errors": "If several layers qualify, the error lists their IDs. Name the intended target and set `anchor_layer` to that name, as in the second example. When there is no compatible layer, supply a target or usable independent label data.",
       "roles": [],
       "example_setup": ""
@@ -5239,6 +5239,69 @@
       "errors": "",
       "roles": [],
       "example_setup": ""
+    },
+    "shape_feature": {
+      "title": "Configure a feature prototype or preset",
+      "intro": "Build a custom outline from the prototype or adjust the parts of a preset for a layer or a shape scale.",
+      "value": "An annotation shape specification for `shape` or `scale_shape_manual()`.",
+      "details": "Start with `shape_feature(\"prototype\")` for a flat-ended block. Set the outline with `body_shape`, `head_shape` and `tail_shape`. A preset fixes the outline and lets you adjust its active dimensions and paint. The visible interval sets the total length. The body fills the space between the ends. On directional shapes, the strand determines the head and tail. Legend keys show a representative sample of the same profile.\n\n`arrow` has a shouldered triangular head. `arrow_flush` uses the body width at the head base. `arrow_triangle` uses the full span. `arrow_arc` pairs a thin body with a triangular head. `chevron` pairs a triangular head with a notched tail. `capped_line` has a thin body with two caps. Choose `body_shape = \"line\"`, `head_shape = \"cap\"` and `tail_shape = \"cap\"` to build the same profile from the prototype.\n\nUse `body_shape = \"line\"` and `head_shape = \"circle\"` for a lollipop; use `body_shape = \"none\"` with a circle or diamond head for a point or diamond. A tick or cut body with flat ends gives a normal stroke. For `arrow_flush`, a triangular head with the same width as its block body yields the flush profile.\n\nA flat-ended block also works at a site or a cut boundary. The same specification spans the visible interval, draws a square centred at `pos`, or draws a square on the corresponding side of each known cut boundary. A cut without known boundaries produces no square. The cut legend shows a representative staggered pair. The site and cut layers use their documented glyphs.\n\nThe same lollipop specification places its stem at the visible interval or segment midpoint, at the recorded site `pos`, or at each known cut boundary. Interval stems connect the backbone to the feature track. At a site or cut boundary, the stem extends 1.5 times the layer size. The circle and diamond follow the same anchor rules for their centres. An interval tick marks the visible midpoint; a site tick marks `pos`.\n\nEach part can supply its own fill and outline. A fixed or mapped layer `fill` and `colour` overrides its own channel across all parts. Explicit `NA` hides the corresponding channel. The part fills share an exterior outline, which can have a different colour on each part.",
+      "errors": "Unknown names, topology settings on a preset, parameters for absent parts and incompatible or non-positive sizes raise errors.",
+      "arguments": [
+        {
+          "format": "character(1)",
+          "description": "Supported names include `\"prototype\"`, `\"arrow\"`, `\"capped_line\"` and `\"lollipop\"`."
+        },
+        {
+          "format": "positive mm or absolute grid unit / NULL",
+          "description": "Requested head length along the sequence. The full-span triangle uses the interval length."
+        },
+        {
+          "format": "positive mm or absolute grid unit / NULL",
+          "description": "Head width across the reference. A notch and the head of `arrow_flush` use the body width. For circular and diamond heads this is the nominal symbol diameter or cross-sequence width."
+        },
+        {
+          "format": "character(1) / NULL",
+          "description": "When the requested ends exceed the available span, choose `\"shrink\"` (default), `\"block\"` to draw a plain block, or `\"error\"`."
+        },
+        {
+          "format": "positive mm or absolute grid unit / NULL",
+          "description": "Body width across the reference. This sets the side of a block at an anchor, stem thickness for a lollipop, and the full normal span of a tick or cut. Each cut stroke uses half this span."
+        },
+        {
+          "format": "character(1) / NULL",
+          "description": "Fill and outline of each part. A fixed or mapped layer value overrides the corresponding channel. Explicit `NA` suppresses it."
+        },
+        {
+          "format": "character(1) / NULL",
+          "description": "The prototype body. Use `\"block\"`, `\"line\"`, `\"none\"`, `\"tick\"` or `\"cut\"`. Use an admissible head and tail combination."
+        },
+        {
+          "format": "character(1) / NULL",
+          "description": "Use `\"none\"`, `\"triangle\"`, `\"cap\"` or `\"notch\"` for an end. For an anchored mark the head can be `\"circle\"` or `\"diamond\"`."
+        },
+        {
+          "format": "positive mm or absolute grid unit / NULL",
+          "description": "Requested tail length along the sequence. For a notch, this sets its depth."
+        },
+        {
+          "format": "positive mm or absolute grid unit / NULL",
+          "description": "Tail width across the sequence. A notch uses the body width."
+        },
+        {
+          "format": "positive mm or absolute grid unit / NULL",
+          "description": "Common size of the caps. A size supplied for a particular end takes priority."
+        },
+        {
+          "format": "character(1) / NULL",
+          "description": "Fill and outline of each part. A fixed or mapped layer value overrides the corresponding channel. Explicit `NA` suppresses it."
+        },
+        {
+          "format": "character(1) / NULL",
+          "description": "Fill and outline of each part. A fixed or mapped layer value overrides the corresponding channel. Explicit `NA` suppresses it."
+        }
+      ],
+      "roles": [],
+      "example_setup": ""
     }
   },
   "families": {
@@ -5351,20 +5414,20 @@
     "geom_feature": {
       "intro": "Draw sequence annotations with `geom_feature()`. Use `geom_gene()`, `geom_primer()`, `geom_seq_region()`, `geom_site()` and `geom_restriction_site()` for marks with specialized defaults.",
       "arguments": {
-        "shape": "The general entry defaults to `\"block\"` for intervals, `\"tick\"` for sites and `\"cut\"` for cuts. Gene and primer marks default to `\"arrow\"` and `\"primer_arc\"`. Map interval shapes to a compatible scale or supply a compatible fixed shape.",
-        "thickness": "Physical thickness normal to the path, 2 mm by default. Supply a number in millimetres, an absolute grid unit or values selected by reference or strand. In circular maps this sets the shaft thickness for the arrow shapes.",
+        "shape": "Use a preset name or [`shape_feature()`](#api-shape_feature) specification. Map either with `aes(shape = category)` and `scale_shape_manual()`.",
+        "thickness": "Physical thickness normal to the path, 2 mm by default. Supply a number in millimetres, an absolute grid unit or values selected by reference or strand. In circular maps this sets the shaft thickness for the arrow shapes. Set the symbol size with `size` in `geom_site()` or `thickness` in `geom_feature()`.",
         "position": "`geom_gene()` defaults to [`position_strand()`](position_strand.html#api-position_strand). The primer and region shortcuts use [`position_offset(0)`](position_offset.html#api-position_offset). The general feature, site and cut entries default to identity.",
         "alpha": "Explicit in `geom_seq_region()`, which defaults to 0.25. Set or map transparency to override that default.",
-        "...": "Named visual styles, compatible shape settings and parameters for the selected Stat. Arrow settings such as `head_length`, `head_width`, `head_style` and `short_feature` apply to interval arrows.",
+        "...": "Named visual styles and parameters for the selected Stat. Set arrow dimensions with [`shape_feature()`](#api-shape_feature).",
         "stat": "A compatible ggplot2 Stat or its name. The default uses the supplied records."
       },
       "roles": "Intervals use one-based inclusive `start` and `end`; directional marks use the source `strand`. Sites use one-based `pos`. Cuts retain `pos` as the residue anchor and use `cut_top` and `cut_bottom` for interbase coordinates. A supplied `entity_id` or an appropriate `feature_id` or `site_id` can identify a record across layers.",
-      "details": "The geometry follows the corresponding source location. A `\"+/-\"` interval can draw two arrowheads while retaining one source identity. The [annotation label family](geom_feature_label.html#api-geom_feature_label) follows the displayed anchors.",
-      "example_intro": "Draw annotations with mapped shapes or with the default shapes for sites and cuts.",
+      "details": "| Entry point | Supported shapes |\n| --- | --- |\n| `geom_feature(location = \"interval\")`, `geom_gene()`, `geom_primer()` and `geom_seq_region()` | `block`, `arrow`, `arrow_flush`, `arrow_triangle`, `capped_line`, `arrow_arc`, `chevron`, `diamond`, `point`, `tick`, `lollipop`. Their respective defaults are `block`, `arrow_flush`, `arrow_arc` and `block`. |\n| `geom_feature(location = \"site\")` and `geom_site()` | `tick` (default), `point`, `diamond`, `block`, `lollipop`. |\n| `geom_feature(location = \"cut\")` and `geom_restriction_site()` | `cut` (default), `block`, `point`, `diamond`, `lollipop`. |\n\nUse all interval shapes in [collinear coordinates](coord_collinear.html#api-coord_collinear) and [circular coordinates](coord_circular.html#api-coord_circular). Use `aes(shape = category)` with `scale_shape_manual(values = c(...))` to assign a shape to each category. Supply a fixed `shape` to use one glyph throughout the layer.\n\n| Interval shape | Appearance and use |\n| --- | --- |\n| `\"block\"` | Default interval mark. A filled band drawn along the full interval. |\n| `\"arrow\"` | Filled band with a directional head. |\n| `\"arrow_flush\"` | Directional band with head base and shaft equally wide. |\n| `\"arrow_triangle\"` | Wedge spanning the entire directional interval. |\n| `\"diamond\"` | Diamond centred on the interval. |\n| `\"capped_line\"` | Thin stroke with a cap inside each end. Set or map `colour` for the stroke and both caps. |\n| `\"arrow_arc\"` | Slender directional stroke that follows the reference path. A standalone legend shows a straight sample of its outline. |\n| `\"chevron\"` | Pointed band with a notched tail. |\n| `\"lollipop\"` | Round head at the midpoint of the displayed interval or visible segment, with a stem to the reference backbone. |\n| `\"point\"` | Circle centred on the visible interval. |\n| `\"tick\"` | Short normal stroke at the visible interval midpoint. |\n\nStart with `shape_feature(\"prototype\")` for a flat-ended block. Set the outline with `body_shape`, `head_shape` and `tail_shape`. A preset fixes the outline and lets you adjust its active dimensions and paint. The visible interval sets the total length. The body fills the space between the ends. On directional shapes, the strand determines the head and tail. Legend keys show a representative sample of the same profile.\n\n`arrow` has a shouldered triangular head. `arrow_flush` uses the body width at the head base. `arrow_triangle` uses the full span. `arrow_arc` pairs a thin body with a triangular head. `chevron` pairs a triangular head with a notched tail. `capped_line` has a thin body with two caps. Choose `body_shape = \"line\"`, `head_shape = \"cap\"` and `tail_shape = \"cap\"` to build the same profile from the prototype. Use `body_shape = \"line\"` and `head_shape = \"circle\"` for a lollipop; use `body_shape = \"none\"` with a circle or diamond head for a point or diamond. A tick or cut body with flat ends gives a normal stroke. For `arrow_flush`, a triangular head with the same width as its block body yields the flush profile.\n\nA flat-ended block also works at a site or a cut boundary. The same specification spans the visible interval, draws a square centred at `pos`, or draws a square on the corresponding side of each known cut boundary. A cut without known boundaries produces no square. The cut legend shows a representative staggered pair. The site and cut layers use their documented glyphs.\n\nEach part can supply its own fill and outline. A fixed or mapped layer `fill` and `colour` overrides its own channel across all parts. Explicit `NA` hides the corresponding channel. The part fills share an exterior outline, which can have a different colour on each part.\n\nThe same lollipop specification places its stem at the visible interval or segment midpoint, at the recorded site `pos`, or at each known cut boundary. Interval stems connect the backbone to the feature track. At a site or cut boundary, the stem extends 1.5 times the layer size. The circle and diamond follow the same anchor rules for their centres. An interval tick marks the visible midpoint; a site tick marks `pos`.\n\nThe `cut` preset draws a separate stroke at each known interbase boundary. The top stroke extends in the positive normal direction and the bottom stroke in the negative direction. Cut legend keys pair the upper-left and lower-right marks. Use `block` for a square on each boundary’s side, `point` or `diamond` for a glyph centred on the boundary, or `lollipop` for a stem and head facing outward. When both boundaries are missing, `cut` draws a tick at `pos` or reports an error according to `unknown_cut`. The other cut shapes omit the mark.\n\nUse `\"+\"`, `\"-\"`, `\"+/-\"` or `\".\"` for strand. A `\"+/-\"` interval can draw two arrowheads while retaining one source identity. Legend keys summarise the glyph at a standard size. Read the actual length, direction and placement from the plotted interval. The [annotation label family](geom_feature_label.html#api-geom_feature_label) follows the displayed anchors.",
+      "example_intro": "Compare the nine interval shapes on one synthetic 2,200 bp sequence. Numbers in each panel match the legend. All intervals have the same span and forward strand. The last plot shows a site lollipop and a staggered cut.",
       "examples": {
         "geom_feature": {
-          "title": "Map shapes and draw point annotations",
-          "description": "Map interval shape and fill by type, then draw a site tick and an interbase cut with the same entry point."
+          "title": "Compare all interval shapes and draw a site and cut",
+          "description": "The first two figures use the same input, shape mapping and visual styles. The collinear panel reads left to right. The circular panel starts at the top and reads clockwise."
         },
         "geom_gene": {
           "title": "Use strand-positioned gene arrows",
@@ -5379,12 +5442,16 @@
           "description": "Draw wide, translucent regions first and add the sequence backbone above them."
         },
         "geom_site": {
-          "title": "Mark a source position",
-          "description": "Draw a tick at the supplied source position and add its label."
+          "title": "Compare all site shapes",
+          "description": "Each symbol uses its recorded position. The lollipop extends outward from the anchor."
         },
         "geom_restriction_site": {
-          "title": "Draw a known cut",
-          "description": "Give each strand its own inter-residue cut position."
+          "title": "Compare all cut shapes",
+          "description": "Each cut has a known boundary on both chains. The legend shows both boundary marks."
+        },
+        "shape_feature": {
+          "title": "Configure the common prototype",
+          "description": "Compare arrow and cap dimensions, then use the same block or lollipop specification with multiple location types."
         }
       }
     },

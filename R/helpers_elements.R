@@ -130,42 +130,76 @@ key_glyph_ribbon <- function(data, params, size) {
 #' Key glyph for generic genomic features
 #' @keywords internal
 #' @noRd
-ggchord_feature_key_shape <- function(data, params) {
-  key <- params$arrow_key %||% list(style = "flush")
+ggchord_feature_key_spec <- function(data, params) {
   mapped <- as.character(data$shape)[1L]
-  fallback <- data$feature_shape %||% "arrow"
-  if (identical(fallback, "arrow")) fallback <- key$shape %||% fallback
-  shape <- if (mapped %in% ggchord_feature_shapes) mapped else as.character(fallback)[1L]
-  if (!shape %in% ggchord_feature_shapes) key$shape %||% "arrow" else shape
+  value <- if (is.na(mapped)) params$arrow_key$shape %||% "arrow" else mapped
+  spec <- ggchord_parse_feature_shape(value)
+  if (spec$name %in% ggchord_feature_shapes) spec else
+    ggchord_parse_feature_shape(params$arrow_key$shape %||% "arrow")
+}
+
+ggchord_feature_key_shape <- function(data, params) {
+  ggchord_feature_key_spec(data, params)$name
 }
 
 key_glyph_feature <- function(data, params, size) {
-  key <- params$arrow_key %||% list(style = "flush")
-  shape <- ggchord_feature_key_shape(data, params)
+  key <- params$arrow_key
+  spec <- ggchord_feature_key_spec(data, params)
+  shape <- spec$name
   strand <- as.character(data$strand %||% "+")[1L]
   opacity <- data$alpha %||% 1
-  colour <- scales::alpha(data$colour %||% "#353A3E", opacity)
-  fill <- scales::alpha(data$fill %||% data$feature_fill %||% "grey", opacity)
-  gp <- gpar(col = colour, fill = fill, lwd = (data$linewidth %||% .25) * ggplot2::.pt,
-    lty = data$linetype %||% 1, linejoin = "round")
-  if (identical(shape, "lollipop")) {
-    return(grobTree(segmentsGrob(.50, .19, .50, .52, gp = gp),
-      grid::circleGrob(.50, .61, r = unit(.17, "snpc"), gp = gp)))
+  pen <- function(part = "body", paint = "full") {
+    style <- data
+    if (shape == "capped_line" &&
+        (!isTRUE(spec$components) || !"fill" %in% params$body_style_explicit))
+      style$fill <- style$colour %||% "#353A3E"
+    style <- ggchord_shape_part_styles(style, spec$value, part, params$body_style_explicit)
+    colour <- if (paint == "fill") NA_character_ else style$colour %||% "#353A3E"
+    fill <- if (paint == "outline") NA_character_ else style$fill %||% style$feature_fill %||% "grey"
+    gpar(col = scales::alpha(colour, opacity), fill = scales::alpha(fill, opacity),
+      lwd = (style$linewidth %||% .25) * ggplot2::.pt, lty = style$linetype %||% 1,
+      linejoin = "round", lineend = "round")
+  }
+  if (shape %in% c("lollipop", "point", "tick")) {
+    data$shape <- spec$value %||% shape
+    data$size <- key$thickness %||% 2
+    data$alpha <- opacity
+    data$fill <- data$fill %||% data$feature_fill %||% "grey"
+    data$colour <- data$colour %||% "#353A3E"
+    data$linewidth <- data$linewidth %||% .25
+    data$linetype <- data$linetype %||% 1
+    data$stroke <- data$linewidth
+    params$site_key_shape <- data$shape
+    params$site_key_location <- "site"
+    return(GeomSequenceSite$draw_key(data, params, size))
   }
   fixed <- isTRUE(key$fixed_body_width) && shape %in% ggchord_block_arrow_shapes
-  head_ratio <- key$head_ratio %||%
-    if (fixed && identical(key$style, "shouldered")) ggchord_circular_arrow_head_ratio else 1
-  parts <- ggchord_feature_geometry(shape, .1, .9, 1, .52, 1, NULL,
-    arrow_head_length = key$length %||% .28, arrow_head_width = head_ratio,
-    arrow_head_style = key$style, short_feature = "shrink", draw_head = strand != ".",
+  # The schematic interval is four times the nominal thickness.
+  along_width <- if (identical(shape, "capped_line")) .12 else .20
+  width <- if (is.null(spec$body_width)) .52 else
+    .52 * spec$body_width / (key$thickness %||% 2)
+  parts <- ggchord_feature_geometry(shape, .1, .9, 1, width, 1, NULL,
+    arrow_head_length = along_width * (spec$head_length %||% 2) / (key$thickness %||% 2),
+    arrow_head_width = if (!is.null(spec$head_width)) spec$head_width / (key$thickness %||% 2),
+    short_feature = "shrink", draw_head = strand != ".",
     draw_start_head = identical(strand, "+/-"), bidirectional = identical(strand, "+/-"),
-    fixed_body_width = fixed)
-  half_height <- max(vapply(parts, function(part) max(abs(part$radius - 1)), numeric(1)))
-  if (identical(shape, "capped_line")) gp$fill <- gp$col
+    fixed_body_width = fixed, along_width = along_width,
+    profile = spec, nominal_width = .52, along_metric = .20 / (key$thickness %||% 2),
+    normal_metric = .52 / (key$thickness %||% 2))
+  half_height <- max(vapply(parts, function(part) {
+    y <- if (is.null(part$xy)) part$radius else part$xy[, 2L]
+    max(abs(y - 1))
+  }, numeric(1)))
   glyphs <- lapply(parts, function(part) {
-    x <- if (identical(strand, "-")) 1 - part$angle else part$angle
-    y <- .5 + (part$radius - 1) * min(1, .34 / half_height)
-    polygonGrob(unit(x, "npc"), unit(y, "npc"), gp = gp)
+    x <- if (is.null(part$xy)) part$angle else part$xy[, 1L]
+    if (identical(strand, "-")) x <- 1 - x
+    y <- if (is.null(part$xy)) part$radius else part$xy[, 2L]
+    y <- .5 + (y - 1) * min(1, .34 / half_height)
+    paint <- part$paint %||% "full"
+    gp <- pen(part$part %||% "body", paint)
+    if (paint == "path")
+      grid::polylineGrob(unit(x, "npc"), unit(y, "npc"), gp = gp)
+    else polygonGrob(unit(x, "npc"), unit(y, "npc"), gp = gp)
   })
   if (length(glyphs) == 1L) glyphs[[1L]] else do.call(grobTree, glyphs)
 }

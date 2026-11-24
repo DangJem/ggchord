@@ -30,7 +30,7 @@ ggchord_feature_width_factor <- function(shape) {
   rep(1, length(shape))
 }
 
-ggchord_block_arrow_shapes <- c("arrow", "compact_arrow", "promoter_arrow", "primer_arrow")
+ggchord_block_arrow_shapes <- c("arrow", "arrow_flush")
 ggchord_circular_arrow_head_ratio <- 1.42
 
 ggchord_circular_arrow_band <- function(circular, feature_role) {
@@ -104,18 +104,6 @@ ggchord_shape_wedge <- function(a_start, a_end, r0, width) {
   list(list(
     angle = c(a_start, a_start, a_end),
     radius = c(r0 + width / 2, r0 - width / 2, r0)
-  ))
-}
-
-ggchord_shape_marker <- function(a_start, a_end, r0, width) {
-  mid <- (a_start + a_end) / 2
-  half <- min(abs(a_end - a_start) / 2,
-    width * .34 / max(abs(r0), .1))
-  direction <- if (a_end < a_start) -1 else 1
-  half <- direction * max(half, abs(a_end - a_start) * .22)
-  list(list(
-    angle = c(mid - half, mid, mid + half, mid),
-    radius = c(r0, r0 + width / 2, r0, r0 - width / 2)
   ))
 }
 
@@ -219,55 +207,89 @@ ggchord_shape_chevron <- function(a_start, a_end, r0, width) {
   ))
 }
 
-ggchord_shape_lollipop <- function(a_start, a_end, r0, width,
-                                   sequence_radius, ref) {
-  span <- a_end - a_start
-  mid <- (a_start + a_end) / 2
-  angle_half <- min(abs(span) * 0.08, width * 0.10 / max(abs(r0), 0.1))
-  stem <- list(
-    angle = c(mid - angle_half, mid + angle_half,
-              mid + angle_half, mid - angle_half),
-    radius = c(sequence_radius, sequence_radius, r0, r0)
-  )
+# Translate a midpoint symbol through the track projection. The head is
+# placed in the plane of the graphic so it stays round on a curved reference.
+ggchord_interval_anchor_parts <- function(profile, start, end, center, width,
+    backbone, ref, along_metric, normal_metric) {
+  shape <- profile$name
+  mid <- (start + end) / 2
+  span <- abs(end - start)
+  ratio <- along_metric / normal_metric
+  radius <- if (is.null(ref)) 1 else max(abs(center), .1)
+  project <- if (is.null(ref)) cbind else function(x, y) map_to_curve_many(x, y, ref)
+  part <- function(x, y, role, paint = "full") {
+    list(xy = project(x, y), part = role, paint = paint)
+  }
+  if (shape == "tick") {
+    height <- (profile$body_width %||% (width / normal_metric)) * normal_metric
+    return(list(part(rep(mid, 2L), center + c(-.5, .5) * height, "body", "path")))
+  }
+  if (shape == "diamond") {
+    height <- (profile$head_width %||% (width / normal_metric)) * normal_metric
+    half <- height * ratio * .34 / radius
+    if (span > 0) half <- min(span / 2, max(half, span * .22))
+    return(list(part(mid + c(-half, 0, half, 0),
+      center + c(0, .5, 0, -.5) * height, "head")))
+  }
+  head_radius <- if (!is.null(profile$head_width)) profile$head_width * normal_metric / 2 else
+    width * if (shape == "lollipop") .58 else .5
+  xy <- as.numeric(project(mid, center))
   theta <- seq(0, 2 * pi, length.out = 48L)
-  head_radius <- width * 0.58
-  center <- as.numeric(map_to_curve_many(mid, r0, ref)[1L, ])
-  delta <- max(abs(span) * 1e-4, 1e-7)
-  tangent_pts <- map_to_curve_many(c(mid - delta, mid + delta), rep(r0, 2L), ref)
-  tangent <- as.numeric(tangent_pts[2L, ] - tangent_pts[1L, ])
-  tangent_norm <- sqrt(sum(tangent^2))
-  if (!is.finite(tangent_norm) || tangent_norm <= 1e-12) tangent <- c(1, 0)
-  else tangent <- tangent / tangent_norm
-  normal <- c(-tangent[2L], tangent[1L])
-  head <- list(xy = cbind(
-    center[1L] + head_radius *
-      (cos(theta) * tangent[1L] + sin(theta) * normal[1L]),
-    center[2L] + head_radius *
-      (cos(theta) * tangent[2L] + sin(theta) * normal[2L])
-  ))
+  head <- list(xy = cbind(xy[1L] + head_radius * (if (is.null(ref)) ratio else 1) * cos(theta),
+    xy[2L] + head_radius * sin(theta)), part = "head", paint = "full")
+  if (shape == "point") return(list(head))
+  half <- if (is.null(profile$body_width)) width * ratio * .10 / radius else
+    profile$body_width * along_metric / (2 * radius)
+  if (span > 0) half <- min(half, span * if (is.null(profile$body_width)) .08 else .5)
+  stem <- part(mid + c(-half, half, half, -half),
+    c(backbone, backbone, center, center), "body")
   list(stem, head)
 }
 
 ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
                                      sequence_radius, ref,
                                      arrow_head_length = 0.04,
-                                     arrow_head_width = 1,
-                                     arrow_head_style = "shouldered",
+                                     arrow_head_width = NULL,
                                      short_feature = "auto",
                                      draw_head = TRUE,
                                      draw_start_head = FALSE,
                                      bidirectional = FALSE,
-                                     fixed_body_width = FALSE) {
-  if (!fixed_body_width && identical(shape, "arrow") &&
-      identical(arrow_head_style, "shouldered") &&
-      arrow_head_width == 1) {
-    # Keep the default head as wide as thickness and narrow its stem.
-    stem_fraction <- .72
-    width <- width * stem_fraction
-    arrow_head_width <- 1 / stem_fraction
+                                     fixed_body_width = FALSE,
+                                     along_width = width, profile = NULL,
+                                     nominal_width = width, along_metric = 1,
+                                     normal_metric = 1, draw_tail = TRUE) {
+  if (isTRUE(profile$components) && identical(shape, profile$name))
+    return(ggchord_profile_geometry(profile, a_start, a_end, r0, width,
+      nominal_width, along_metric, normal_metric, draw_head, draw_start_head,
+      draw_tail, bidirectional, fixed_body_width))
+  if (identical(shape, "arrow") && is.null(arrow_head_width)) {
+    if (fixed_body_width) {
+      arrow_head_width <- ggchord_circular_arrow_head_ratio
+    } else {
+      # Retain the nominal maximum thickness by narrowing the shaft.
+      stem_fraction <- .72
+      width <- width * stem_fraction
+      arrow_head_width <- 1 / stem_fraction
+    }
   }
-  if (identical(shape, "marker")) {
-    return(ggchord_shape_marker(a_start, a_end, r0, width))
+  arrow_head_width <- arrow_head_width %||% 1
+  if (identical(shape, "arrow_triangle")) {
+    if (draw_head && draw_start_head && bidirectional) {
+      mid <- (a_start + a_end) / 2
+      half <- width * arrow_head_width / 2
+      return(list(list(angle = c(a_start, mid, a_end, mid),
+        radius = c(r0, r0 + half, r0, r0 - half))))
+    }
+    if (draw_head)
+      return(ggchord_shape_wedge(a_start, a_end, r0, width * arrow_head_width))
+    if (draw_start_head)
+      return(ggchord_shape_wedge(a_end, a_start, r0, width * arrow_head_width))
+    return(ggchord_shape_block(a_start, a_end, r0, width))
+  }
+  if (shape %in% ggchord_midpoint_shapes) {
+    profile <- profile %||% ggchord_resolve_feature_profile(shape)
+    return(ggchord_interval_anchor_parts(profile, a_start, a_end, r0, width,
+      sequence_radius, ref, along_metric, normal_metric))
   }
   if (identical(shape, "capped_line")) {
     # Put both caps inside the displayed interval, including at seams and
@@ -278,7 +300,8 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
     inset <- min(abs(span) * .10, along * .06)
     from <- a_start + direction * inset
     to <- a_end - direction * inset
-    cap_length <- direction * min(abs(to - from) / 2, along * .56)
+    cap_length <- direction * min(abs(to - from) / 2,
+      along_width * .56 / max(abs(r0), .1))
     line_width <- max(width * .055, .0015)
     body <- ggchord_shape_block(from, to, r0, line_width)
     start_cap <- ggchord_shape_block(
@@ -289,68 +312,24 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
     )
     return(c(body, start_cap, end_cap))
   }
-  if (identical(shape, "primer_arc")) {
+  if (identical(shape, "arrow_arc")) {
     line_width <- max(width * .24, .0015)
-    body <- ggchord_shape_block(a_start, a_end, r0, line_width)
-    if (!isTRUE(draw_head)) return(body)
-    head_span <- min(abs(a_end - a_start) * .28,
-      width * .55 / max(abs(r0), .1))
-    direction <- if (a_end < a_start) -1 else 1
-    shoulder <- a_end - direction * head_span
-    head <- ggchord_shape_wedge(shoulder, a_end, r0, width * .62)
-    return(c(body, head))
-  }
-  if (shape %in% c("compact_arrow", "promoter_arrow", "primer_arrow")) {
-    # Compact glyphs need a visible stem and a restrained head. Reusing the
-    # long-feature head verbatim turns very short promoters and primers into
-    # chunky pentagons once their display interval is widened.
-    head_length_factor <- c(
-      compact_arrow = .76, promoter_arrow = .66, primer_arrow = .60
-    )[[shape]]
-    head_width_factor <- c(
-      compact_arrow = .92, promoter_arrow = .86, primer_arrow = .82
-    )[[shape]]
-    compact_head_length <- min(
-      arrow_head_length * head_length_factor, width * 1.05
-    )
-    compact_head_width <- if (identical(arrow_head_style, "flush")) {
-      1
-    } else if (fixed_body_width) {
-      arrow_head_width
-    } else {
-      max(1, arrow_head_width * head_width_factor)
-    }
-    if (isTRUE(bidirectional) && isTRUE(draw_head) &&
-        isTRUE(draw_start_head)) {
-      interval <- if (identical(short_feature, "auto")) {
-        ggchord_arrow_display_interval(
-          a_start, a_end, r0, width, compact_head_length, heads = 2L
-        )
-      } else c(a_start, a_end)
-      return(ggchord_shape_bidirectional_arrow(
-        interval[1L], interval[2L], r0, width,
-        head_length = compact_head_length,
-        head_width = compact_head_width,
-        short_feature = short_feature
-      ))
-    }
-    if (isTRUE(draw_start_head) && !isTRUE(draw_head)) {
-      # An open display seam is not a biological end. The first fragment
-      # retains only its real start head, including compact glyphs.
-      swap <- a_start; a_start <- a_end; a_end <- swap
-      draw_head <- TRUE
-    }
-    interval <- if (identical(short_feature, "auto") && isTRUE(draw_head)) {
-      ggchord_arrow_display_interval(
-        a_start, a_end, r0, width, compact_head_length, heads = 1L
-      )
-    } else c(a_start, a_end)
-    return(ggchord_shape_arrow(
-      interval[1L], interval[2L], r0, width,
-      head_length = compact_head_length,
-      head_width = compact_head_width,
-      short_feature = short_feature, draw_head = draw_head
-    ))
+    if (!draw_head && !draw_start_head)
+      return(ggchord_shape_block(a_start, a_end, r0, line_width))
+
+    head_length <- min(abs(a_end - a_start) * max(abs(r0), .1) * .28,
+      width * .55)
+    head_width <- width * .62 / line_width
+    # One outline joins shaft and head at the shoulders. The shaft never
+    # continues beneath the tapered sides of the head.
+    if (bidirectional && draw_head && draw_start_head)
+      return(ggchord_shape_bidirectional_arrow(a_start, a_end, r0, line_width,
+        head_length = head_length, head_width = head_width, short_feature = "shrink"))
+    if (draw_start_head && !draw_head)
+      return(ggchord_shape_arrow(a_end, a_start, r0, line_width,
+        head_length = head_length, head_width = head_width, short_feature = "shrink"))
+    return(ggchord_shape_arrow(a_start, a_end, r0, line_width,
+      head_length = head_length, head_width = head_width, short_feature = "shrink"))
   }
   if (isTRUE(bidirectional) &&
       isTRUE(draw_head) && isTRUE(draw_start_head)) {
@@ -362,8 +341,7 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
     return(ggchord_shape_bidirectional_arrow(
       interval[1L], interval[2L], r0, width,
       head_length = arrow_head_length,
-      head_width = if (identical(arrow_head_style, "flush")) 1 else
-        arrow_head_width,
+      head_width = arrow_head_width,
       short_feature = short_feature
     ))
   }
@@ -371,9 +349,6 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
     shape,
     block = ggchord_shape_block(a_start, a_end, r0, width),
     chevron = ggchord_shape_chevron(a_start, a_end, r0, width),
-    lollipop = ggchord_shape_lollipop(
-      a_start, a_end, r0, width, sequence_radius, ref
-    ),
     if (isTRUE(draw_start_head) && !isTRUE(draw_head)) {
       interval <- if (identical(short_feature, "auto")) {
         ggchord_arrow_display_interval(
@@ -383,12 +358,9 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
       ggchord_shape_arrow(
         interval[1L], interval[2L], r0, width,
         head_length = arrow_head_length,
-        head_width = if (identical(arrow_head_style, "flush")) 1 else
-          arrow_head_width,
+        head_width = arrow_head_width,
         short_feature = short_feature, draw_head = TRUE
       )
-    } else if (identical(arrow_head_style, "triangle") && isTRUE(draw_head)) {
-      ggchord_shape_wedge(a_start, a_end, r0, width * arrow_head_width)
     } else {
       interval <- if (identical(short_feature, "auto") && isTRUE(draw_head)) {
         ggchord_arrow_display_interval(
@@ -398,8 +370,7 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
       ggchord_shape_arrow(
         interval[1L], interval[2L], r0, width,
         head_length = arrow_head_length,
-        head_width = if (identical(arrow_head_style, "flush")) 1 else
-          arrow_head_width,
+        head_width = arrow_head_width,
         short_feature = short_feature,
         draw_head = draw_head
       )

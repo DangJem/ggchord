@@ -15,9 +15,10 @@ gene, primer or site layer, respectively. Generic feature labels can
 follow interval, site and cut layers, including genes, primers and regions.
 Layer order is immaterial. When several targets qualify, give the intended
 target an ID and pass that name as \code{anchor_layer}.
-Supplying label data, a non-identity Stat or a Position makes the labels
-independent by default. An explicit target can also take a keyed subset
-of its data. Use \code{anchor_layer = NULL} to read independent label data.
+Label tables with their own coordinates, data callbacks, a non-identity
+Stat or a Position make labels independent by default. A label table with
+entity or source row keys can follow the unique compatible layer when it
+omits coordinates. Use \code{anchor_layer = NULL} for independent labels.
 }
 \examples{
 library(ggplot2)

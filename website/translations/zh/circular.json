@@ -1,5 +1,5 @@
 {
-  "source_sha256": "601546de7b821de9efcbaf81e13bc7b707474fa8cd5be0d3ac7a4dc3ee5d9402",
+  "source_sha256": "f14f3712591da0732c26c62c82a615c1845aecc056ce8704aac1ca43a3519459",
   "blocks": {
     "0": {
       "source_sha256": "c3075ec28799d9ae3c60c19c2867e6618b06b8a2149a7f96e5be3bb05c50e2af",
@@ -12,9 +12,9 @@
       "translation": "## 画出 pUC19 骨架 {#draw}\n"
     },
     "3": {
-      "source_sha256": "ad0ecb38915e90c8016d2d400e4825b09d3f9c834cbbeab455a28f127f51f186",
+      "source_sha256": "e87167fc789c068afc8361ef9a376b9096a32875818a71a98b4da56edbee5617",
       "status": "reviewed",
-      "translation": "把序列表交给 `ggchord()`，然后加上 `geom_seq()`。设置 `start_angle = 90`，起点位于十二点方向。沿顺时针方向，刻度上的坐标逐渐增大，首尾两个碱基在顶部相接。\n"
+      "translation": "把序列表交给 `ggchord()`，然后加上 `geom_seq()`。默认 `start_angle = 0`，起点位于十二点方向。沿顺时针方向，刻度上的坐标逐渐增大，首尾两个碱基在顶部相接。\n"
     },
     "6": {
       "source_sha256": "7ff422c8953f87996eb238815e29a698e78d35a28de320102fceaad9d7d4dbc1",

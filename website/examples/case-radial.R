@@ -41,15 +41,19 @@ overview <- ggchord(comparison$seq_data) +
     linewidth = 0.15) +
   scale_colour_manual(name = "Sequence", values = sequence_colours,
     guide = guide_legend(nrow = 1, order = 2)) +
+  scale_fill_pident() +
   scale_for(scale_fill_manual(name = "Strand", values = strand_colours,
     breaks = c("+", "-"),
     guide = guide_legend(nrow = 1, order = 1)), layers = "genes") +
   layout_sequences(orientation = comparison$orientation, inner_radius = 0.19) +
   coord_radial_synteny(start_angle = 45, fit = "labels", clip = "off") +
-  theme_ggchord_publication() +
+  theme_ggchord_publication(base_size = 11) +
   theme(plot.background = element_rect(fill = "#FFFCF5", colour = NA),
     panel.background = element_blank(), legend.position = "bottom",
-    plot.title = element_text(face = "bold", size = 17),
+    legend.key.width = unit(11.5, "mm"), legend.key.height = unit(7.5, "mm"),
+    legend.title = element_text(size = 11.5, face = "bold"),
+    legend.text = element_text(size = 10.5), legend.spacing.y = unit(1.7, "mm"),
+    plot.title = element_text(face = "bold", size = 18),
     plot.margin = margin(10, 14, 10, 14))
 
 # Alternate CDS names across a spoke, then align the nearer text edge with its leader.
@@ -74,7 +78,7 @@ overview + gene_names +
   scale_seq_continuous(name = NULL, minor_breaks = NULL,
     labels = label_comma()) +
   guides(fill = guide_coloursteps(direction = "horizontal", even.steps = FALSE,
-    show.limits = TRUE, theme = theme(legend.key.width = unit(115, "mm"), legend.key.height = unit(2.8, "mm")))) +
+    show.limits = TRUE, theme = theme(legend.key.width = unit(145, "mm"), legend.key.height = unit(3.3, "mm")))) +
   theme(legend.box = "vertical") +
   labs(title = "Four genomes, a radial view",
     subtitle = "Original Chord sources; all 20 CDS annotations")

@@ -12,6 +12,9 @@ CoordCircular <- ggproto(
 #' Project a reference sequence onto a circle
 #'
 #' @inheritParams coord_chord
+#' @param start_angle Initial angle in degrees counterclockwise from the top.
+#'   The default `0` starts at twelve o'clock. The reference direction controls
+#'   whether increasing sequence positions move clockwise or counterclockwise.
 #' @return A coordinate system for a ggchord plot.
 #' @export
 #' @examples
@@ -35,7 +38,7 @@ CoordCircular <- ggproto(
 #'   geom_seq() +
 #'   geom_gene(data = subset(genes, accver == "A"), aes(fill = type)) +
 #'   layout_sequences(angular_gap = 12) +
-#'   coord_circular(start_angle = 90)
+#'   coord_circular()
 coord_circular <- function(start_angle = 0, direction = "clockwise",
     xlim = NULL, ylim = NULL, expand = FALSE, clip = "on", fit = "geometry") {
   ggchord_local_console_errors()
@@ -43,6 +46,6 @@ coord_circular <- function(start_angle = 0, direction = "clockwise",
   direction <- ggchord_coord_direction(start_angle, direction)
   settings <- ggchord_coord_settings(1, xlim, ylim, expand, clip, fit)
   ggproto(NULL, CoordCircular, !!!settings,
-    rotation = start_angle %% 360, reference_direction = direction,
+    rotation = (start_angle %% 360 + 90) %% 360, reference_direction = direction,
     ggchord_circular = TRUE)
 }

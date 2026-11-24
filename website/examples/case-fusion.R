@@ -14,13 +14,13 @@ detail_border <- element_rect(fill = NA, colour = "#927DA2", linewidth = 0.35)
 panel_theme <- theme_ggchord_publication() +
   theme(plot.background = element_rect(fill = paper, colour = NA),
     panel.background = element_blank(), legend.position = "bottom",
-    legend.title = element_text(size = 10.5, face = "bold"),
-    legend.text = element_text(size = 9.5),
-    legend.key.spacing.x = unit(2.0, "mm"),
+    legend.title = element_text(size = 11.5, face = "bold"),
+    legend.text = element_text(size = 10),
+    legend.key.spacing.x = unit(2.5, "mm"),
     legend.key.spacing.y = unit(0.8, "mm"),
     legend.margin = margin(3, 4, 3, 4),
-    plot.title.position = "plot", plot.title = element_text(face = "bold", size = 15, hjust = 0),
-    plot.subtitle = element_text(size = 9, colour = "#52646A"),
+    plot.title.position = "plot", plot.title = element_text(face = "bold", size = 16, hjust = 0),
+    plot.subtitle = element_text(size = 10, colour = "#52646A"),
     plot.margin = margin(4, 5, 4, 5))
 
 # Each panel uses the original source coordinates, including the windowed detail.
@@ -28,27 +28,32 @@ relationship_view <- function(sequences, links, genes) {
   ggchord(sequences) +
     geom_link_ribbon(aes(fill = pident), data = links, alpha = 0.42,
       linewidth = 0.22, colour = "#516960", curvature = 0.55, avoid = "smooth") +
-    geom_seq(aes(colour = accver), linewidth = 1, key_glyph = draw_key_path, show.legend = c(colour = TRUE),
+    # Collect all categories from each mapped guide, including in subset panels.
+    geom_seq(aes(colour = accver), linewidth = 1,
+      show.legend = c(colour = TRUE, fill = FALSE),
       arrow = arrow(length = unit(1.6, "mm"), type = "closed")) +
     geom_gene(aes(fill = strand), data = genes, id = "genes",
-      position = position_strand(1.3), thickness = 1.55, linewidth = 0.17, show.legend = c(fill = TRUE, colour = FALSE)) +
+      position = position_strand(1.3), thickness = 1.55, linewidth = 0.17,
+      show.legend = c(fill = TRUE, colour = FALSE)) +
     scale_colour_manual(name = "Sequence", values = sequence_colours,
       limits = names(sequence_colours), drop = FALSE, guide = guide_legend(nrow = 2, order = 2)) +
     scale_fill_pident() +
     scale_for(scale_fill_manual(name = "Strand", values = strand_colours,
       limits = names(strand_colours), drop = FALSE, guide = guide_legend(nrow = 1, order = 1,
-        override.aes = list(strand = c("+", "-")))), layers = "genes") +
-    scale_seq_continuous(guide = "none") +
+        override.aes = list(strand = c("+", "-")),
+        theme = theme(legend.key.width = unit(9.5, "mm"), legend.key.height = unit(7.6, "mm")))),
+      layers = "genes") +
     panel_theme +
     # The shared Identity ruler fits its labels without scaling to the full canvas.
     render_policy(mode = "fixed")
 }
 overview <- relationship_view(study$seq_data, study$links, study$features)
-seq_names <- geom_seq_label(aes(label = accver), anchor = "start", hjust = 1, size = 3.05,
-  label_layout = layout_label_fixed(orientation = "horizontal", along = -1.5, offset = 0))
+seq_names <- geom_seq_label(aes(label = accver), anchor = "start", hjust = 1, size = 3.25,
+  label_layout = layout_label_fixed(orientation = "horizontal", along = -2.2, offset = 0))
 chord <- overview +
-  geom_seq_label(aes(label = accver), size = 3.05,
-    label_layout = layout_label_fixed(orientation = "horizontal", offset = 4)) +
+  geom_seq_label(aes(label = accver), size = 3.3,
+    label_layout = layout_label_fixed(orientation = "horizontal", offset = 8)) +
+  scale_seq_continuous(guide = "none") +
   layout_sequences(angular_gap = 7, orientation = study$orientation) +
   coord_chord(start_angle = 45, fit = "labels") +
   labs(title = "A  |  Chord", subtitle = "6 HSPs; 3 CDS per genome")
@@ -69,14 +74,15 @@ draw_linear <- function(row_gap) {
     labs(title = "B  |  Collinear", subtitle = "The same intervals in linear coordinates")
 }
 spoke_names <- function(sequences, hjust) {
-  geom_seq_label(aes(label = accver), data = sequences, anchor = "end", size = 3.05,
+  geom_seq_label(aes(label = accver), data = sequences, anchor = "end", size = 3.25,
     hjust = hjust,
-    label_layout = layout_label_fixed(orientation = "horizontal", offset = 0, along = 4.5))
+    label_layout = layout_label_fixed(orientation = "horizontal", offset = 0, along = 5.5))
 }
 # With the 45-degree start, the first two spokes point right and the other two left.
 radial <- overview +
   spoke_names(slice(study$seq_data, 1:2), hjust = 0) +
   spoke_names(slice(study$seq_data, 3:4), hjust = 1) +
+  scale_seq_continuous(guide = "none") +
   layout_sequences(inner_radius = 0.26, orientation = study$orientation) +
   coord_radial_synteny(start_angle = 45, fit = "labels") +
   labs(title = "C  |  Radial", subtitle = "Shared intervals; A / D")
@@ -99,7 +105,7 @@ detail_genes <- detail_genes |>
   ungroup()
 detail_label <- function(features, side, hjust = 0) {
   geom_gene_label(aes(label = anno), data = features,
-    anchor_layer = "genes", size = 2.7, hjust = hjust, segment_colour = "#70766B",
+    anchor_layer = "genes", size = 2.9, hjust = hjust, segment_colour = "#70766B",
     segment_linewidth = 0.18,
     label_layout = layout_label_repel(arrangement = "local", side = side,
       orientation = "horizontal", offset = 6, padding = 1.2, wrap = 19, max_lines = 3))
@@ -138,13 +144,13 @@ draw_bases <- function(size) {
       cell_colour = "#64566F", cell_linewidth = 0.24,
       overflow = "error", show.legend = FALSE) +
     scale_fill_residue("DNA", guide = "none") +
-    annotate("text", x = base_range[1] - 2, y = 1, label = "DNA", size = 2.5, colour = "#25363B") +
+    annotate("text", x = base_range[1] - 2, y = 1, label = "DNA", size = 2.7, colour = "#25363B") +
     annotate("segment", x = base_ticks$alignment_column, xend = base_ticks$alignment_column,
       y = 0.5, yend = 0.41, colour = "#657177", linewidth = 0.22) +
     annotate("text", x = base_ticks$alignment_column, y = 0.33,
-      label = base_ticks$source_position, vjust = 1, size = 2.35, colour = "#25363B") +
+      label = base_ticks$source_position, vjust = 1, size = 2.55, colour = "#25363B") +
     annotate("text", x = mean(base_range), y = -0.67,
-      label = "Source position (bp)", size = 2.5, colour = "#25363B") +
+      label = "Source position (bp)", size = 2.7, colour = "#25363B") +
     scale_x_continuous(guide = "none") +
     scale_y_discrete(guide = "none") +
     coord_fixed(xlim = base_range + c(-3.75, 0.8), ylim = c(-1.10, 1.65), expand = FALSE) +
@@ -156,8 +162,8 @@ draw_bases <- function(size) {
     theme(panel.grid = element_blank(),
       panel.border = detail_border,
       plot.background = element_rect(fill = paper, colour = NA),
-      plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
-      plot.subtitle = element_text(size = 9, colour = "#52646A", hjust = 0.5),
+      plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+      plot.subtitle = element_text(size = 10, colour = "#52646A", hjust = 0.5),
       plot.margin = margin(3, 5, 3, 5))
   register_ggchord_alignment(result, cells)
 }
@@ -195,21 +201,23 @@ draw_fusion <- function(preview = FALSE) {
   }
   output <- ggchord_fusion(views, layout = layout_fusion(layout), guides = "collect") +
     fusion_ribbon(aes(fill = relation), data = filter(connections, relation == "A - B"),
-      curvature = 0.09, alpha = 0.38, colour = "#536571", linewidth = 0.26) +
+      curvature = 0.09, alpha = 0.30, colour = "#536571", linewidth = 0.22) +
     fusion_ribbon(aes(fill = relation), data = filter(connections, relation != "A - B"),
-      curvature = 0.20, alpha = 0.55, colour = "#536571", linewidth = 0.26) +
+      curvature = 0.20, alpha = 0.46, colour = "#536571", linewidth = 0.22) +
     scale_fill_manual(name = if (preview) "Links" else "Correspondence",
       values = c("A - B" = "#527FB8", "A - C" = "#CE9741", "C - D" = "#9064AC")) +
     fusion_zoom("center", "zoom", study$windows, colour = "#725094",
       fill = NA, alpha = 0.62, linewidth = 0.30, connector = "border") +
     fusion_zoom("zoom", "bases", filter(study$focus_regions, detail_panel == "bases"),
       colour = "#725094", fill = NA, alpha = 0.62, linewidth = 0.30, connector = "border") +
-    theme(legend.position = "bottom", legend.title = element_text(size = 10.5, face = "bold"),
-      legend.text = element_text(size = 9.5),
-      legend.key.spacing.x = unit(2.0, "mm"), legend.margin = margin(3, 4, 3, 4),
+    theme(legend.position = "bottom", legend.title = element_text(size = 11.5, face = "bold"),
+      legend.text = element_text(size = 10),
+      legend.key.spacing.x = unit(2.5, "mm"), legend.margin = margin(3, 4, 3, 4),
       plot.background = element_rect(fill = paper, colour = NA),
       plot.margin = margin(8, 12, 8, 12),
-      plot.title = element_text(face = "bold", size = 20))
+      plot.title = element_text(face = "bold", size = 22),
+      plot.subtitle = element_text(size = 11, colour = "#52646A"),
+      plot.caption = element_text(size = 9.5, colour = "#52646A", hjust = 0, margin = margin(t = 4)))
   if (preview) return(output)
   output +
     labs(title = "One dataset, six linked views",

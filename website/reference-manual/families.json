@@ -57,7 +57,8 @@
     "geom_primer",
     "geom_seq_region",
     "geom_site",
-    "geom_restriction_site"
+    "geom_restriction_site",
+    "shape_feature"
   ],
   "geom_feature_label": [
     "geom_feature_label",

@@ -16,5 +16,5 @@ ggchord(record$seq_data) +
   ) +
   scale_shape_identity() +
   scale_fill_identity() +
-  coord_circular(start_angle = 90) +
+  coord_circular() +
   theme_ggchord_minimal()

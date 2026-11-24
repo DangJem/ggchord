@@ -1,6 +1,6 @@
 # Region, gene and fixed sequence-label geometry.
 ggchord_layout_annotation_step <- function(
-    arrow_head_length, arrow_head_style, arrow_head_width, circular, draw_gene_geometry, ends,
+    arrow_head_length, circular, draw_gene_geometry, ends,
     gene_color_scheme, gene_colors, gene_data, gene_label_family, gene_label_fit,
     gene_label_fontface, gene_label_lineheight, gene_label_min_size, gene_label_orientation,
     gene_label_show, gene_label_side, gene_label_size, gene_label_wrap, gene_order,
@@ -149,7 +149,7 @@ ggchord_layout_annotation_step <- function(
       } else {
         "arrow"
       }
-      if (gene$start == gene$end) {
+      if (gene$start == gene$end && !feature_shape %in% ggchord_midpoint_shapes) {
         point_piece <- list(start = gene$start, end = gene$end)
         point_angle <- ggchord_feature_angle_interval(
           point_piece, sequence_length, orientation[sid], starts[sid], ends[sid]
@@ -164,6 +164,7 @@ ggchord_layout_annotation_step <- function(
         gene_poly_list[[length(gene_poly_list) + 1L]] <- data.frame(
           x = mapped[, 1L], y = mapped[, 2L], group = i * 100L + 1L,
           anno = anno, strand = strand, feature_shape = "point",
+          .shape_spec = gene$.shape_spec %||% "block",
           biological_strand = as.character(
             gene$.feature_biological_strand %||% strand
           ),
@@ -201,14 +202,17 @@ ggchord_layout_annotation_step <- function(
         shape_parts <- ggchord_feature_geometry(
           feature_shape, interval[1L], interval[2L], r0, width,
           seqRadius[sid], ref,
-          arrow_head_length = arrow_head_length,
-          arrow_head_width = if (is.null(gene$.feature_head_width)) arrow_head_width else
+          arrow_head_length = gene$.feature_head_length %||% arrow_head_length,
+          arrow_head_width = if (is.finite(gene$.feature_head_width %||% NA_real_))
             gene$.feature_head_width / width,
-          arrow_head_style = arrow_head_style,
-          short_feature = short_feature,
+          short_feature = gene$.feature_short %||% short_feature,
           draw_head = draw_head, draw_start_head = draw_start_head,
           bidirectional = identical(biological_strand, "+/-"),
-          fixed_body_width = isTRUE(gene$.feature_fixed_body_width)
+          fixed_body_width = isTRUE(gene$.feature_fixed_body_width),
+          profile = gene$.feature_profile[[1L]], nominal_width = gene$.feature_nominal_width %||% width,
+          along_metric = ggchord_units_per_mm(), normal_metric = ggchord_units_per_mm(),
+          draw_tail = piece_index == 1L &&
+            !isTRUE(if (strand == "-") gene$.truncated_right else gene$.truncated_left)
         )
         piece_polygons <- list()
         for (part in seq_along(shape_parts)) {
@@ -227,8 +231,10 @@ ggchord_layout_annotation_step <- function(
             if (draw_head) tip[on_axis & along == max(along)] <- "head"
             if (draw_start_head) tip[on_axis & along == min(along)] <- "tail"
           }
-          piece_polygons[[length(piece_polygons)+1L]] <- data.frame(
-            x=mapped[,1L],y=mapped[,2L])
+          if (!identical(vertices$paint, "path")) {
+            piece_polygons[[length(piece_polygons) + 1L]] <- data.frame(
+              x = mapped[, 1L], y = mapped[, 2L])
+          }
           gene_poly_list[[length(gene_poly_list) + 1L]] <- data.frame(
           x = mapped[, 1],
           y = mapped[, 2],
@@ -236,6 +242,9 @@ ggchord_layout_annotation_step <- function(
           anno = anno,
           strand = strand,
           feature_shape = feature_shape,
+          .shape_spec = gene$.shape_spec %||% "block",
+          .shape_part = vertices$part %||% NA_character_,
+          .shape_paint = vertices$paint %||% NA_character_,
           biological_strand = biological_strand,
           feature_fill_explicit = if ("feature_color" %in% names(gene)) {
             as.character(gene$feature_color)
@@ -374,7 +383,7 @@ ggchord_layout_annotation_step <- function(
 
         r0 <- gene_track_radius(gene, sid, strand, ref$angles[idx])
 
-        center_r <- if (gene$start == gene$end) {
+        center_r <- if (gene$start == gene$end && !feature_shape %in% ggchord_midpoint_shapes) {
           unname(seqRadius[sid])
         } else r0
         center_pt <- map_to_curve(angle = ref$angles[idx], radius = center_r, ref = ref)
@@ -447,15 +456,8 @@ ggchord_layout_annotation_step <- function(
             lineheight = gene_label_lineheight
           ), units_per_inch = label_measure_units)
           shape <- as.character(gene$.feature_shape %||% "arrow")
-          head_reserve <- if (shape == "arrow") {
-            arrow_head_length
-          } else if (shape == "compact_arrow") {
-            arrow_head_length * .76
-          } else if (shape == "promoter_arrow") {
-            arrow_head_length * .66
-          } else if (shape == "primer_arrow") {
-            arrow_head_length * .60
-          } else 0
+          head_reserve <- if (shape %in% ggchord_block_arrow_shapes)
+            gene$.feature_head_length %||% arrow_head_length else 0
           if (identical(as.character(gene$.feature_biological_strand %||% strand), "+/-"))
             head_reserve <- 2 * head_reserve
           body_padding <- max(.008, measured_label$h * .24)
@@ -493,7 +495,7 @@ ggchord_layout_annotation_step <- function(
             centre_length <- sqrt(sum(center_pt^2))
             if (is.finite(centre_length) && centre_length > 1e-8) {
               compact_shape <- shape %in% c(
-                "compact_arrow", "promoter_arrow", "primer_arrow", "marker"
+                "diamond"
               )
               adjacent_gap <- measured_label$h *
                 if (compact_shape) 1.05 else .64

@@ -17,7 +17,6 @@ home_collinear <- home_relationship("collinear",
   layout_sequences(align = "center", row_gap = 16) +
   coord_collinear(xlim = c(-2.18, 1.50), fit = "labels", clip = "off")
 home_radial <- home_relationship("radial", flagship_cases$radial$spoke_labels(size = 3.55)) +
-  scale_fill_pident() +
   coord_radial_synteny(start_angle = 45, fit = "manual",
     xlim = c(-3.10, 2.85), ylim = c(-2.85, 2.75), clip = "off")
 home_sankey <- home_relationship("sankey",
@@ -32,7 +31,7 @@ home_dotplot <- with(flagship_cases$dotplot, {
   offsets <- c(0, head(cumsum(sequences$length + observed$axis_gap), -1))
   midpoints <- offsets + (1 + sequences$length) / 2
   overview +
-    scale_x_continuous(breaks = midpoints, labels = sequences$accver, guide = guide_axis(angle = 25)) +
+    scale_x_continuous(breaks = midpoints, labels = sequences$accver, guide = guide_axis(angle = 0)) +
     scale_y_continuous(breaks = midpoints, labels = sequences$accver) +
     labs(x = "Query sequence", y = "Subject sequence") +
     home_theme + theme(axis.title = element_text(size = 11), axis.text = element_text(size = 10),

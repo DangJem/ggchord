@@ -889,8 +889,8 @@ ggchord_fusion_identity_guide <- function(plot, styles, direction = NULL) {
       warning("Fusion Identity labels exceed the explicitly fixed guide length; increase its length or reduce its explicit text size",call.=FALSE)
   width <- explicit[[thickness]] %||% explicit$legend.key.size %||% ggchord_identity_bar_width()
   guide_theme <- do.call(ggplot2::theme,setNames(list(length,width),c(field,thickness)))
-  result <- guide_coloursteps(even.steps=FALSE,show.limits=TRUE,
-    direction=if(horizontal) "horizontal" else "vertical",theme=guide_theme)
+  result <- ggchord_identity_title_gap(guide_coloursteps(even.steps=FALSE,show.limits=TRUE,
+    direction=if(horizontal) "horizontal" else "vertical",theme=guide_theme))
   attr(result, "ggchord_fusion_default") <- TRUE
   result
 }

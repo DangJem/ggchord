@@ -14,6 +14,8 @@
 #' @param id Optional layer name for export. The native Cartesian character panel uses ordinary ggplot2 scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Provide an aligned character table with source or alignment identity. Display wrapping does not change alignment columns, and a gap has no source position. Pair text and tiles explicitly with a residue fill scale when colour conveys alphabet symbols.
+#'   With a discrete colour or fill scale mapped directly to the label column,
+#'   a visible legend displays the corresponding residue characters.
 #' @examples
 #' library(ggplot2)
 #'
@@ -113,6 +115,8 @@ ggchord_residue_validate_styles <- function(styles, representation, overflow) {
 #' @param id Optional layer name for export. The native Cartesian character panel uses ordinary ggplot2 scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Provide an aligned character table with source or alignment identity. Display wrapping does not change alignment columns, and a gap has no source position. Pair text and tiles explicitly with a residue fill scale when colour conveys alphabet symbols.
+#'   With a discrete colour or fill scale mapped directly to the label column,
+#'   a visible legend displays the corresponding residue characters.
 #' @examples
 #' library(ggplot2)
 #'
@@ -171,6 +175,8 @@ ggplot_add.LayerResidue <- function(object, plot, ...) {
   original <- object
   object <- ggproto(NULL, original)
   plot <- NextMethod()
+  if (object$geom_params$representation != "tile" && !identical(object$show.legend, FALSE))
+    plot$guides <- ggchord_residue_guides(plot$guides)
   if (!is.null(object$geom_params$line_width)) {
     y_scale <- plot$scales$get_scales("y")
     if (is.null(y_scale)) plot <- plot + ggplot2::scale_y_discrete() else
@@ -187,6 +193,47 @@ ggplot_add.LayerResidue <- function(object, plot, ...) {
     if (is.null(plot$labels$y)) plot <- plot + labs(y = NULL)
   }
   plot
+}
+
+ggchord_residue_guides <- function(guides) {
+  if (isTRUE(guides$ggchord_residue_keys)) return(guides)
+  ggproto(NULL, guides, ggchord_residue_keys = TRUE,
+    merge = function(self) {
+      # GuideLegend retains only the first scale's raw breaks after merging.
+      breaks <- setNames(lapply(self$params, function(params) params$key$.value),
+        self$aesthetics)
+      self$guides <- lapply(self$guides, function(guide) {
+        if (!inherits(guide, "GuideLegend")) return(guide)
+        ggchord_residue_key_guide(guide, breaks)
+      })
+      ggproto_parent(guides, self)$merge()
+    })
+}
+
+ggchord_residue_key_guide <- function(guide, breaks) {
+  force(breaks)
+  ggproto(NULL, guide, get_layer_key = function(params, layers, data, theme = NULL) {
+    out <- guide$get_layer_key(params, layers, data, theme)
+    channels <- intersect(params$aesthetic, c("colour", "fill"))
+    if (!length(channels) || length(out$decor) != length(layers)) return(out)
+    for (i in seq_along(out$decor)) {
+      layer <- layers[[i]]
+      if (!inherits(layer, "LayerResidue") || !is.null(out$decor[[i]]$data$label)) next
+      mapping <- layer$computed_mapping
+      label <- as_label(mapping$label)
+      # Match the raw break to its source field, even when colours coincide.
+      mapped <- Filter(function(expr) {
+        identical(ggchord_legend_variable(expr, label), label)
+      }, mapping[intersect(names(mapping), channels)])
+      if (!length(mapped)) next
+      raw <- breaks[[names(mapped)[1L]]]
+      if (!(is.character(raw) || is.factor(raw)) || length(raw) != nrow(params$key)) next
+      symbols <- as.character(raw)
+      valid <- !is.na(symbols) & nchar(symbols) == 1L & !grepl("[[:space:]]", symbols)
+      out$decor[[i]]$data$label <- ifelse(valid, symbols, "")
+    }
+    out
+  })
 }
 
 # Display rows are separate from source/alignment coordinates.

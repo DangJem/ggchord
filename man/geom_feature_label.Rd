@@ -61,6 +61,8 @@ Label source annotations
 Labels can follow interval, site or cut annotations. Supply a label
 or a label mapping. The automatic anchor is the interval midpoint, the
 directional head of a primer, or the source position of a site or cut.
+A separate label table bound to a named layer can identify records by their
+entity ID or by a matching source file and original row or feature number.
 For circular features, mapping \code{fill} sets the background of an exterior
 callout. Text uses a contrasting colour when \code{colour} is omitted.
 Filled circular exterior labels have a visible outline. Circular

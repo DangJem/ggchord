@@ -6,11 +6,10 @@ ggchord_uses_plasmid_feature_scale <- function(circular, levels) {
 }
 
 ggchord_default_feature_shapes <- function(levels) {
-  shapes <- c(
-    "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker",
-    "block", "capped_line", "primer_arc", "chevron", "lollipop"
-  )
-  values <- if (all(levels %in% shapes)) levels else rep(shapes, length.out = length(levels))
+  first <- c("arrow", "arrow_flush", "arrow_triangle", "diamond")
+  shapes <- c(first, setdiff(ggchord_feature_shapes, c(first, "prototype", "point", "tick")))
+  is_shape <- levels %in% ggchord_feature_shapes | startsWith(levels, "ggchord:")
+  values <- if (all(is_shape)) levels else rep(shapes, length.out = length(levels))
   setNames(values, levels)
 }
 
@@ -713,7 +712,8 @@ ggchord_apply_scoped_scales <- function(plot, specs = ggchord_drawing_scopes(plo
   guides <- plot$guides$guides
   for (spec in specs) {
     if (!isTRUE(spec$automatic)) ggchord_validate_scope_mapping(plot, spec)
-    scale <- ggchord_prepare_domain_scale(spec$scale, plot)$clone()
+    scale <- ggchord_prepare_domain_scale(spec$scale, plot,
+      guide_overrides = if (isTRUE(spec$automatic)) guides)$clone()
     plot$scales$add(ggchord_scope_scale(scale, spec$aliases, theme))
     # Preserve public guide settings and titles across the internal rename.
     for (aesthetic in spec$aesthetics) {
@@ -861,7 +861,7 @@ ggchord_add_visual_scales <- function(plot, explicit_aes = character()) {
   for (i in seq_along(plot$scales$scales)) {
     s <- plot$scales$scales[[i]]
     if (!any(startsWith(s$aesthetics, "ggchord_scope_")) && !is.null(s$ggchord_palette))
-      plot$scales$scales[[i]] <- ggchord_prepare_domain_scale(s, plot)
+      plot$scales$scales[[i]] <- ggchord_prepare_domain_scale(s, plot, plot$guides$guides)
   }
   for (aesthetic in c("fill", "colour")) {
     if (plot$scales$has_scale(aesthetic)) next

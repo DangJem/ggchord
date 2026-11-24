@@ -41,7 +41,8 @@ ggchord_instance_position <- function(position, instances) {
   do.call(ggproto, c(list(NULL, position), changes))
 }
 
-ggchord_instance_expand <- function(input, instances, reference = FALSE, location = NULL) {
+ggchord_instance_expand <- function(input, instances, reference = FALSE, location = NULL,
+                                      check_window = TRUE) {
   if (is.null(input)) return(list(data = NULL, rows = integer()))
   ggchord_require_columns(input, "accver", "display instances")
   point <- isTRUE(location %in% c("site", "cut"))
@@ -54,7 +55,7 @@ ggchord_instance_expand <- function(input, instances, reference = FALSE, locatio
       at <- at[instances$instance_id[at] == selected]
       if (!length(at)) ggchord_stop("No display instance matches input row ", i)
     }
-    if ("window_start" %in% names(instances)) {
+    if (check_window && "window_start" %in% names(instances)) {
       low <- if (interval) input$start[i] else input$pos[i] %||% input$x[i]
       high <- if (interval) input$end[i] else low
       if (!is.null(low)) at <- at[is.finite(low) & is.finite(high) &
@@ -87,7 +88,7 @@ ggchord_instance_expand <- function(input, instances, reference = FALSE, locatio
     }
     if (reference && "length" %in% names(out)) out$length <- as.numeric(to - from + 1L)
     nested <- c("segments", ".feature_runs", ".feature_boundaries", "cleavage_arrows")
-    if (!point && nrow(out) && any(nested %in% names(out))) {
+    if (check_window && !point && nrow(out) && any(nested %in% names(out))) {
       parts <- lapply(seq_len(nrow(out)), function(i) {
         ggchord_focus_feature_parts(out[i, , drop = FALSE], from[i], to[i],
           origin = 1, caller = "layout_sequences(windows)")
@@ -333,12 +334,13 @@ ggchord_prepare_instances <- function(plot, seqs) {
       location <- p$annotation_location %||% p$anchor_location
       if (is.null(location) && type == "domain_label" && NROW(input) &&
           ggchord_label_kind(p, input) == "site") location <- "site"
+      follow_target <- type == "domain_label" && !isTRUE(p$anchor_default_data) &&
+        NROW(p$anchor_data) && "window_start" %in% names(instances)
       expanded <- ggchord_instance_expand(input, instances,
-        reference = ggchord_reference_layer(type, p$label_kind), location = location)
-      # A separate keyed label table need not contain coordinates. Decide
-      # which windows contain its target using the target's original rows.
-      if (type == "domain_label" && !isTRUE(p$anchor_default_data) &&
-          NROW(p$anchor_data) && NROW(expanded$data) && "window_start" %in% names(instances)) {
+        reference = ggchord_reference_layer(type, p$label_kind), location = location,
+        check_window = !follow_target)
+      # A separate label table follows its target's visibility in each window.
+      if (follow_target && NROW(expanded$data)) {
         matching <- ggchord_label_match(input, p$anchor_data, p$label_kind,
           isTRUE(p$anchor_same_source), p$anchor_location)
         members <- attr(matching, "entity_rows") %||% as.list(matching)

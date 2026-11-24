@@ -9,5 +9,5 @@ features <- record$features |>
 ggchord(record$seq_data) +
   geom_seq(geometry = "double", thickness = 1.3, show.legend = FALSE) +
   geom_feature(data = features, fill = "#2B7580", position = position_feature_stack(base_position = position_offset(-3), direction = "negative")) +
-  coord_circular(start_angle = 90) +
+  coord_circular() +
   theme_ggchord_minimal()

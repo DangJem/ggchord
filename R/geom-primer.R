@@ -2,7 +2,7 @@
 #' @export
 #' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
-#' @param shape Default shape. An explicitly supplied fixed shape takes priority over its mapping.
+#' @param shape Preset name or [shape_feature()] specification. A fixed shape takes priority over its mapping.
 #' @param thickness Physical thickness in mm or absolute grid units. Named values select references.
 #' @param stat A compatible ggplot2 Stat or its name. See [geom_feature()] for
 #'   source grouping and reuse during rendering.
@@ -13,7 +13,10 @@
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
 #' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
-#' @details Provide one-based closed intervals with `accver`, `start` and `end`. A strand or disjoint segments can be supplied where appropriate. The gene shortcut defaults to an arrow and strand placement. The primer shortcut defaults to a directional narrow path, and the region shortcut defaults to a translucent block.
+#' @details Provide one-based closed intervals with `accver`, `start` and
+#' `end`. A strand or disjoint segments can be supplied where appropriate.
+#' This shortcut uses the interval shapes listed in [geom_feature()].
+#' The default `"arrow_arc"` follows the reference path with a narrow directional stroke.
 #' @examples
 #' seqs <- data.frame(
 #'   accver = c("A", "B"), length = c(1000, 800),
@@ -31,7 +34,7 @@
 #'   geom_seq(geometry = "double", thickness = 3) +
 #'   geom_primer(data = primers, thickness = 0.6, id = "primers") +
 #'   coord_circular()
-geom_primer <- function(mapping = NULL, data = NULL, shape = "primer_arc",
+geom_primer <- function(mapping = NULL, data = NULL, shape = "arrow_arc",
     thickness = 2, stat = "identity", position = position_offset(0), ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_local_console_errors()

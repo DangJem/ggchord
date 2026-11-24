@@ -124,7 +124,7 @@ scale_fill_pident <- function(name = "Identity (%)", ..., limits = c(0, 100),
 }
 
 # Resolve reference order and legend dimensions once the plot exists.
-ggchord_prepare_domain_scale <- function(scale, plot) {
+ggchord_prepare_domain_scale <- function(scale, plot, guide_overrides = NULL) {
   if (is.null(scale$ggchord_palette)) return(scale)
   copy <- scale$clone()
   if (identical(copy$ggchord_palette, "sequence")) {
@@ -139,7 +139,10 @@ ggchord_prepare_domain_scale <- function(scale, plot) {
       }
     }
   } else if (identical(copy$ggchord_palette, "pident")) {
-    copy$guide <- ggchord_identity_guide(plot, "fill")
+    # Guides$setup uses an explicit plot guide before the scale's guide.
+    # Avoid measuring an automatic guide that will never be drawn.
+    supplied <- vapply(copy$aesthetics, function(aes) !is.null(guide_overrides[[aes]]), logical(1))
+    if (!all(supplied)) copy$guide <- ggchord_identity_guide(plot, "fill")
   }
   copy
 }

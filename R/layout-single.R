@@ -486,39 +486,42 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
         rep(gene_params$feature_shape %||% "arrow", nrow(gene_data_layout))
     )
     feature_shape_order <- unique(raw_shape)
+    shape_values <- raw_shape
     if (isTRUE(gene_params$feature_shape_mapped)) {
       shape_scale <- gene_params$shape_scale %||% plot$scales$get_scales("shape")
-      if (!is.null(shape_scale)) {
-        shape_scale <- shape_scale$clone()
-        shape_scale$train(unique(c(chord$facet_feature_shape_order, raw_shape)))
-        mapped_shape <- as.character(shape_scale$map(raw_shape))
-      } else {
+      if (is.null(shape_scale))
         ggchord_stop("geom_feature(): mapped shape requires an explicit shape scale")
-      }
-    } else {
-      mapped_shape <- raw_shape
-    }
-    allowed_shape <- c(
-      "arrow", "compact_arrow", "promoter_arrow", "primer_arrow",
-      "marker", "block", "capped_line", "primer_arc", "chevron", "lollipop"
-    )
-    if (anyNA(mapped_shape) || any(!mapped_shape %in% allowed_shape)) {
-      ggchord_stop(
-        "geom_feature(): shape scale must produce feature geometry names"
-      )
-    }
-    if (is.null(feature_shape_pal) &&
-        isTRUE(gene_params$feature_shape_mapped)) {
+      shape_scale <- shape_scale$clone()
+      shape_scale$train(unique(c(chord$facet_feature_shape_order, raw_shape)))
+      shape_values <- as.character(shape_scale$map(raw_shape))
       feature_shape_pal <- setNames(
-        mapped_shape[match(feature_shape_order, raw_shape)],
-        feature_shape_order
-      )
+        shape_values[match(feature_shape_order, raw_shape)], feature_shape_order)
     }
+    values <- unique(shape_values)
+    specs <- lapply(values, ggchord_parse_feature_shape)
+    by_row <- specs[match(shape_values, values)]
+    mapped_shape <- vapply(by_row, `[[`, character(1), "name")
+    if (any(!mapped_shape %in% ggchord_feature_shapes))
+      ggchord_stop("geom_feature(): shape scale must produce interval shapes")
+    along_axis <- if (!is.null(metric_axis)) if (metric_axis == "x") "y" else "x"
+    gene_data_layout$.feature_head_length <- vapply(by_row, function(spec)
+      spec$head_length %||% 2, numeric(1)) * ggchord_units_per_mm(along_axis)
+    gene_data_layout$.feature_head_width <- vapply(by_row, function(spec)
+      spec$head_width %||% NA_real_, numeric(1)) * normal_metric
+    gene_data_layout$.feature_short <- vapply(by_row, function(spec)
+      spec$short_feature %||% "shrink", character(1))
+    gene_data_layout$.shape_spec <- shape_values
+    gene_data_layout$.feature_body_width <- vapply(by_row, function(spec)
+      if (spec$name %in% c("lollipop", "tick")) NA_real_ else spec$body_width %||% NA_real_,
+      numeric(1)) * normal_metric
+    gene_data_layout$.feature_tail_width <- vapply(by_row, function(spec)
+      spec$tail_width %||% NA_real_, numeric(1)) * normal_metric
+    gene_data_layout$.feature_profile <- I(by_row)
     gene_data_layout <- as.data.frame(gene_data_layout, stringsAsFactors = FALSE)
-    if (length(gene_params$head_args) && any(!mapped_shape %in% ggchord_feature_heads))
-      ggchord_stop("geom_feature(): arrow head parameters require headed shapes")
     biological <- gene_data_layout$.feature_biological_strand
-    unknown <- biological == "." & mapped_shape %in% c(ggchord_feature_heads, "chevron")
+    directional <- vapply(by_row, function(spec)
+      any(c(spec$head_shape, spec$tail_shape) %in% c("triangle", "notch")), logical(1))
+    unknown <- biological == "." & (mapped_shape %in% ggchord_feature_heads | directional)
     if (identical(gene_params$unknown_strand, "error") && any(unknown))
       ggchord_stop("geom_feature(): directional shapes require a known strand")
     mapped_shape[unknown] <- "block"
@@ -527,8 +530,6 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
 
   }
   if (!is.null(gene_data_layout) && nrow(gene_data_layout)) {
-    if (!is.null(gene_params$head_width_mm))
-      gene_data_layout$.feature_head_width <- gene_params$head_width_mm * normal_metric
     gene_data_layout$.feature_width <- vapply(seq_len(nrow(gene_data_layout)),
       function(i) {
         sid <- as.character(gene_data_layout$accver[i])
@@ -538,20 +539,26 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
           gene_data_layout$.feature_width_factor[i] %||% 1
         )
       }, numeric(1))
+    gene_data_layout$.feature_nominal_width <- gene_data_layout$.feature_width
+    body_width <- gene_data_layout$.feature_body_width
+    custom <- which(!is.na(body_width))
+    gene_data_layout$.feature_width_factor[custom] <-
+      body_width[custom] / gene_data_layout$.feature_width[custom]
+    gene_data_layout$.feature_width[custom] <- body_width[custom]
     outline <- gene_params$feature_outline_mm %||% .25
     lift <- if (length(outline) && any(is.finite(outline))) max(outline[is.finite(outline)]) else 0
-    head <- gene_data_layout$.feature_head_width %||% gene_data_layout$.feature_width
+    head <- gene_data_layout$.feature_head_width %||% rep(NA_real_, nrow(gene_data_layout))
     if (ggchord_circular_arrow_band(circular, gene_params$feature_role)) {
-      arrow <- gene_data_layout$.feature_shape %in% ggchord_block_arrow_shapes
-      gene_data_layout$.feature_fixed_body_width <- arrow
-      if (is.null(gene_params$head_width_mm) &&
-          identical(gene_params$arrow_head_style, "shouldered")) {
-        head[arrow] <- ggchord_circular_arrow_head_ratio * gene_data_layout$.feature_width[arrow]
-        gene_data_layout$.feature_head_width <- head
-      }
+      shoulder <- gene_data_layout$.feature_shape %in% "arrow"
+      gene_data_layout$.feature_fixed_body_width <- shoulder
+      default <- shoulder & is.na(head)
+      head[default] <- ggchord_circular_arrow_head_ratio * gene_data_layout$.feature_width[default]
     }
-    if (identical(gene_params$arrow_head_style, "flush")) head <- gene_data_layout$.feature_width
-    gene_data_layout$.feature_clearance_width <- pmax(gene_data_layout$.feature_width, head) +
+    gene_data_layout$.feature_head_width <- head
+    head[is.na(head)] <- gene_data_layout$.feature_width[is.na(head)]
+    tail <- gene_data_layout$.feature_tail_width %||% NA_real_
+    gene_data_layout$.feature_clearance_width <- pmax(gene_data_layout$.feature_width, head, tail,
+      na.rm = TRUE) +
       lift * normal_metric
   }
   axis_selection <- ggchord_axis_selection(position_scale$ggchord_axis_sequences,
@@ -826,6 +833,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       seq_label_vjust_explicit = !is.null(seq_label_params$seq_label_vjust),
       collinear_transform = collinear_transform,
       collinear_crossrow_styles = ggchord_collinear_row_styles(plot$coordinates),
+      feature_normal_axis = metric_axis,
       collinear_radial = isTRUE(plot$coordinates$ggchord_radial),
       defer_connection_bend = isTRUE(plot$coordinates$ggchord_radial) ||
         isTRUE(plot$coordinates$ggchord_sankey),
@@ -877,12 +885,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     gene_data = gene_data_layout,
     draw_gene_geometry = gene_geometry_layer_requested,
     geneWidth = geneWidth,
-    arrow_head_length = (gene_params$head_length_mm %||% 2) *
-      ggchord_units_per_mm(if (is.null(metric_axis)) NULL else
-        if (metric_axis == "x") "y" else "x"),
-    arrow_head_width = gene_params$arrow_head_width %||% 1,
-    arrow_head_style = gene_params$arrow_head_style %||% "shouldered",
-    short_feature = gene_params$short_feature %||% "auto",
+    arrow_head_length = 2 * ggchord_units_per_mm(if (!is.null(metric_axis))
+      if (metric_axis == "x") "y" else "x"),
     circular = isTRUE(plot$coordinates$ggchord_circular),
     geneLabelRadialOffset = geneLabelRadialOffset,
     geneLabelCircumOffset = geneLabelCircumOffset,

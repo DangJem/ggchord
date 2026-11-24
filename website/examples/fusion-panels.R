@@ -8,7 +8,7 @@ reference <- seq_data_example |>
 
 overview <- ggchord(filter(reference, accver == ids[1])) +
   geom_seq(geometry = "double", thickness = 1.3) +
-  coord_circular(start_angle = 90) +
+  coord_circular() +
   theme_ggchord_minimal()
 
 detail <- ggchord(reference) +

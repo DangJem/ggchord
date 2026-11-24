@@ -85,8 +85,7 @@ compute_chord_layout <- function(
     # Gene parameters
     gene_data = NULL, draw_gene_geometry = TRUE,
     geneWidth,
-    arrow_head_length = 0.04, arrow_head_width = 1,
-    arrow_head_style = "shouldered",
+    arrow_head_length = 0.04,
     short_feature = "auto", circular = FALSE,
     geneLabelRadialOffset, geneLabelCircumOffset,
     geneLabelCircumLimit, geneLabelRotation,

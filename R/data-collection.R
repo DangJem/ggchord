@@ -111,16 +111,18 @@ data_report <- function(x, sections = NULL) {
       c("ggchord_import", "ggchord_conversion", "ggchord_projection", "ggchord_focus",
         "ggchord_link_report", "ggchord_translation"))]
     report <- if (is.list(x) && !is.data.frame(x)) x$report else NULL
-    if (is.null(report) && length(provenance)) {
-      latest <- provenance[[length(provenance)]]
+    if (is.null(report)) {
       lineage <- if (is.data.frame(x)) {
         fields <- intersect(c(".source_file", ".source_input", "source_input", ".source_row", ".source_line",
           ".source_record", ".source_feature", "source_rows", "source_row", "source_block",
           "source_segment", "source_members"), names(x))
         if (length(fields)) x[fields]
       }
-      report <- list(operation = names(provenance)[length(provenance)], lineage = lineage,
-        inputs = latest$files %||% latest$source_class, metadata = provenance)
+      if (length(provenance)) {
+        latest <- provenance[[length(provenance)]]
+        report <- list(operation = names(provenance)[length(provenance)], lineage = lineage,
+          inputs = latest$files %||% latest$source_class, metadata = provenance)
+      } else if (!is.null(lineage)) report <- list(lineage = lineage)
     }
     if (!is.null(report)) {
       metadata <- report[setdiff(names(report), report_names)]

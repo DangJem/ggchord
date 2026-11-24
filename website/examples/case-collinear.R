@@ -43,10 +43,13 @@ overview <- ggchord(comparison$seq_data) +
     guide = guide_legend(nrow = 1, order = 1)), layers = "genes") +
   layout_sequences(align = "center", row_gap = 41) +
   coord_collinear(fit = "labels", clip = "off") +
-  theme_ggchord_publication() +
+  theme_ggchord_publication(base_size = 11) +
   theme(plot.background = element_rect(fill = "#FFFCF5", colour = NA),
     panel.background = element_blank(), legend.position = "bottom",
     legend.box.spacing = unit(2.5, "mm"),
+    legend.key.width = unit(11.5, "mm"), legend.key.height = unit(7.5, "mm"),
+    legend.title = element_text(size = 11.5, face = "bold"),
+    legend.text = element_text(size = 10.5),
     plot.title = element_text(face = "bold", size = 17),
     plot.margin = margin(10, 14, 10, 14))
 
@@ -67,6 +70,6 @@ overview + gene_names +
     labels = label_comma(), guide = guide_seq_axis(side = "negative")) +
   guides(fill = guide_coloursteps(position = "left", direction = "vertical",
     even.steps = FALSE, show.limits = TRUE,
-    theme = theme(legend.key.height = unit(93, "mm"), legend.key.width = unit(2.8, "mm")))) +
+    theme = theme(legend.key.height = unit(138, "mm"), legend.key.width = unit(3.6, "mm")))) +
   labs(title = "Sequence architecture, across four genomes",
     subtitle = "Selected labelled CDS · strand-separated arrows · routed cross-row comparisons")

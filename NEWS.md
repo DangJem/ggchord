@@ -1,5 +1,9 @@
 # ggchord 0.50.0 (development)
 
+- `coord_circular(start_angle = 0)` now starts at twelve o'clock. Positive
+  angles advance counterclockwise. Subtract 90 degrees from an earlier
+  v0.50.0 development angle to preserve the same orientation.
+
 - `as_ggchord_feature()` and `geom_feature()` accept closed intervals, residue
   sites and interbase cuts through `location`. `geom_feature_label()` follows
   any of those annotation types. Use a layer ID to resolve ambiguous targets
@@ -52,6 +56,50 @@
   key size.
 - Default discrete genomic keys measure 8 × 6.4 mm. Symbols in separate
   slots use the space around their own shapes to stay readable.
+- Standalone genomic glyphs are centred vertically with their legend labels.
+  Standalone feature arrows have fuller silhouettes and visible outlines.
+  Standalone sequence arrows with closed heads have rounded tips.
+  Explicit Identity guides bypass automatic colour-bar measurement.
+- Interval lollipop heads stay round on collinear panels. Capped lines use
+  the line colour in both the panel and the key, and the default fine
+  outlines for compact shapes now follow the shape drawn in the panel.
+- Primer paths join the shaft and head in a single outline. Standalone
+  feature keys have slimmer end caps and larger diamond, primer and
+  interval lollipop symbols.
+- `shape_feature()` specifies dimensions for feature presets in fixed
+  layers and in `scale_shape_manual()`. Use `arrow`, `arrow_flush`, or
+  `arrow_triangle` in place of `head_style`. `geom_gene()` defaults to
+  `arrow_flush`. Set `head_length`, `head_width`, and `short_feature`
+  in the specification. The former `compact_arrow`, `promoter_arrow`,
+  and `primer_arrow` presets were removed. Use
+  `shape_feature("arrow", head_length = 1)` for a short head.
+- `geom_site()` supports `shape = "lollipop"`. The same shape in
+  `geom_feature()` uses the recorded site position or the displayed
+  interval midpoint according to the data location.
+- The `block` specification spans an interval, marks a site with a square,
+  and marks each recorded cut boundary on its corresponding side. Set
+  `body_width`, `body_fill` and `body_colour` in `shape_feature()`.
+  Explicit layer fills and outlines take priority in their own channels.
+- Use `shape_feature("prototype")` to assemble an interval outline from a
+  body, head and tail. Named presets accept part dimensions and paint.
+  `capped_line` takes shared cap dimensions and per-end overrides.
+- Feature specifications also define `diamond`, `point`, `tick`, `lollipop`
+  and `cut`. Shape geometry anchors to the visible interval, the residue
+  position or the recorded boundaries. Cut keys show separate chain
+  strokes. A lollipop at a cut has one outward stem and head per known
+  boundary.
+- Cut legend keys use a compact, rotationally symmetric pair, with the top
+  boundary on the upper left. Lollipop keys use longer stems and smaller
+  heads in standalone and composite guides.
+- The slender arrow that follows the reference path is named `arrow_arc`.
+  It remains the default for `geom_primer()`. The former `primer_arc` name
+  was removed in v0.50.0.
+- Automatic Identity colour bars leave room for the title beside endpoint
+  labels. In compound keys, sequence arrowheads leave space for annotations
+  and primer arcs are separated from nearby marks. Standalone sequence bands
+  and lollipops are easier to distinguish.
+- Site size mappings work with shared and layer-specific scales. Residue
+  legends show the actual character when colour or fill maps to that character.
 - Fixed-style genomic glyphs included by `show.legend = TRUE` can use
   the composite template when the key has one compatible mapped group.
 - `scale_for()` reports a selected layer without a matching mapped aesthetic

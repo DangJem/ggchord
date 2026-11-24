@@ -17,5 +17,5 @@ ggchord(record$seq_data) +
     name = "Feature", values = c(CDS = "#2B7580", primer_bind = "#C5753B",
                                  misc_feature = "#81729A")
   ) +
-  coord_circular(start_angle = 90) +
+  coord_circular() +
   theme_ggchord_minimal()

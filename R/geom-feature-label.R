@@ -267,7 +267,8 @@ ggchord_domain_label <- function(mapping, data, stat, anchor_layer, anchor, posi
   if (!inherits(label_layout, "ggchord_label_layout"))
     ggchord_stop("label_layout must be a label layout strategy")
   if (inherits(anchor_layer, "ggchord_auto_anchor") &&
-      (!is.null(data) || !is.null(position) || !ggchord_identity_stat(stat))) {
+      ((!is.null(data) && !is.data.frame(data)) || !is.null(position) ||
+        !ggchord_identity_stat(stat))) {
     anchor_layer <- NULL
   }
   if (!is.null(anchor_layer) && !inherits(anchor_layer, "ggchord_auto_anchor")) {
@@ -353,6 +354,8 @@ ggchord_domain_label <- function(mapping, data, stat, anchor_layer, anchor, posi
 #' @details Labels can follow interval, site or cut annotations. Supply a label
 #' or a label mapping. The automatic anchor is the interval midpoint, the
 #' directional head of a primer, or the source position of a site or cut.
+#' A separate label table bound to a named layer can identify records by their
+#' entity ID or by a matching source file and original row or feature number.
 #' For circular features, mapping `fill` sets the background of an exterior
 #' callout. Text uses a contrasting colour when `colour` is omitted.
 #' Filled circular exterior labels have a visible outline. Circular
@@ -405,9 +408,10 @@ geom_feature_label <- function(mapping = NULL, data = NULL, stat = "identity",
 #' follow interval, site and cut layers, including genes, primers and regions.
 #' Layer order is immaterial. When several targets qualify, give the intended
 #' target an ID and pass that name as `anchor_layer`.
-#' Supplying label data, a non-identity Stat or a Position makes the labels
-#' independent by default. An explicit target can also take a keyed subset
-#' of its data. Use `anchor_layer = NULL` to read independent label data.
+#' Label tables with their own coordinates, data callbacks, a non-identity
+#' Stat or a Position make labels independent by default. A label table with
+#' entity or source row keys can follow the unique compatible layer when it
+#' omits coordinates. Use `anchor_layer = NULL` for independent labels.
 #' @return A declaration resolved against the layers in the same plot.
 #' @export
 #' @examples
@@ -427,20 +431,30 @@ ggchord_resolve_auto_anchors <- function(plot) {
     p <- layer$ggchord_params
     if (!inherits(p$anchor_layer, "ggchord_auto_anchor")) next
     role <- p$anchor_role %||% p$label_kind
+    input <- layer$ggchord_input_data
+    fields <- c(names(input %||% plot$data), names(layer$ggchord_input_mapping))
+    coordinates <- (role %in% c("site", "feature") && "pos" %in% fields) ||
+      (role != "site" && all(c("start", "end") %in% fields))
+    independent <- "accver" %in% fields && coordinates
+    if (!is.null(input)) {
+      keyed <- !independent && NROW(input) > 0L && "accver" %in% fields &&
+        (any(c("entity_id", "feature_id", "site_id") %in% fields) ||
+          (any(c(".source_row", ".source_line", ".source_feature") %in% fields) &&
+            any(!is.na(ggchord_annotation_source_files(input)))))
+      if (!keyed) {
+        layer$ggchord_params$anchor_layer <- NULL
+        next
+      }
+    }
     candidates <- Filter(function(target) ggchord_is_label_target(target, role), plot$layers)
     ids <- vapply(candidates, function(target) target$ggchord_layer_id, character(1))
     if (length(ids) > 1L)
       ggchord_stop("Label layer '", layer$ggchord_layer_id, "' has multiple compatible ",
         role, " targets: ", paste(ids, collapse = ", "),
         ". Set anchor_layer to the intended ID, or supply data and anchor_layer = NULL.")
-    if (!length(ids)) {
-      fields <- c(names(plot$data), names(layer$ggchord_input_mapping))
-      location <- (role %in% c("site", "feature") && "pos" %in% fields) ||
-        (role != "site" && all(c("start", "end") %in% fields))
-      if (!"accver" %in% fields || !location)
-        ggchord_stop("Label layer '", layer$ggchord_layer_id, "' has no compatible ", role,
-          " target. Add a target layer or supply independent label data.")
-    }
+    if (!length(ids) && !independent)
+      ggchord_stop("Label layer '", layer$ggchord_layer_id, "' has no compatible ", role,
+        " target. Add a target layer or supply independent label data.")
     layer$ggchord_params$anchor_layer <- if (length(ids)) ids[[1L]]
   }
   plot
@@ -485,6 +499,27 @@ ggchord_bind_domain_labels <- function(plot) {
   plot
 }
 
+ggchord_label_source_rows <- function(input, target, lhs, rhs) {
+  fields <- intersect(c(".source_line", ".source_feature", ".source_row"),
+    intersect(names(input), names(target)))
+  declared <- function(data) {
+    conversion <- attr(data, "ggchord_conversion", exact = TRUE)
+    is.null(conversion) || isTRUE(conversion$source_row_declared)
+  }
+  if (!declared(input) || !declared(target)) fields <- setdiff(fields, ".source_row")
+  key <- function(data, identity, field) {
+    row <- data[[field]]
+    if (!is.numeric(row)) return(rep(NA_character_, nrow(data)))
+    id <- ggchord_annotation_key(data$accver, identity$namespace, row)
+    id[is.na(identity$namespace) | !is.finite(row) | row < 1 | row != trunc(row)] <- NA_character_
+    id
+  }
+  lapply(fields, function(field) {
+    available <- key(target, rhs, field)
+    list(query = key(input, lhs, field), index = split(seq_len(nrow(target)), available))
+  })
+}
+
 ggchord_label_match <- function(input, target, kind, allow_row_match, location = NULL) {
   location <- location %||% if (kind == "feature") "interval" else "site"
   lhs <- ggchord_annotation_identity(input, location, caller = "Label data")
@@ -503,6 +538,16 @@ ggchord_label_match <- function(input, target, kind, allow_row_match, location =
       ggchord_annotation_key(target$accver[present], value[present]))
   }
   by_entity <- split(seq_len(nrow(target)), keys)
+  by_source <- NULL
+  source_rows <- function(i) {
+    if (is.null(by_source)) by_source <<- ggchord_label_source_rows(input, target, lhs, rhs)
+    all_matches <- lapply(by_source, function(source) {
+      query <- source$query[i]
+      if (!is.na(query)) source$index[[query]] %||% integer()
+    })
+    matches <- Filter(Negate(is.null), all_matches)
+    if (length(matches)) Reduce(intersect, matches) else integer()
+  }
   coordinates <- c("accver", ggchord_annotation_coordinates(location))
   numeric_coordinate <- function(value) {
     if (is.factor(value)) value <- as.character(value)
@@ -515,7 +560,12 @@ ggchord_label_match <- function(input, target, kind, allow_row_match, location =
       numeric_coordinate(input[[key]]), numeric_coordinate(target[[key]])), logical(1)))
   matches <- lapply(seq_len(nrow(input)), function(i) {
     if (row_match && (is.na(lhs$id[i]) || lhs$ambiguous[i])) return(i)
-    if (is.na(lhs$id[i])) ggchord_stop("Supply a stable entity_id, feature_id or site_id to bind label row ", i)
+    if (is.na(lhs$id[i])) {
+      found <- source_rows(i)
+      if (length(unique(keys[found])) == 1L) return(by_entity[[keys[found[1L]]]])
+      if (length(found)) ggchord_stop("Ambiguous annotation source row for label row ", i)
+      ggchord_stop("Supply a stable entity_id, feature_id, site_id or a matching source row to bind label row ", i)
+    }
     key <- ggchord_annotation_key(input$accver[i], lhs$id[i])
     index <- aliases[[lhs$id_column[i]]] %||% by_id
     found <- index[[key]]
@@ -524,8 +574,12 @@ ggchord_label_match <- function(input, target, kind, allow_row_match, location =
       found <- if (length(same)) same else found[is.na(rhs$namespace[found])]
     }
     if (!length(found)) ggchord_stop("No matching annotation entity for label row ", i, ": ", lhs$id[i])
-    if (any(rhs$ambiguous[found]) || length(unique(keys[found])) != 1L)
-      ggchord_stop("Ambiguous annotation entity for label row ", i, ": ", lhs$id[i])
+    if (any(rhs$ambiguous[found]) || length(unique(keys[found])) != 1L) {
+      specific <- intersect(found, source_rows(i))
+      if (length(unique(keys[specific])) != 1L)
+        ggchord_stop("Ambiguous annotation entity for label row ", i, ": ", lhs$id[i])
+      found <- specific
+    }
     by_entity[[keys[found[1L]]]]
   })
   matched <- vapply(matches, `[`, integer(1), 1L)

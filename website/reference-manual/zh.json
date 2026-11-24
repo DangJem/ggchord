@@ -1,5 +1,5 @@
 {
-  "source_sha256": "50772e61edd2b675f4f389979ca028d78b7c36a553fb63d2f5efaced859a5fed",
+  "source_sha256": "dea887f83c14ed9c61672f6210336b1775a89f87a0617c04c6e3ea6836616c13",
   "description": "按绘图问题或函数查阅 API。索引每行对应一篇主题文档，并列出该文档涵盖的函数。",
   "groups": {
     "construct": {
@@ -186,7 +186,7 @@
       "arguments": [
         {
           "format": "numeric(1)；默认 0",
-          "description": "第一个正向参考方向的画布角度，单位度；0 指向右方，正角逆时针。允许任意有限值，按 360 度取等价方向。"
+          "description": "从十二点方向逆时针量取的起始角度，单位为度。0° 将序列起点放在顶部。"
         },
         {
           "format": "character；默认 \"clockwise\"",
@@ -846,7 +846,7 @@
         },
         {
           "format": "character(1)",
-          "description": "省略时区间用 `\"block\"`，位点用 `\"tick\"`，切口用 `\"cut\"`。固定形状优先于形状映射。"
+          "description": "指定预设名或 [`shape_feature()`](#api-shape_feature) 规格。这两类值都可通过 `aes(shape = category)` 和 `scale_shape_manual()` 映射。"
         },
         {
           "format": "positive physical size / flexible",
@@ -862,7 +862,7 @@
         },
         {
           "format": "named arguments",
-          "description": "固定 fill/colour/alpha/linewidth/linetype 和兼容 Stat 参数。几何高级项：head_length=2（mm）、head_width=NULL（mm；在圆坐标下，带肩箭头默认使用箭身厚度的 1.42 倍）、head_style=\"shouldered\"（shouldered/flush/triangle）、short_feature=\"shrink\"（shrink/block/error）、unknown_strand=\"undirected\"（undirected/error）、segment_boundaries=FALSE、boundary_colour=NULL（继承 colour）、boundary_linewidth=0.3（mm）、boundary_linetype=1。箭头项仅适用于 arrow/compact_arrow/promoter_arrow/primer_arrow/primer_arc；显式给其他形状报错。boundary_* 只在 segment_boundaries=TRUE 且已有内部段时有效。"
+          "description": "附加的固定视觉样式和所选 Stat 的参数。用 [`shape_feature()`](#api-shape_feature) 设置箭头尺寸。"
         },
         {
           "format": "logical",
@@ -882,7 +882,7 @@
         }
       ],
       "value": "一个 feature 图层；一条输入实体可以展开为多个几何片段，但保持实体 ID 与来源区间，不修改输入表。",
-      "details": "1. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n2. 合法 shape 为 block、arrow、compact_arrow、promoter_arrow、primer_arrow、marker、capped_line、primer_arc、chevron、lollipop。它们仅改变同一已选区间的表示：block 是实心区间块；arrow 是带箭头的区间块；compact_arrow 是短头紧凑箭头；promoter_arrow 是头部较短的方向箭头；primer_arrow 是细长方向箭头；marker 是区间中心标记；capped_line 是两端封口区间线；primer_arc 是沿参考路径的细方向线；chevron 是方向折线；lollipop 是区间中心的杆和圆头。所有形状仍保留完整源区间。\n\n3. thickness 控制可见对象的法向物理厚度。在圆坐标下，它指定 arrow、compact_arrow、promoter_arrow 和 primer_arrow 的箭身厚度。head_style = \"shouldered\" 时，默认箭头肩部向箭身两侧突出。短箭头可缩短箭头头部并保留箭身厚度。显式 head_width 指定箭头头部的物理宽度。箭头头长不扩大源端点；短对象使用 short_feature 的明确几何政策。unknown_strand=\"undirected\" 保留记录并绘制相应无向轮廓，不能冒充正链；需要可靠方向时设为 error。\n\n4. shape 的映射要求适用的 manual/identity Scale。Feature 与点轨道使用不同形状字典时，显式 scale_for 分域，不根据 Geom 偷换映射值。\n\n5. thickness 支持灵活的参数格式：标量、按参考具名向量、严格显示顺序向量，以及显式 source/instance 分组；单位统一为 mm 或绝对 grid unit。视觉差异不会改数据筛选。\n\n特征默认使用 0.25 mm 深色轮廓，小型符号使用较细描边。显式指定或映射 linewidth 时按用户设置绘制。\n\n方向列支持 `+`、`-`、`+/-` 和 `.`。双向箭头保留一个源实体，在两端绘制箭头。 capped_line 的两端方块绘制在特征区间内。",
+      "details": "`arrow` 带肩，`arrow_flush` 的头根与箭身等宽，`arrow_triangle` 把整个区间画成三角。双向三角在区间两端各有一个尖端。用 [`shape_feature()`](#api-shape_feature) 设置尺寸和短区间绘制规则。短头箭头可写成 `shape_feature(\"arrow\", head_length = 1)`。图例用直线样段示意同一份几何规格。",
       "errors": "- 未知或矛盾参考、超出未裁剪完整参考的端点、无效分段来源。\n\n- 给某形状提供不适用的高级参数；非法 shape Scale 输出；厚度或头部尺寸非正。\n\n- 需要有向锚点或 unknown_strand=\"error\" 时缺少方向。",
       "roles": [
         "必需参考身份；默认使用同名规范列。",
@@ -908,7 +908,7 @@
         },
         {
           "format": "character / mapped aesthetic",
-          "description": "默认 arrow；合法形状与母函数 geom_feature 相同。显式值覆盖 shape 映射，省略的默认不压过映射。本快捷函数的形状为可覆盖默认，不按函数名重新强制注入。"
+          "description": "指定预设名或 [`shape_feature()`](#api-shape_feature) 规格。这两类值都可通过 `aes(shape = category)` 和 `scale_shape_manual()` 映射。"
         },
         {
           "format": "positive physical size / flexible",
@@ -924,7 +924,7 @@
         },
         {
           "format": "named arguments",
-          "description": "固定 fill/colour/alpha/linewidth/linetype 和兼容 Stat 参数。几何高级项：head_length=2（mm）、head_width=NULL（mm；在圆坐标下，带肩箭头默认使用箭身厚度的 1.42 倍）、head_style=\"flush\"（shouldered/flush/triangle）、short_feature=\"shrink\"（shrink/block/error）、unknown_strand=\"undirected\"（undirected/error）、segment_boundaries=FALSE、boundary_colour=NULL（继承 colour）、boundary_linewidth=0.3（mm）、boundary_linetype=1。箭头项仅适用于 arrow/compact_arrow/promoter_arrow/primer_arrow/primer_arc；显式给其他形状报错。boundary_* 只在 segment_boundaries=TRUE 且已有内部段时有效。"
+          "description": "附加的固定视觉样式和所选 Stat 的参数。用 [`shape_feature()`](#api-shape_feature) 设置箭头尺寸。"
         },
         {
           "format": "logical",
@@ -944,7 +944,7 @@
         }
       ],
       "value": "一个 feature 图层；一条输入实体可以展开为多个几何片段，但保持实体 ID 与来源区间，不修改输入表。",
-      "details": "1. 无用户覆盖时严格展开为 geom_feature(shape=\"arrow\", thickness=2, stat=\"identity\", position=position_strand(), ...)；其他行为与母函数一致。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. 合法 shape 为 block、arrow、compact_arrow、promoter_arrow、primer_arrow、marker、capped_line、primer_arc、chevron、lollipop。它们仅改变同一已选区间的表示：block 是实心区间块；arrow 是带箭头的区间块；compact_arrow 是短头紧凑箭头；promoter_arrow 是头部较短的方向箭头；primer_arrow 是细长方向箭头；marker 是区间中心标记；capped_line 是两端封口区间线；primer_arc 是沿参考路径的细方向线；chevron 是方向折线；lollipop 是区间中心的杆和圆头。所有形状仍保留完整源区间。\n\n4. thickness 控制可见对象的法向物理厚度。在圆坐标下，它指定 arrow、compact_arrow、promoter_arrow 和 primer_arrow 的箭身厚度。head_style = \"shouldered\" 时，默认箭头肩部向箭身两侧突出。短箭头可缩短箭头头部并保留箭身厚度。显式 head_width 指定箭头头部的物理宽度。箭头头长不扩大源端点；短对象使用 short_feature 的明确几何政策。unknown_strand=\"undirected\" 保留记录并绘制相应无向轮廓，不能冒充正链；需要可靠方向时设为 error。\n\n5. shape 的映射要求适用的 manual/identity Scale。Feature 与点轨道使用不同形状字典时，显式 scale_for 分域，不根据 Geom 偷换映射值。\n\n6. thickness 支持灵活的参数格式：标量、按参考具名向量、严格显示顺序向量，以及显式 source/instance 分组；单位统一为 mm 或绝对 grid unit。视觉差异不会改数据筛选。\n\n普通基因箭头默认无肩，使用 `head_style = \"flush\"`。显式 `\"shouldered\"` 可绘制较宽箭头。",
+      "details": "`arrow` 带肩，`arrow_flush` 的头根与箭身等宽，`arrow_triangle` 把整个区间画成三角。双向三角在区间两端各有一个尖端。用 [`shape_feature()`](#api-shape_feature) 设置尺寸和短区间绘制规则。短头箭头可写成 `shape_feature(\"arrow\", head_length = 1)`。图例用直线样段示意同一份几何规格。",
       "errors": "- 未知或矛盾参考、超出未裁剪完整参考的端点、无效分段来源。\n\n- 给某形状提供不适用的高级参数；非法 shape Scale 输出；厚度或头部尺寸非正。\n\n- 需要有向锚点或 unknown_strand=\"error\" 时缺少方向。",
       "roles": [
         "必需参考身份；默认使用同名规范列。",
@@ -970,7 +970,7 @@
         },
         {
           "format": "character / mapped aesthetic",
-          "description": "默认 primer_arc；合法形状与母函数 geom_feature 相同。显式值覆盖 shape 映射，省略的默认不压过映射。本快捷函数的形状为可覆盖默认，不按函数名重新强制注入。"
+          "description": "指定预设名或 [`shape_feature()`](#api-shape_feature) 规格。这两类值都可通过 `aes(shape = category)` 和 `scale_shape_manual()` 映射。"
         },
         {
           "format": "positive physical size / flexible",
@@ -986,7 +986,7 @@
         },
         {
           "format": "named arguments",
-          "description": "固定 fill/colour/alpha/linewidth/linetype 和兼容 Stat 参数。几何高级项：head_length=2（mm）、head_width=NULL（mm；NULL 等于本实体 thickness）、head_style=\"shouldered\"（shouldered/flush/triangle）、short_feature=\"shrink\"（shrink/block/error）、unknown_strand=\"undirected\"（undirected/error）、segment_boundaries=FALSE、boundary_colour=NULL（继承 colour）、boundary_linewidth=0.3（mm）、boundary_linetype=1。箭头项仅适用于 arrow/compact_arrow/promoter_arrow/primer_arrow/primer_arc；显式给其他形状报错。boundary_* 只在 segment_boundaries=TRUE 且已有内部段时有效。"
+          "description": "附加的固定视觉样式和所选 Stat 的参数。用 [`shape_feature()`](#api-shape_feature) 设置箭头尺寸。"
         },
         {
           "format": "logical",
@@ -1006,7 +1006,7 @@
         }
       ],
       "value": "一个 feature 图层；一条输入实体可以展开为多个几何片段，但保持实体 ID 与来源区间，不修改输入表。",
-      "details": "1. 严格展开为 geom_feature(shape=\"primer_arc\", thickness=2, position=position_offset(0), ...)；3′ 方向来自 strand，文字由 geom_primer_label 家族另加。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. 合法 shape 为 block、arrow、compact_arrow、promoter_arrow、primer_arrow、marker、capped_line、primer_arc、chevron、lollipop。它们仅改变同一已选区间的表示：block 是实心区间块；arrow 是带箭头的区间块；compact_arrow 是短头紧凑箭头；promoter_arrow 是带起始折角的方向符号；primer_arrow 是细长方向箭头；marker 是区间中心标记；capped_line 是两端封口区间线；primer_arc 是沿参考路径的细方向线；chevron 是方向折线；lollipop 是区间中心的杆和圆头。所有形状仍保留完整源区间。\n\n4. thickness 是可见对象的法向物理包围厚度。箭头头长不扩大源端点；短对象使用 short_feature 的明确几何政策。unknown_strand=\"undirected\" 保留记录并绘制相应无向轮廓，不能冒充正链；需要可靠方向时设为 error。\n\n5. shape 的映射要求适用的 manual/identity Scale。Feature 与点轨道使用不同形状字典时，显式 scale_for 分域，不根据 Geom 偷换映射值。\n\n6. thickness 支持灵活的参数格式：标量、按参考具名向量、严格显示顺序向量，以及显式 source/instance 分组；单位统一为 mm 或绝对 grid unit。视觉差异不会改数据筛选。\n\n圆坐标中的 primer 快捷层保留细型轮廓，便于在序列双圈之间绘制。",
+      "details": "此快捷入口支持 geom_feature() 的区间预设。默认的 arrow_arc 沿参考路径绘制细方向线。",
       "errors": "- 未知或矛盾参考、超出未裁剪完整参考的端点、无效分段来源。\n\n- 给某形状提供不适用的高级参数；非法 shape Scale 输出；厚度或头部尺寸非正。\n\n- 需要有向锚点或 unknown_strand=\"error\" 时缺少方向。",
       "roles": [
         "必需参考身份；默认使用同名规范列。",
@@ -1032,7 +1032,7 @@
         },
         {
           "format": "character / mapped aesthetic",
-          "description": "默认 block；合法形状与母函数 geom_feature 相同。显式值覆盖 shape 映射，省略的默认不压过映射。本快捷函数的形状为可覆盖默认，不按函数名重新强制注入。"
+          "description": "指定预设名或 [`shape_feature()`](#api-shape_feature) 规格。这两类值都可通过 `aes(shape = category)` 和 `scale_shape_manual()` 映射。"
         },
         {
           "format": "positive physical size / flexible",
@@ -1052,7 +1052,7 @@
         },
         {
           "format": "named arguments",
-          "description": "固定 fill/colour/alpha/linewidth/linetype 和兼容 Stat 参数。几何高级项：head_length=2（mm）、head_width=NULL（mm；在圆坐标下，带肩箭头默认使用箭身厚度的 1.42 倍）、head_style=\"shouldered\"（shouldered/flush/triangle）、short_feature=\"shrink\"（shrink/block/error）、unknown_strand=\"undirected\"（undirected/error）、segment_boundaries=FALSE、boundary_colour=NULL（继承 colour）、boundary_linewidth=0.3（mm）、boundary_linetype=1。箭头项仅适用于 arrow/compact_arrow/promoter_arrow/primer_arrow/primer_arc；显式给其他形状报错。boundary_* 只在 segment_boundaries=TRUE 且已有内部段时有效。"
+          "description": "附加的固定视觉样式和所选 Stat 的参数。用 [`shape_feature()`](#api-shape_feature) 设置箭头尺寸。"
         },
         {
           "format": "logical",
@@ -1072,7 +1072,7 @@
         }
       ],
       "value": "一个 feature 图层；一条输入实体可以展开为多个几何片段，但保持实体 ID 与来源区间，不修改输入表。",
-      "details": "1. 严格展开为 geom_feature(shape=\"block\", thickness=2, position=position_offset(0), alpha=0.25, ...)；没有额外的隐藏厚度或 radius 政策。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. 合法 shape 为 block、arrow、compact_arrow、promoter_arrow、primer_arrow、marker、capped_line、primer_arc、chevron、lollipop。它们仅改变同一已选区间的表示：block 是实心区间块；arrow 是带箭头的区间块；compact_arrow 是短头紧凑箭头；promoter_arrow 是头部较短的方向箭头；primer_arrow 是细长方向箭头；marker 是区间中心标记；capped_line 是两端封口区间线；primer_arc 是沿参考路径的细方向线；chevron 是方向折线；lollipop 是区间中心的杆和圆头。所有形状仍保留完整源区间。\n\n4. thickness 控制可见对象的法向物理厚度。在圆坐标下，它指定 arrow、compact_arrow、promoter_arrow 和 primer_arrow 的箭身厚度。head_style = \"shouldered\" 时，默认箭头肩部向箭身两侧突出。短箭头可缩短箭头头部并保留箭身厚度。显式 head_width 指定箭头头部的物理宽度。箭头头长不扩大源端点；短对象使用 short_feature 的明确几何政策。unknown_strand=\"undirected\" 保留记录并绘制相应无向轮廓，不能冒充正链；需要可靠方向时设为 error。\n\n5. shape 的映射要求适用的 manual/identity Scale。Feature 与点轨道使用不同形状字典时，显式 scale_for 分域，不根据 Geom 偷换映射值。\n\n6. thickness 支持灵活的参数格式：标量、按参考具名向量、严格显示顺序向量，以及显式 source/instance 分组；单位统一为 mm 或绝对 grid unit。视觉差异不会改数据筛选。",
+      "details": "此快捷入口支持 geom_feature() 的区间预设。默认用半透明色块覆盖源区间。",
       "errors": "- 未知或矛盾参考、超出未裁剪完整参考的端点、无效分段来源。\n\n- 给某形状提供不适用的高级参数；非法 shape Scale 输出；厚度或头部尺寸非正。\n\n- 需要有向锚点或 unknown_strand=\"error\" 时缺少方向。",
       "roles": [
         "必需参考身份；默认使用同名规范列。",
@@ -1094,7 +1094,7 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "自动绑定时读取目标层经过 Stat 后的实体表。单独提供表或回调函数时默认绘制独立标签。如需只标注一部分并跟随目标位置，可用 `anchor_layer` 指定目标名称，并提供匹配的 `feature_id`。显式绑定时回调函数接收目标实体表。"
+          "description": "自动绑定时读取目标层经过 Stat 后的实体表。标签表提供匹配的实体 ID，或提供匹配的来源文件和原行号时，可省略坐标。已有完整坐标的标签表或回调函数默认独立定位。绑定具名目标时，回调函数接收目标实体表。"
         },
         {
           "format": "Stat / character",
@@ -1102,7 +1102,7 @@
         },
         {
           "format": "auto_anchor() / 单个字符串 / NULL",
-          "description": "默认跟随唯一兼容的区间特征层。如有多个候选，请写目标层的 ID；写 `NULL` 可独立定位。提供标签数据、非恒等 Stat 或显式 Position 时，默认独立定位。"
+          "description": "省略坐标时默认跟随唯一兼容的注释层。如有多个候选，给出目标图层 ID。设为 `NULL` 可独立定位。非恒等 Stat 或显式 Position 也会选择独立定位。"
         },
         {
           "format": "character(1)",
@@ -1163,7 +1163,7 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "自动绑定时读取目标层经过 Stat 后的实体表。单独提供表或回调函数时默认绘制独立标签。如需只标注一部分并跟随目标位置，可用 `anchor_layer` 指定目标名称，并提供匹配的 `feature_id`。显式绑定时回调函数接收目标实体表。"
+          "description": "自动绑定时读取目标层经过 Stat 后的实体表。标签表提供匹配的实体 ID，或提供匹配的来源文件和原行号时，可省略坐标。已有完整坐标的标签表或回调函数默认独立定位。绑定具名目标时，回调函数接收目标实体表。"
         },
         {
           "format": "Stat / character",
@@ -1171,7 +1171,7 @@
         },
         {
           "format": "auto_anchor() / 单个字符串 / NULL",
-          "description": "默认跟随唯一兼容的基因层。如有多个候选，请写目标层的 ID；写 `NULL` 可独立定位。提供标签数据、非恒等 Stat 或显式 Position 时，默认独立定位。"
+          "description": "省略坐标时默认跟随唯一兼容的基因层。如有多个候选，给出目标图层 ID。设为 `NULL` 可独立定位。非恒等 Stat 或显式 Position 也会选择独立定位。"
         },
         {
           "format": "character(1)",
@@ -1232,7 +1232,7 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "自动绑定时读取目标层经过 Stat 后的实体表。单独提供表或回调函数时默认绘制独立标签。如需只标注一部分并跟随目标位置，可用 `anchor_layer` 指定目标名称，并提供匹配的 `feature_id`。显式绑定时回调函数接收目标实体表。"
+          "description": "自动绑定时读取目标层经过 Stat 后的实体表。标签表提供匹配的实体 ID，或提供匹配的来源文件和原行号时，可省略坐标。已有完整坐标的标签表或回调函数默认独立定位。绑定具名目标时，回调函数接收目标实体表。"
         },
         {
           "format": "Stat / character",
@@ -1240,7 +1240,7 @@
         },
         {
           "format": "auto_anchor() / 单个字符串 / NULL",
-          "description": "默认跟随唯一兼容的引物层。如有多个候选，请写目标层的 ID；写 `NULL` 可独立定位。提供标签数据、非恒等 Stat 或显式 Position 时，默认独立定位。"
+          "description": "省略坐标时默认跟随唯一兼容的引物层。如有多个候选，给出目标图层 ID。设为 `NULL` 可独立定位。非恒等 Stat 或显式 Position 也会选择独立定位。"
         },
         {
           "format": "character(1)",
@@ -1293,7 +1293,7 @@
     },
     "geom_site": {
       "title": "绘制序列点位",
-      "intro": "为明确来源点或已提供的切口边界绘制符号。不将点位伪装成宽度未知的区间。",
+      "intro": "在记录的残基位点绘制图符。",
       "arguments": [
         {
           "format": "aes / NULL",
@@ -1305,7 +1305,7 @@
         },
         {
           "format": "character / mapped aesthetic",
-          "description": "默认 tick；tick、point、cut。固定选择可显式覆盖，映射遵守标准优先级。"
+          "description": "指定预设名或 [`shape_feature()`](#api-shape_feature) 规格。这两类值都可通过 `aes(shape = category)` 和 `scale_shape_manual()` 映射。"
         },
         {
           "format": "positive physical size / mapped aesthetic",
@@ -1341,8 +1341,8 @@
         }
       ],
       "value": "一个点位几何层，保留 site_id、pos 与独立切口边界；不修改输入。",
-      "details": "1. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n2. pos 使用 1 基来源点，cut_top/cut_bottom 使用残基间坐标。切口字段与位置点字段有意分开，避免 off-by-one；读入相对切口 offset 时须先经 Reader/Adapter 转为规范绝对边界。\n\n3. 标记、名称与引线是不同层。使用 geom_site_label 或其 repel 快捷式添加名称；不会根据酶出现次数自动加粗。\n\n4. data 来自明确的注释表；图层不会运行 find_restriction_sites、读取 DNA 或推断酶切机制。\n\n5. shape 映射须使用输出 tick/point/cut 的 manual/identity Scale；不能将 ggplot2 默认点符号整数静默解释为位点类型。\n\n各位点图层默认独立训练大小标度。需要跨图层比较符号大小时，可显式添加一个普通大小标度。",
-      "errors": "- 未知参考、pos 超界或切口不在 0..length。\n\n- unknown_cut=\"error\" 时没有已知切口；切口字段被错误提供为相对偏移。\n\n- 对 tick/cut 显式提供只适用于封闭 point 的 fill。",
+      "details": "提供参考序列与一基位点 `pos`。刻线沿法向绘制，圆点、菱形和方块在 `pos` 居中。棒棒糖沿正法向伸出一根柄，圆头距锚点为图层尺寸的 1.5 倍。`position_offset()` 平移整个图符。用 `shape_feature()` 设置部件尺寸和颜色。",
+      "errors": "位点须在参考序列范围内。使用支持的形状。填色适用于圆点、菱形、方块或棒棒糖。",
       "roles": [
         "必需参考与 1 基来源点；pos 是明确锚点，不自动等于酶切的残基间边界。",
         "稳定点位实体身份，用于标签绑定和来源导出。",
@@ -1354,7 +1354,7 @@
     },
     "geom_restriction_site": {
       "title": "绘制已知限制性酶切位点",
-      "intro": "为明确来源点或已提供的切口边界绘制符号。这是 geom_site(shape=\"cut\") 的语义快捷式。",
+      "intro": "在各条链记录的切口边界绘制图符。",
       "arguments": [
         {
           "format": "aes / NULL",
@@ -1366,7 +1366,7 @@
         },
         {
           "format": "character / mapped aesthetic",
-          "description": "默认 cut；tick、point、cut。固定选择可显式覆盖，映射遵守标准优先级。"
+          "description": "指定预设名或 [`shape_feature()`](#api-shape_feature) 规格。这两类值都可通过 `aes(shape = category)` 和 `scale_shape_manual()` 映射。"
         },
         {
           "format": "positive physical size / mapped aesthetic",
@@ -1402,8 +1402,8 @@
         }
       ],
       "value": "一个点位几何层，保留 site_id、pos 与独立切口边界；不修改输入。",
-      "details": "1. 无覆盖时严格展开为 geom_site(shape=\"cut\", size=2, stat=\"identity\", position=\"identity\", ...)；不额外过滤某类酶或改变颜色。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. pos 使用 1 基来源点，cut_top/cut_bottom 使用残基间坐标。切口字段与位置点字段有意分开，避免 off-by-one；读入相对切口 offset 时须先经 Reader/Adapter 转为规范绝对边界。\n\n4. 标记、名称与引线是不同层。使用 geom_site_label 或其 repel 快捷式添加名称；不会根据酶出现次数自动加粗。\n\n5. data 来自明确的注释表；图层不会运行 find_restriction_sites、读取 DNA 或推断酶切机制。\n\n6. shape 映射须使用输出 tick/point/cut 的 manual/identity Scale；不能将 ggplot2 默认点符号整数静默解释为位点类型。",
-      "errors": "- 未知参考、pos 超界或切口不在 0..length。\n\n- unknown_cut=\"error\" 时没有已知切口；切口字段被错误提供为相对偏移。\n\n- 对 tick/cut 显式提供只适用于封闭 point 的 fill。",
+      "details": "`cut` 在每个已知的残基间边界分别绘制一条刻线。上链刻线沿正法向、下链刻线沿负法向，各类切口图例都以左上和右下的图符成对示意。`block` 在边界对应侧画方块，`point` 或 `diamond` 在边界居中，`lollipop` 从两侧已知边界各向外伸出柄和圆头。两条边界均缺失时，`cut` 根据 `unknown_cut` 在 `pos` 画刻线或报错，其余形状省略标记。",
+      "errors": "在 bp 参考上，切口边界须在 `0..length` 内。设 `unknown_cut = \"error\"` 时，无已知边界的切口线会报错。",
       "roles": [
         "必需参考与 1 基来源点；pos 是明确锚点，不自动等于酶切的残基间边界。",
         "稳定点位实体身份，用于标签绑定和来源导出。",
@@ -1423,7 +1423,7 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "自动绑定时读取目标层经过 Stat 后的实体表。单独提供表或回调函数时默认绘制独立标签。如需只标注一部分并跟随目标位置，可用 `anchor_layer` 指定目标名称，并提供匹配的 `site_id`。显式绑定时回调函数接收目标实体表。"
+          "description": "自动绑定时读取目标层经过 Stat 后的实体表。标签表提供匹配的实体 ID，或提供匹配的来源文件和原行号时，可省略坐标。已有完整坐标的标签表或回调函数默认独立定位。绑定具名目标时，回调函数接收目标实体表。"
         },
         {
           "format": "Stat / character",
@@ -1431,7 +1431,7 @@
         },
         {
           "format": "auto_anchor() / 单个字符串 / NULL",
-          "description": "默认跟随唯一兼容的位点层。如有多个候选，请写目标层的 ID；写 `NULL` 可独立定位。提供标签数据、非恒等 Stat 或显式 Position 时，默认独立定位。"
+          "description": "省略坐标时默认跟随唯一兼容的位点层。如有多个候选，给出目标图层 ID。设为 `NULL` 可独立定位。非恒等 Stat 或显式 Position 也会选择独立定位。"
         },
         {
           "format": "Position / NULL",
@@ -1711,7 +1711,7 @@
         }
       ],
       "value": "一个普通 ggplot 字符单元层；可独立打印，明确注册后可作为 Fusion 子图。保留来源位置和换行映射。",
-      "details": "1. representation=tile 时没有文字拟合步骤；省略 overflow 默认无作用，显式提供 overflow 应提示不适用。\n\n2. 本家族是普通 Cartesian ggplot 层，不沿 Chord/Circular 等参考路径绘制。推荐显式使用 coord_fixed(ratio=1) 获得正方形单元；不会自动替换用户 Coord。\n\n3. 每个字符单元占一个对齐列和一个序列行。gap 有 alignment_column，但没有 source_position；不得给 gap 分配一个虚假的残基位置。\n\n4. line_width 只改变对齐单元的显示换行，保存原 alignment_column/source_position。多个叠加 residue 层必须使用相同换行规则，注册面板时逐一核对。\n\n5. 不自动安装 scale_fill_residue；使用明确 aes(fill=symbol) 与所需 palette。不存在合法 alphabet 时不默认为 AA。\n\n6. 注册到 Fusion 前使用 register_ggchord_alignment(plot, cells)，并验证实际字符和单元位置。注册是对提供的来源声明做一致性检查，不是重新证明生物学同源性。\n\n在每个 Cartesian 分面内检查单元唯一性。不同面板可以复用行名和列号。",
+      "details": "1. representation=tile 时没有文字拟合步骤；省略 overflow 默认无作用，显式提供 overflow 应提示不适用。\n\n2. 本家族是普通 Cartesian ggplot 层，不沿 Chord/Circular 等参考路径绘制。推荐显式使用 coord_fixed(ratio=1) 获得正方形单元；不会自动替换用户 Coord。\n\n3. 每个字符单元占一个对齐列和一个序列行。gap 有 alignment_column，但没有 source_position；不得给 gap 分配一个虚假的残基位置。\n\n4. line_width 只改变对齐单元的显示换行，保存原 alignment_column/source_position。多个叠加 residue 层必须使用相同换行规则，注册面板时逐一核对。\n\n5. 不自动安装 scale_fill_residue；使用明确 aes(fill=symbol) 与所需 palette。不存在合法 alphabet 时不默认为 AA。\n\n6. 注册到 Fusion 前使用 register_ggchord_alignment(plot, cells)，并验证实际字符和单元位置。注册是对提供的来源声明做一致性检查，不是重新证明生物学同源性。\n\n在每个 Cartesian 分面内检查单元唯一性。不同面板可以复用行名和列号。\n\n显示图例时，若离散颜色或填色直接映射到与 `label` 相同的列，图例键显示相应的残基字符。",
       "errors": "- 非 Cartesian 或非 identity/reverse 位置变换，移动注册单元的 Position。\n\n- 非真实单字符输入、gap 元数据冲突或重复的同一行/列单元。\n\n- 在指定设备下不可读且 overflow=\"error\"；同一字符面板多层换行规则冲突。",
       "roles": [
         "单元所在对齐列和序列行；未映射时唯一默认约定为 x=alignment_column、y=accver。",
@@ -1771,7 +1771,7 @@
         }
       ],
       "value": "一个普通 ggplot 字符单元层；可独立打印，明确注册后可作为 Fusion 子图。保留来源位置和换行映射。",
-      "details": "1. 严格展开为 geom_residue(representation=\"text\", overflow=\"hide\", ...)；表示类型固定为 text，改变表示应使用母函数或 tile 快捷式。\n\n2. 本家族是普通 Cartesian ggplot 层，不沿 Chord/Circular 等参考路径绘制。推荐显式使用 coord_fixed(ratio=1) 获得正方形单元；不会自动替换用户 Coord。\n\n3. 每个字符单元占一个对齐列和一个序列行。gap 有 alignment_column，但没有 source_position；不得给 gap 分配一个虚假的残基位置。\n\n4. line_width 只改变对齐单元的显示换行，保存原 alignment_column/source_position。多个叠加 residue 层必须使用相同换行规则，注册面板时逐一核对。\n\n5. 不自动安装 scale_fill_residue；使用明确 aes(fill=symbol) 与所需 palette。不存在合法 alphabet 时不默认为 AA。\n\n6. 注册到 Fusion 前使用 register_ggchord_alignment(plot, cells)，并验证实际字符和单元位置。注册是对提供的来源声明做一致性检查，不是重新证明生物学同源性。\n\n7. 默认 overflow=\"hide\" 不绘制色块，显式 fill/cell_* 因而不适用；只有显式选择 overflow=\"tile\" 才启用这些用于降级色块的属性。",
+      "details": "1. 严格展开为 geom_residue(representation=\"text\", overflow=\"hide\", ...)；表示类型固定为 text，改变表示应使用母函数或 tile 快捷式。\n\n2. 本家族是普通 Cartesian ggplot 层，不沿 Chord/Circular 等参考路径绘制。推荐显式使用 coord_fixed(ratio=1) 获得正方形单元；不会自动替换用户 Coord。\n\n3. 每个字符单元占一个对齐列和一个序列行。gap 有 alignment_column，但没有 source_position；不得给 gap 分配一个虚假的残基位置。\n\n4. line_width 只改变对齐单元的显示换行，保存原 alignment_column/source_position。多个叠加 residue 层必须使用相同换行规则，注册面板时逐一核对。\n\n5. 不自动安装 scale_fill_residue；使用明确 aes(fill=symbol) 与所需 palette。不存在合法 alphabet 时不默认为 AA。\n\n6. 注册到 Fusion 前使用 register_ggchord_alignment(plot, cells)，并验证实际字符和单元位置。注册是对提供的来源声明做一致性检查，不是重新证明生物学同源性。\n\n7. 默认 overflow=\"hide\" 不绘制色块，显式 fill/cell_* 因而不适用；只有显式选择 overflow=\"tile\" 才启用这些用于降级色块的属性。\n\n显示图例时，若离散颜色或填色直接映射到与 `label` 相同的列，图例键显示相应的残基字符。",
       "errors": "- 非 Cartesian 或非 identity/reverse 位置变换，移动注册单元的 Position。\n\n- 非真实单字符输入、gap 元数据冲突或重复的同一行/列单元。\n\n- 在指定设备下不可读且 overflow=\"error\"；同一字符面板多层换行规则冲突。",
       "roles": [
         "单元所在对齐列和序列行；未映射时唯一默认约定为 x=alignment_column、y=accver。",
@@ -3255,15 +3255,15 @@
       "arguments": [
         {
           "format": "ggchord data result",
-          "description": "由 Reader、Adapter、数据操作或科学坐标转换返回的表/容器。"
+          "description": "带显式来源列的数据框，或 ggchord 的数据表或数据集合。"
         },
         {
           "format": "character / NULL",
-          "description": "NULL 返回全部可用报告段；可选择 inputs、schema、changes、lineage、issues、decoder、statistics 等已登记段名。不存在的段以 unavailable 状态返回。"
+          "description": "选择报告段。`NULL` 返回所有段。可选 `operation`、`inputs`、`lineage`、`issues`、`changes` 和 `metadata`。"
         }
       ],
       "value": "具名报告 list，含 operation、inputs、lineage、issues、changes、metadata 和 section_status；没有来源元数据的普通表明确标记 unavailable，而非伪造已验证状态。",
-      "details": "1. 普通表操作返回表本身，保持可串联性；报告作为元数据读取，不要求每次取 $data。\n\n2. 截断/聚合可能一对多或多对一，lineage 使用成员集合。报告是当次操作的快照；手工修改表后不宣称旧报告自动更新。",
+      "details": "读取数据对象已有的来源记录、问题和转换报告。普通数据框的显式来源列也可在 `lineage` 段查看。已选段在对象中缺失时，`section_status` 会标为 `unavailable`。",
       "errors": "",
       "roles": [],
       "example_setup": ""
@@ -4908,7 +4908,7 @@
       "intro": "默认的 `anchor_layer = auto_anchor()` 让标签跟随同一张图中唯一兼容图层的实体及其显示位置。第一个示例直接标注基因，两个图层都可以省略名称。",
       "arguments": [],
       "value": "标签目标声明，在同一张图的图层中解析。",
-      "details": "基因、引物和位点标签分别查找对应类型的图层。通用特征标签可跟随任意区间特征层，包括基因、引物和区域。目标层可位于标签层之前或之后。\n\n提供标签数据、非恒等 Stat 或显式 Position 时，默认独立定位。也可用 `anchor_layer = NULL` 明确要求独立标签。如需只标注目标的一部分实体，可给目标命名，将名称传给 `anchor_layer`，并提供包含相应实体键的标签表。",
+      "details": "基因、引物和位点标签分别查找对应类型的图层。通用特征标签可跟随区间、位点或切口。目标层可位于标签层之前或之后。\n\n标签表提供匹配的实体 ID 或来源行时，可省略坐标并跟随唯一目标。已有完整坐标的表、数据回调、非恒等 Stat 或显式 Position 默认独立定位。用 `anchor_layer = NULL` 可明确独立定位。",
       "errors": "多个图层符合条件时，错误提示会列出候选 ID。像第二个示例那样，为目标层命名并通过 `anchor_layer` 指定。没有兼容层时，可添加目标层或提供可用的独立标签数据。",
       "roles": [],
       "example_setup": ""
@@ -5240,6 +5240,69 @@
       "errors": "",
       "roles": [],
       "example_setup": ""
+    },
+    "shape_feature": {
+      "title": "配置特征原型或分型",
+      "intro": "用原型组合轮廓，或调整具名分型的部件，供固定图层或形状标度使用。",
+      "value": "供 `shape` 或 `scale_shape_manual()` 使用的形状规格。",
+      "details": "用 `shape_feature(\"prototype\")` 从平端块开始。用 `body_shape`、`head_shape` 和 `tail_shape` 组合轮廓。具名分型固定轮廓，可以调整现有部件的尺寸和颜色。可见区间决定总长，主体填满两端之间的空间。方向性图形根据链方向确定头尾。图例用示意样段呈现同一份轮廓。\n\n`arrow` 有带肩的三角头。 `arrow_flush` 的头根与主体等宽。 `arrow_triangle` 占满整个区间。 `arrow_arc` 将细主体与三角头配对。 `chevron` 将三角头与缺口尾配对。 `capped_line` 由细主体和两个端帽组成。原型中使用 `body_shape = \"line\"`、`head_shape = \"cap\"` 和 `tail_shape = \"cap\"` 可得到同一轮廓。\n\n用 `body_shape = \"line\"` 和 `head_shape = \"circle\"` 组合棒棒糖，无主体时选择圆头或菱形头即可组合成圆点或菱形。刻线或切口主体配平端，形成沿法向的短线。主体为块且三角头的宽度与主体相等时，组合得到 `arrow_flush` 的等宽轮廓。\n\n同一份平端块规格也能用于位点和切口。它覆盖可见区间，在 `pos` 处画居中的方块，或在每个已知切口边界的对应侧画方块。没有已知边界的切口不画方块。切口图例用一对错开的方块示意。位点和切口图层沿用各自列出的图符。\n\n同一份棒棒糖规格把柄的起点放在可见区间或分段的中点、实际位点 `pos`，或每个已知切口边界。区间的柄连到特征轨道。位点和切口的柄长为图层尺寸的 1.5 倍。圆点和菱形的中心遵循同样的锚点规则。刻线使区间标在可见中点、位点标在 `pos`。\n\n每个部件可设置填色和轮廓色。图层固定或映射的 `fill` 和 `colour` 分别覆盖所有部件的对应通道。显式 `NA` 隐藏对应通道。分色部件共用外轮廓，各段外轮廓可以使用不同颜色。",
+      "errors": "未知名称、在分型上指定拓扑、设置不存在的部件，或提供不兼容及非正尺寸，都会报错。",
+      "arguments": [
+        {
+          "format": "单个字符值",
+          "description": "支持的名称包括 `\"prototype\"`、`\"arrow\"`、`\"capped_line\"` 和 `\"lollipop\"`。"
+        },
+        {
+          "format": "正数毫米或绝对 grid 单位，可为 NULL",
+          "description": "沿序列方向请求的头部长度。整段三角使用区间长度。"
+        },
+        {
+          "format": "正数毫米或绝对 grid 单位，可为 NULL",
+          "description": "垂直于参考序列的头部宽度。缺口和 `arrow_flush` 的头部使用主体宽度。圆头或菱形头用这个尺寸设定标称直径或横向宽度。"
+        },
+        {
+          "format": "单个字符值或 NULL",
+          "description": "端部尺寸超出可见跨度时，可用 `\"shrink\"`（默认）缩短端部、`\"block\"` 画平端块，或用 `\"error\"` 报错。"
+        },
+        {
+          "format": "正数毫米或绝对 grid 单位，可为 NULL",
+          "description": "垂直于序列的主体宽度。它可以设定锚点方块的边长、棒棒糖的柄粗细、刻线或切口的总法向跨度。每条切口刻线占总跨度的一半。"
+        },
+        {
+          "format": "单个字符值或 NULL",
+          "description": "各部件的填色和轮廓色。图层的固定值或映射结果覆盖相应通道。显式 `NA` 隐藏该通道。"
+        },
+        {
+          "format": "单个字符值或 NULL",
+          "description": "可用的原型主体包括 `\"block\"`、`\"line\"`、`\"none\"`、`\"tick\"` 和 `\"cut\"`。主体需与头尾组合匹配。"
+        },
+        {
+          "format": "单个字符值或 NULL",
+          "description": "端部可为 `\"none\"`、`\"triangle\"`、`\"cap\"` 或 `\"notch\"`。锚点图形的头部还可用 `\"circle\"` 或 `\"diamond\"`。"
+        },
+        {
+          "format": "正数毫米或绝对 grid 单位，可为 NULL",
+          "description": "沿序列方向请求的尾部长度。缺口用这个尺寸设定深度。"
+        },
+        {
+          "format": "正数毫米或绝对 grid 单位，可为 NULL",
+          "description": "垂直于序列的尾部宽度。缺口使用主体宽度。"
+        },
+        {
+          "format": "正数毫米或绝对 grid 单位，可为 NULL",
+          "description": "端帽共用的尺寸。单独指定一端的尺寸时，采用该端设置。"
+        },
+        {
+          "format": "单个字符值或 NULL",
+          "description": "各部件的填色和轮廓色。图层的固定值或映射结果覆盖相应通道。显式 `NA` 隐藏该通道。"
+        },
+        {
+          "format": "单个字符值或 NULL",
+          "description": "各部件的填色和轮廓色。图层的固定值或映射结果覆盖相应通道。显式 `NA` 隐藏该通道。"
+        }
+      ],
+      "roles": [],
+      "example_setup": ""
     }
   },
   "families": {
@@ -5352,20 +5415,20 @@
     "geom_feature": {
       "intro": "用 `geom_feature()` 绘制序列注释。`geom_gene()`、`geom_primer()`、`geom_seq_region()`、`geom_site()` 和 `geom_restriction_site()` 提供各自的默认样式。",
       "arguments": {
-        "shape": "通用入口的默认形状为区间 `\"block\"`、位点 `\"tick\"`、切口 `\"cut\"`。基因默认 `\"arrow\"`，引物默认 `\"primer_arc\"`。可通过适用的标度映射区间形状，也可给出与位置类型相容的固定形状。",
-        "thickness": "相对于路径法向的物理厚度，默认 2 mm。可用以 mm 计的数值、绝对 grid 单位，或按参考序列或链指定的值。圆图中，此参数控制箭头类形状的箭身厚度。",
+        "shape": "指定预设名或 [`shape_feature()`](#api-shape_feature) 规格。这两类值都可通过 `aes(shape = category)` 和 `scale_shape_manual()` 映射。",
+        "thickness": "相对于路径法向的物理厚度，默认 2 mm。可用以 mm 计的数值、绝对 grid 单位，或按参考序列或链指定的值。圆图中，此参数控制箭头类形状的箭身厚度。 通过 `geom_site()` 的 `size` 或 `geom_feature()` 的 `thickness` 设置位点图符大小。",
         "position": "`geom_gene()` 默认使用 [`position_strand()`](position_strand.html#api-position_strand)，引物和区域高亮使用 [`position_offset(0)`](position_offset.html#api-position_offset)。通用特征、位点及切口入口默认使用恒等 Position。",
         "alpha": "`geom_seq_region()` 的显式参数，默认 0.25。可显式设置或映射透明度。",
-        "...": "可给出固定样式、适用的几何设置及所选 Stat 的参数。`head_length`、`head_width`、`head_style` 和 `short_feature` 等箭头设置只适用于区间箭头。",
+        "...": "附加的固定视觉样式和所选 Stat 的参数。用 [`shape_feature()`](#api-shape_feature) 设置箭头尺寸。",
         "stat": "默认 identity；可选产生规范 feature 区间和实体身份的兼容 Stat，不接受缺少源区间的输出。"
       },
       "roles": "区间用从 1 开始且包含两端的 `start`、`end`，有方向的记号使用来源 `strand`。位点用从 1 开始的 `pos`。切口保留 `pos` 残基锚点，`cut_top` 和 `cut_bottom` 记录残基间坐标。可用 `entity_id` 或相应的 `feature_id`、`site_id` 在不同层中识别同一条记录。",
-      "details": "几何跟随相应的源位置。`\"+/-\"` 区间可以画两个箭头，同时保留一个来源身份。[注释标签](geom_feature_label.html#api-geom_feature_label) 跟随显示锚点。",
-      "example_intro": "分别用映射形状以及位点和切口的默认形状绘制注释。",
+      "details": "| 函数入口 | 支持形状 |\n| --- | --- |\n| `geom_feature(location = \"interval\")`、`geom_gene()`、`geom_primer()` 和 `geom_seq_region()` | `block`、`arrow`、`arrow_flush`、`arrow_triangle`、`capped_line`、`arrow_arc`、`chevron`、`diamond`、`point`、`tick`、`lollipop`。四个入口依次默认用 `block`、`arrow_flush`、`arrow_arc`、`block`。 |\n| `geom_feature(location = \"site\")` 和 `geom_site()` | `tick`（默认）、`point`、`diamond`、`block`、`lollipop`。 |\n| `geom_feature(location = \"cut\")` 和 `geom_restriction_site()` | `cut`（默认）、`block`、`point`、`diamond`、`lollipop`。 |\n\n这些区间形状均可用于[共线坐标](coord_collinear.html#api-coord_collinear)和[圆形坐标](coord_circular.html#api-coord_circular)。用 `aes(shape = category)` 和 `scale_shape_manual(values = c(...))` 为各类别指定形状。整层使用同一形状时，直接设置 `shape`。\n\n| 区间形状 | 外观与用途 |\n| --- | --- |\n| `\"block\"` | 区间默认图形。色块沿参考序列覆盖整个区间。 |\n| `\"arrow\"` | 带方向性箭头的实心色带。 |\n| `\"arrow_flush\"` | 箭头根部与箭身等宽的方向性条带。 |\n| `\"arrow_triangle\"` | 跨整个方向区间的三角。 |\n| `\"diamond\"` | 绘制在区间中心的菱形。 |\n| `\"capped_line\"` | 两端各有一条位于区间内的端帽。设置或映射 `colour` 会改变线和端帽的颜色。 |\n| `\"arrow_arc\"` | 沿参考序列走向绘制的细方向线。独立图例用直线样段呈现其轮廓。 |\n| `\"chevron\"` | 前端尖、尾部有缺口的色带。 |\n| `\"lollipop\"` | 圆头位于显示区间或可见分段的中点，柄连到序列骨架。 |\n| `\"point\"` | 在可见区间中心画圆点。 |\n| `\"tick\"` | 在可见区间中点画法向短线。 |\n\n用 `shape_feature(\"prototype\")` 从平端块开始。用 `body_shape`、`head_shape` 和 `tail_shape` 组合轮廓。具名分型固定轮廓，可以调整现有部件的尺寸和颜色。可见区间决定总长，主体填满两端之间的空间。方向性图形根据链方向确定头尾。图例用示意样段呈现同一份轮廓。\n\n`arrow` 有带肩的三角头。 `arrow_flush` 的头根与主体等宽。 `arrow_triangle` 占满整个区间。 `arrow_arc` 将细主体与三角头配对。 `chevron` 将三角头与缺口尾配对。 `capped_line` 由细主体和两个端帽组成。原型中使用 `body_shape = \"line\"`、`head_shape = \"cap\"` 和 `tail_shape = \"cap\"` 可得到同一轮廓。 用 `body_shape = \"line\"` 和 `head_shape = \"circle\"` 组合棒棒糖，无主体时选择圆头或菱形头即可组合成圆点或菱形。刻线或切口主体配平端，形成沿法向的短线。主体为块且三角头的宽度与主体相等时，组合得到 `arrow_flush` 的等宽轮廓。\n\n同一份平端块规格也能用于位点和切口。它覆盖可见区间，在 `pos` 处画居中的方块，或在每个已知切口边界的对应侧画方块。没有已知边界的切口不画方块。切口图例用一对错开的方块示意。位点和切口图层沿用各自列出的图符。\n\n每个部件可设置填色和轮廓色。图层固定或映射的 `fill` 和 `colour` 分别覆盖所有部件的对应通道。显式 `NA` 隐藏对应通道。分色部件共用外轮廓，各段外轮廓可以使用不同颜色。\n\n同一份棒棒糖规格把柄的起点放在可见区间或分段的中点、实际位点 `pos`，或每个已知切口边界。区间的柄连到特征轨道。位点和切口的柄长为图层尺寸的 1.5 倍。圆点和菱形的中心遵循同样的锚点规则。刻线使区间标在可见中点、位点标在 `pos`。\n\n`cut` 在每个已知的残基间边界分别绘制一条刻线。上链刻线沿正法向、下链刻线沿负法向，各类切口图例都以左上和右下的图符成对示意。`block` 在边界对应侧画方块，`point` 或 `diamond` 在边界居中，`lollipop` 从两侧已知边界各向外伸出柄和圆头。两条边界均缺失时，`cut` 根据 `unknown_cut` 在 `pos` 画刻线或报错，其余形状省略标记。\n\n链方向可填 `\"+\"`、`\"-\"`、`\"+/-\"` 或 `\".\"`。一个 `\"+/-\"` 区间可以绘制两个箭头，仍对应同一条源记录。图例用统一大小示意图形。长度、方向和摆放位置以主图为准。[注释标签](geom_feature_label.html#api-geom_feature_label)随显示锚点放置。",
+      "example_intro": "用一条 2,200 bp 的合成序列对照九种区间形状。主图编号与图例一一对应。每个区间等长，且都在正链。最后一图展示位点棒棒糖和交错切口。",
       "examples": {
         "geom_feature": {
-          "title": "映射区间形状并绘制点状注释",
-          "description": "先按区间类型映射形状与填色，再用同一入口画位点刻线与残基间切口。"
+          "title": "对照全部区间形状，并绘制位点与切口",
+          "description": "前两张图使用相同的输入、形状映射和视觉样式。共线图从左向右读，圆图从顶部起沿顺时针读。"
         },
         "geom_gene": {
           "title": "按链放置基因箭头",
@@ -5380,12 +5443,16 @@
           "description": "先画较宽的半透明区域，再在其上叠加序列骨架。"
         },
         "geom_site": {
-          "title": "标记源位置",
-          "description": "在给定位置绘制刻线并加上标签。"
+          "title": "对照全部位点形状",
+          "description": "每个图符使用记录的位点。棒棒糖从锚点向外伸出。"
         },
         "geom_restriction_site": {
-          "title": "绘制已知切口",
-          "description": "分别给出两条链在残基之间的切口坐标。"
+          "title": "对照全部切口形状",
+          "description": "每个切口都给出两条链的边界。图例示意两个边界上的图符。"
+        },
+        "shape_feature": {
+          "title": "配置通用原型",
+          "description": "对照箭头和端帽的尺寸，再将同一份方块或棒棒糖规格用于多种定位数据。"
         }
       }
     },

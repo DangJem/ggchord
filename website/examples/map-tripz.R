@@ -27,7 +27,7 @@ draw_reference_map <- function(reference, overview = FALSE) {
       name = NULL, labels = label_comma(),
       guide = guide_seq_axis(side = "negative")
     ) +
-    coord_circular(start_angle = 90, fit = "labels", clip = "off") +
+    coord_circular(fit = "labels", clip = "off") +
     theme_ggchord_plasmid()
   label_data <- if (overview) filter(features, type %in% c("CDS", "rep_origin")) else features
   operators <- filter(label_data, label == "tet operator")
@@ -90,7 +90,8 @@ draw_reference_map <- function(reference, overview = FALSE) {
       mutate(label = paste0(label, " (", start, "–", end, ")"))
     p <- p +
       geom_primer(
-        data = primers, id = "primers", shape = "primer_arrow", fill = "#7852A2",
+        data = primers, id = "primers",
+        shape = shape_feature("arrow", head_length = 0.8), fill = "#7852A2",
         colour = "#7852A2", position = position_offset(0), thickness = 0.76
       ) +
       geom_primer_label(

@@ -121,12 +121,9 @@ scale_feature_fill_manual <- function(..., values, limits = NULL) {
 #' @noRd
 scale_feature_shape_manual <- function(..., values, name = "Feature",
                                        limits = NULL, guide = "none") {
-  allowed <- c(
-    "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker",
-    "block", "capped_line", "primer_arc", "chevron", "lollipop"
-  )
   if (!is.character(values) || length(values) == 0L || anyNA(values) ||
-      any(!values %in% allowed)) {
+      any(!vapply(values, function(value)
+        ggchord_parse_feature_shape(value)$name %in% ggchord_feature_shapes, logical(1)))) {
     ggchord_stop(
       "scale_feature_shape_manual(): values contain an unknown geometry"
     )
@@ -212,15 +209,16 @@ scale_feature_fill_plasmid <- function(..., limits = NULL) {
 
 #' @noRd
 scale_feature_shape_plasmid <- function(..., limits = NULL, guide = "none") {
+  short <- shape_feature("arrow", head_length = 1)
   values <- c(
     CDS="arrow", gene="arrow", resistance_gene="arrow",
-    selection_marker="arrow", reporter="arrow", peptide="compact_arrow",
-    tag="compact_arrow",
+    selection_marker="arrow", reporter="arrow", peptide=short,
+    tag=short,
     rep_origin="arrow", replication_origin="arrow", ori="arrow",
-    promoter="promoter_arrow", primer_bind="primer_arrow",
-    primer="primer_arrow", protein_bind="block", binding_site="block",
+    promoter=short, primer_bind=short,
+    primer=short, protein_bind="block", binding_site="block",
     operator="block", terminator="block", enhancer="block",
-    regulatory="compact_arrow", RBS="block", polyA_signal="block",
+    regulatory=short, RBS="block", polyA_signal="block",
     poly_a_signal="block", LTR="block", repeat_region="block",
     misc_RNA="block", intron="capped_line", MCS="block", misc_feature="block"
   )

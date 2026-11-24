@@ -4,7 +4,7 @@ Use a circular map to locate features along a single reference. The bundled pUC1
 
 ## Draw the pUC19 backbone {#draw}
 
-Pass the sequence table to `ggchord()` and add `geom_seq()`. Set `start_angle = 90` to place the origin at twelve o’clock. Follow the ticks clockwise to increasing positions. The first and last bases meet at the top.
+Pass the sequence table to `ggchord()` and add `geom_seq()`. The default `start_angle = 0` places the origin at twelve o’clock. Follow the ticks clockwise to increasing positions. The first and last bases meet at the top.
 
 {{example:puc-backbone}}
 

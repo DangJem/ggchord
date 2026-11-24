@@ -27,9 +27,15 @@ geom_feature(
 \item{location}{Annotation position type: \code{"interval"}, \code{"site"}, \code{"cut"}, or
 \code{"auto"} to determine it from the input columns and role mappings.}
 
-\item{shape}{Default shape. An explicitly supplied fixed shape takes priority over its mapping.}
+\item{shape}{A preset name or \code{\link[=shape_feature]{shape_feature()}} specification for the
+chosen location. Omit it to map interval
+categories with \code{aes(shape = ...)} and \code{\link[ggplot2:scale_shape_manual]{ggplot2::scale_shape_manual()}},
+or to use the default listed below. A fixed shape takes priority over
+the mapping.}
 
-\item{thickness}{Physical thickness in mm or absolute grid units. Named values select references.}
+\item{thickness}{Physical thickness in mm or absolute grid units. Named
+values select references for intervals. For a site, use a single value
+to set the symbol size, as with the \code{size} argument to \code{\link[=geom_site]{geom_site()}}.}
 
 \item{stat}{A compatible ggplot2 Stat or its name. The default uses the supplied records.
 A custom Stat works on source intervals. An explicit group takes priority;
@@ -56,18 +62,50 @@ Features have a dark 0.25 mm outline by default. Compact symbols use a
 finer outline unless a linewidth is set or mapped.
 }
 \details{
-Intervals use \code{accver}, \code{start} and \code{end} and default to a block.
-Sites use \code{accver} and one-based \code{pos} and default to a tick. Cuts also
-carry one or both interbase boundaries \code{cut_top} and \code{cut_bottom} and use
-the cut shape. A cut with unknown boundaries can display its anchor as a tick.
+Intervals use \code{accver} and one-based inclusive \code{start} and \code{end}.
+These interval shapes work in both \code{\link[=coord_collinear]{coord_collinear()}} and
+\code{\link[=coord_circular]{coord_circular()}}:
+\itemize{
+\item \code{"block"}: the default. A filled band drawn along the interval.
+\item \code{"arrow"}: a filled directional band with a pointed end.
+\item \code{"arrow_flush"}: directional band with the head base and shaft equally wide.
+\item \code{"arrow_triangle"}: a wedge spanning the whole directional interval.
+\item \code{"diamond"} and \code{"point"}: a diamond or circle at the visible midpoint.
+\item \code{"tick"}: a short normal stroke at the visible midpoint.
+\item \code{"capped_line"}: a thin stroke with a cap inside each end. Set or map
+\code{colour} to style both the stroke and the caps.
+\item \code{"arrow_arc"}: a slender directional stroke that follows the sequence
+path. A standalone legend shows a straight sample of its outline.
+\item \code{"chevron"}: a pointed band with a notched tail.
+\item \code{"lollipop"}: a stem from the backbone to a round head at the midpoint
+of the displayed interval or visible segment.
+}
+
+Use \code{\link[=shape_feature]{shape_feature()}} to set part dimensions, colours and short-interval
+behaviour. Use \code{shape_feature("prototype", ...)} to assemble an interval
+outline from its body, head and tail. A legend uses a representative
+sample of the same specification. A bidirectional \code{"arrow_triangle"}
+has two tips across the interval.
+
+Sites use \code{accver} and one-based \code{pos}. Their shapes are \code{"tick"} (the
+default), \code{"point"}, \code{"diamond"}, \code{"lollipop"} and \code{"block"}. A lollipop
+uses the visible midpoint for an interval and \code{pos} for a site. See
+\code{\link[=geom_site]{geom_site()}} for the size and placement of site symbols.
+
+Cuts use \code{pos} and interbase fields \code{cut_top} and \code{cut_bottom}. They use
+\code{"cut"} by default and also support \code{"block"}, \code{"point"}, \code{"diamond"}
+and \code{"lollipop"}. Each known boundary gets its own mark. Cut lollipops
+point away from the reference on each chain side. With no known
+boundaries, \code{"cut"} can show a tick at \code{pos}; the other shapes are
+omitted. See \code{\link[=geom_restriction_site]{geom_restriction_site()}}.
+
 Supply strand \code{+}, \code{-}, \verb{+/-} (both directions), or \code{.} (undirected),
 with disjoint segments when applicable. Bidirectional arrow shapes retain
 one source entity and use heads at both ends. The gene shortcut defaults to
 an arrow and strand placement. The primer shortcut defaults to a directional
 narrow path, and the region shortcut defaults to a translucent block.
-In circular coordinates, shouldered arrows and their compact and promoter
-forms retain the full body thickness. With no explicit \code{head_width}, their
-head is 1.42 times the body thickness.
+In circular coordinates, \code{"arrow"} on feature and gene layers retains the
+full body thickness and defaults to a head 1.42 times the body thickness.
 }
 \examples{
 library(ggplot2)
@@ -98,8 +136,67 @@ ggchord(seqs) +
 
 sites <- data.frame(accver = "A", pos = 300, site_id = "s1", label = "Site 1")
 ggchord(seqs) + geom_seq() +
-  geom_feature(data = sites, location = "site", id = "sites") +
+  geom_feature(data = sites, shape = "lollipop", id = "sites") +
   geom_feature_label(aes(label = label), anchor_layer = "sites",
-    label_layout = layout_label_fixed(offset = 5), leader = "straight") +
+    label_layout = layout_label_fixed(offset = 9), leader = "none") +
   coord_collinear()
+
+# Compare interval shapes on the same reference.
+interval_shapes <- c(
+  "block", "arrow", "arrow_flush", "arrow_triangle", "diamond",
+  "capped_line", "arrow_arc", "chevron", "lollipop", "point", "tick"
+)
+shape_numbers <- sprintf("\%02d", seq_along(interval_shapes))
+
+shape_reference <- data.frame(
+  accver = "demo", length = 2650L, sequence_unit = "bp", topology = "circular"
+)
+shape_intervals <- data.frame(
+  accver = "demo",
+  start = seq(45L, by = 240L, length.out = length(interval_shapes)),
+  strand = "+",
+  label = shape_numbers,
+  glyph = factor(interval_shapes, levels = interval_shapes)
+)
+shape_intervals$end <- shape_intervals$start + 165L
+
+shape_comparison <- ggchord(shape_reference) +
+  geom_seq(geometry = "line", colour = "#89979A", show.legend = FALSE) +
+  geom_feature(
+    aes(shape = glyph), data = shape_intervals, location = "interval",
+    id = "interval_marks", position = position_offset(6), thickness = 3,
+    fill = "#77B5AE", colour = "#24474A"
+  ) +
+  geom_feature_label(
+    aes(label = label), anchor_layer = "interval_marks", anchor = "middle",
+    label_layout = layout_label_fixed(orientation = "horizontal", offset = 5),
+    leader = "none", colour = "#24474A", size = 3.2
+  ) +
+  scale_shape_manual(
+    name = "Interval shape",
+    values = stats::setNames(interval_shapes, interval_shapes),
+    breaks = interval_shapes,
+    labels = paste(shape_numbers, interval_shapes),
+    guide = guide_legend(ncol = 4, theme = theme(legend.byrow = TRUE))
+  ) +
+  scale_seq_continuous(guide = "none") +
+  theme_ggchord_minimal() +
+  theme(
+    legend.position = "bottom",
+    legend.title.position = "top",
+    legend.key.width = grid::unit(11, "mm"),
+    legend.key.height = grid::unit(6, "mm"),
+    legend.text = element_text(size = 10),
+    plot.margin = margin(9, 12, 9, 12)
+  )
+
+collinear_shapes <- shape_comparison + coord_collinear() +
+  labs(title = "Interval shapes in collinear coordinates")
+circular_shapes <- shape_comparison + coord_circular(fit = "labels") +
+  guides(shape = guide_legend(ncol = 1)) +
+  theme(legend.position = "right") +
+  labs(title = "Interval shapes in circular coordinates")
+
+collinear_shapes
+circular_shapes
 }

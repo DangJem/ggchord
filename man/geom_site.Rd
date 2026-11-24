@@ -23,7 +23,7 @@ geom_site(
 
 \item{data}{Observation table or a data function. For ggchord layers, provide the required data-role columns.}
 
-\item{shape}{Default shape. An explicitly supplied fixed shape takes priority over its mapping.}
+\item{shape}{Preset name or \code{\link[=shape_feature]{shape_feature()}} specification. A fixed shape takes priority over its mapping.}
 
 \item{size}{Fixed symbol size in millimetres. To map size to data, use
 \code{aes(size = ...)} with a shared or \code{\link[=scale_for]{scale_for()}} size scale.}
@@ -49,26 +49,43 @@ A ggplot2 layer for addition to a plot.
 Draw source point annotations
 }
 \details{
-Site data supplies \code{accver} and a one-based \code{pos}. A double-strand cut uses \code{cut_top} and \code{cut_bottom} as interbase positions. Add site labels separately or bind them to the site layer.
-In a discrete ggchord legend, the default Site tick uses a diamond-headed
-stem. Explicit or mapped Site shapes keep their own symbols.
+Provide \code{accver} and one-based \code{pos}. Use \code{"tick"} (default)
+for a normal stroke, \code{"point"} for a circle, \code{"diamond"} for a diamond,
+\code{"block"} for a square, or \code{"lollipop"} for a stem and circular head.
+The lollipop extends from \code{pos} in the positive normal direction. Its
+stem length is 1.5 times \code{size}. Configure its head size or independently
+style the stem and head with \code{\link[=shape_feature]{shape_feature()}}. \code{position_offset()}
+shifts the entire mark. Map shapes with \code{aes(shape = ...)} and
+\code{\link[ggplot2:scale_shape_manual]{ggplot2::scale_shape_manual()}}.
 }
 \examples{
 library(ggplot2)
 
-seqs <- data.frame(
-  accver = c("A", "B"), length = c(1000, 800),
-  sequence_unit = "bp", topology = "linear"
+# Site shapes are anchored at recorded residue positions.
+site_reference <- data.frame(
+  accver = "demo", length = 2200L, sequence_unit = "bp", topology = "circular"
 )
-
-one_seq <- seqs[1, , drop = FALSE]
-
-sites <- data.frame(accver = "A", pos = 300, site_id = "s1", label = "EcoRI")
-
-cut_sites <- transform(sites, cut_top = 300, cut_bottom = 304)
-ggchord(one_seq) +
-  geom_seq() +
-  geom_site(data = cut_sites, id = "sites") +
-  geom_site_label(aes(label = label), anchor_layer = "sites") +
-  coord_circular()
+site_kinds <- c("tick", "point", "diamond", "block", "lollipop")
+position_sites <- data.frame(
+  accver = "demo",
+  pos = c(300L, 700L, 1100L, 1500L, 1900L),
+  kind = factor(site_kinds, levels = site_kinds),
+  label = c("300", "700", "1100", "1500", "1900")
+)
+site_comparison <- ggchord(site_reference) +
+  geom_seq(geometry = "line", colour = "#89979A", show.legend = FALSE) +
+  geom_site(aes(shape = kind), data = position_sites, id = "position_marks", size = 3,
+    colour = "#24474A") +
+  geom_site_label(aes(label = label), anchor_layer = "position_marks",
+    label_layout = layout_label_fixed(orientation = "horizontal", offset = 13),
+    leader = "none", size = 3.2) +
+  scale_shape_manual(name = "Site shape", values = stats::setNames(site_kinds, site_kinds),
+    breaks = site_kinds, guide = guide_legend(nrow = 1)) +
+  scale_seq_continuous(guide = "none") +
+  coord_circular(fit = "labels") +
+  theme_ggchord_minimal() +
+  theme(legend.position = "bottom", legend.key.size = grid::unit(7, "mm"),
+    plot.margin = margin(9, 12, 9, 12)) +
+  labs(title = "Site shapes anchor at recorded positions")
+site_comparison
 }

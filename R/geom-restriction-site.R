@@ -1,34 +1,98 @@
+ggchord_site_shapes <- c("tick", "point", "diamond", "lollipop", "block")
+ggchord_site_filled_shapes <- c("point", "diamond", "lollipop", "block")
+
+ggchord_site_location_shapes <- function(location) {
+  if (identical(location, "cut")) c("cut", "block", "diamond", "point", "lollipop") else
+    ggchord_site_shapes
+}
+
+ggchord_site_key_spec <- function(data, params) {
+  shape <- as.character(data$shape)[1L]
+  if (is.na(shape)) shape <- params$site_key_shape
+  spec <- ggchord_parse_feature_shape(shape)
+  allowed <- ggchord_site_location_shapes(params$site_key_location)
+  if (spec$name %in% allowed) spec else
+    ggchord_parse_feature_shape(params$site_key_shape)
+}
+
+ggchord_site_key_shape <- function(data, params) {
+  ggchord_site_key_spec(data, params)$name
+}
+
 GeomSequenceSite <- ggproto("GeomSequenceSite", ggplot2::Geom,
   required_aes = c("x", "y"),
   default_aes = aes(colour = "black", fill = "grey70", size = 2, alpha = 1,
     linewidth = .4, linetype = 1, shape = 21, stroke = .4),
-  optional_aes = c(".component", "group"),
-  extra_params = c("na.rm", "site_key_shape"),
+  optional_aes = c(".component", ".shape_spec", ".shape_part", ".block_size", "group"),
+  extra_params = c("na.rm", "site_key_shape", "site_key_location", "body_style_explicit"),
   draw_key = function(data, params, size) {
-    shape <- as.character(data$shape)[1L]
-    if (!shape %in% c("point", "cut", "tick")) shape <- params$site_key_shape
-    if (identical(shape, "point")) {
-      data$shape <- 21
-      return(ggplot2::draw_key_point(data, params, size))
-    }
-    if (identical(shape, "cut")) {
-      return(grid::polylineGrob(unit(c(.3, .3, .7, .7), "npc"),
-        unit(c(.78, .5, .5, .22), "npc"),
-        gp = gpar(col = scales::alpha(data$colour, data$alpha),
-          lwd = data$linewidth * ggplot2::.pt, lty = data$linetype)))
-    }
-    ggplot2::draw_key_vline(data, params, size)
+    spec <- ggchord_site_key_spec(data, params)
+    location <- params$site_key_location %||% "site"
+    width <- data$size %||% 2
+    cut <- identical(location, "cut")
+    lollipop <- identical(spec$name, "lollipop")
+    marks <- ggchord_anchor_mark(spec, location, .5, c(.28, .72), width)
+    span <- max(abs(unlist(lapply(marks, `[[`, "normal"))), width / 2)
+    centre <- if (lollipop && !cut) .20 else .50
+    extent <- if (cut) switch(spec$name, block = .20, lollipop = .32, .26) else
+      if (lollipop) .48 else .30
+    grobs <- lapply(marks, function(mark) {
+      style <- ggchord_shape_part_styles(data, spec$value, mark$part, params$body_style_explicit)
+      gp <- gpar(fill = scales::alpha(style$fill, style$alpha),
+        col = scales::alpha(style$colour, style$alpha),
+        lwd = style$linewidth * ggplot2::.pt, lty = style$linetype)
+      y <- centre + extent * mark$normal / span
+      if (cut && spec$name %in% c("point", "diamond"))
+        y <- y + if (mark$side == "top") .14 else -.14
+      # Start both chain strokes at the centre so dash patterns rotate too.
+      if (cut && spec$name == "cut" && mark$side == "bottom") y <- rev(y)
+      if (mark$component == "block") {
+        side <- unit(min(if (cut) .36 else .58, mark$width / min(size)), "snpc")
+        return(grid::rectGrob(mark$pos, y, width = side, height = side, gp = gp))
+      }
+      if (mark$component %in% c("point", "diamond")) {
+        style$shape <- if (mark$component == "point") 21 else 23
+        style$size <- if (lollipop) min(.9 * mark$width, .31 * min(size)) else
+          min(mark$width, .51 * min(size))
+        point <- ggplot2::draw_key_point(style, params, size)
+        point$x <- unit(mark$pos, "npc")
+        point$y <- unit(y, "npc")
+        return(point)
+      }
+      if (lollipop && !is.null(spec$body_width))
+        gp$lwd <- spec$body_width * ggplot2::.pt
+      segmentsGrob(mark$pos, y[1L], mark$pos, y[2L], gp = gp)
+    })
+    if (length(grobs) == 1L) grobs[[1L]] else do.call(grobTree, grobs)
   },
-  draw_panel = function(data, panel_params, coord, na.rm = FALSE) {
+  draw_panel = function(data, panel_params, coord, na.rm = FALSE,
+                        body_style_explicit = character()) {
+    data <- ggchord_shape_part_styles(data, data$.shape_spec, data$.shape_part, body_style_explicit)
     paths <- data[data$.component == "path", , drop = FALSE]
-    points <- data[data$.component == "point", , drop = FALSE]
+    for (value in unique(paths$.shape_spec)) {
+      spec <- ggchord_parse_feature_shape(value)
+      if (spec$name == "lollipop" && !is.null(spec$body_width))
+        paths$linewidth[paths$.shape_spec == value] <- spec$body_width
+    }
+    points <- data[data$.component %in% c("point", "diamond"), , drop = FALSE]
+    blocks <- data[data$.component == "block", , drop = FALSE]
     grobs <- list()
     if (nrow(paths)) grobs[[1L]] <- ggplot2::GeomPath$draw_panel(
       paths, panel_params, coord, lineend = "butt", na.rm = na.rm)
     if (nrow(points)) {
-      points$shape <- 21
+      points$shape <- ifelse(points$.component == "point", 21, 23)
+      points$size <- points$.block_size
       grobs[[length(grobs) + 1L]] <- ggplot2::GeomPoint$draw_panel(
         points, panel_params, coord, na.rm = na.rm)
+    }
+    if (nrow(blocks)) {
+      blocks <- coord$transform(blocks, panel_params)
+      side <- unit(blocks$.block_size, "mm")
+      grobs[[length(grobs) + 1L]] <- grid::rectGrob(blocks$x, blocks$y,
+        width = side, height = side, default.units = "native", gp = gpar(
+          fill = scales::alpha(blocks$fill, blocks$alpha),
+          col = scales::alpha(blocks$colour, blocks$alpha),
+          lwd = blocks$linewidth * ggplot2::.pt, lty = blocks$linetype))
     }
     do.call(grobTree, grobs)
   }
@@ -36,7 +100,7 @@ GeomSequenceSite <- ggproto("GeomSequenceSite", ggplot2::Geom,
 
 ggchord_site_layer <- function(mapping, data, shape, fixed_shape, size, fixed_size,
     stat, position, dots, na.rm, show.legend, inherit.aes, id) {
-  shape <- ggchord_match_arg(shape, c("tick", "point", "cut"))
+  preset <- ggchord_parse_feature_shape(shape)$name
   size <- ggchord_physical_mm(size, "geom_site(size)", TRUE)
   if (length(size) != 1L || size <= 0) ggchord_stop("geom_site(): size must be positive")
   position <- ggchord_as_feature_position(position, "geom_site()")
@@ -45,9 +109,9 @@ ggchord_site_layer <- function(mapping, data, shape, fixed_shape, size, fixed_si
   dots <- ggchord_colour_dots(dots, "geom_site()")
   mapped_shape <- !fixed_shape && !is.null(mapping$shape)
   if ((fixed_shape || !mapped_shape) && !inherit.aes) {
-    if ("fill" %in% c(names(dots), names(mapping)) && shape != "point")
-      ggchord_stop("geom_site(): fill is only available for point symbols")
-    if ("unknown_cut" %in% names(dots) && shape != "cut")
+    if ("fill" %in% c(names(dots), names(mapping)) && !preset %in% ggchord_site_filled_shapes)
+      ggchord_stop("geom_site(): fill is available for point, diamond, block and lollipop symbols")
+    if ("unknown_cut" %in% names(dots) && preset != "cut")
       ggchord_stop("geom_site(): unknown_cut is only available for cut symbols")
   }
   unknown_cut <- ggchord_match_arg(dots$unknown_cut %||% "site", c("site", "error"))
@@ -62,7 +126,8 @@ ggchord_site_layer <- function(mapping, data, shape, fixed_shape, size, fixed_si
   parameters <- ggchord_split_source_stat(stat, dots, GeomSequenceSite)
   layer <- ggplot2::layer(
     data = ggchord_site_empty(), mapping = aes(x = x, y = y, group = group,
-      .component = I(.component)),
+      .component = I(.component), .shape_spec = I(.shape_spec),
+      .shape_part = I(.shape_part), .block_size = I(.block_size)),
     geom = GeomSequenceSite, stat = "identity", position = "identity",
     show.legend = show.legend, inherit.aes = inherit.aes, check.aes = FALSE,
     params = c(list(na.rm = na.rm, site_key_shape = shape), parameters$geom)
@@ -79,7 +144,7 @@ ggchord_site_layer <- function(mapping, data, shape, fixed_shape, size, fixed_si
 #' @export
 #' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
-#' @param shape Default shape. An explicitly supplied fixed shape takes priority over its mapping.
+#' @param shape Preset name or [shape_feature()] specification. A fixed shape takes priority over its mapping.
 #' @param size Fixed symbol size in millimetres. To map size to data, use
 #'   `aes(size = ...)` with a shared or [scale_for()] size scale.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
@@ -90,27 +155,44 @@ ggchord_site_layer <- function(mapping, data, shape, fixed_shape, size, fixed_si
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
 #' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
-#' @details Site data supplies `accver` and a one-based `pos`. A double-strand cut uses `cut_top` and `cut_bottom` as interbase positions. Add site labels separately or bind them to the site layer.
-#' In a discrete ggchord legend, the default Site tick uses a diamond-headed
-#' stem. Explicit or mapped Site shapes keep their own symbols.
+#' @details Provide `accver` and one-based `pos`. Use `"tick"` (default)
+#' for a normal stroke, `"point"` for a circle, `"diamond"` for a diamond,
+#' `"block"` for a square, or `"lollipop"` for a stem and circular head.
+#' The lollipop extends from `pos` in the positive normal direction. Its
+#' stem length is 1.5 times `size`. Configure its head size or independently
+#' style the stem and head with [shape_feature()]. `position_offset()`
+#' shifts the entire mark. Map shapes with `aes(shape = ...)` and
+#' [ggplot2::scale_shape_manual()].
 #' @examples
 #' library(ggplot2)
 #'
-#' seqs <- data.frame(
-#'   accver = c("A", "B"), length = c(1000, 800),
-#'   sequence_unit = "bp", topology = "linear"
+#' # Site shapes are anchored at recorded residue positions.
+#' site_reference <- data.frame(
+#'   accver = "demo", length = 2200L, sequence_unit = "bp", topology = "circular"
 #' )
-#'
-#' one_seq <- seqs[1, , drop = FALSE]
-#'
-#' sites <- data.frame(accver = "A", pos = 300, site_id = "s1", label = "EcoRI")
-#'
-#' cut_sites <- transform(sites, cut_top = 300, cut_bottom = 304)
-#' ggchord(one_seq) +
-#'   geom_seq() +
-#'   geom_site(data = cut_sites, id = "sites") +
-#'   geom_site_label(aes(label = label), anchor_layer = "sites") +
-#'   coord_circular()
+#' site_kinds <- c("tick", "point", "diamond", "block", "lollipop")
+#' position_sites <- data.frame(
+#'   accver = "demo",
+#'   pos = c(300L, 700L, 1100L, 1500L, 1900L),
+#'   kind = factor(site_kinds, levels = site_kinds),
+#'   label = c("300", "700", "1100", "1500", "1900")
+#' )
+#' site_comparison <- ggchord(site_reference) +
+#'   geom_seq(geometry = "line", colour = "#89979A", show.legend = FALSE) +
+#'   geom_site(aes(shape = kind), data = position_sites, id = "position_marks", size = 3,
+#'     colour = "#24474A") +
+#'   geom_site_label(aes(label = label), anchor_layer = "position_marks",
+#'     label_layout = layout_label_fixed(orientation = "horizontal", offset = 13),
+#'     leader = "none", size = 3.2) +
+#'   scale_shape_manual(name = "Site shape", values = stats::setNames(site_kinds, site_kinds),
+#'     breaks = site_kinds, guide = guide_legend(nrow = 1)) +
+#'   scale_seq_continuous(guide = "none") +
+#'   coord_circular(fit = "labels") +
+#'   theme_ggchord_minimal() +
+#'   theme(legend.position = "bottom", legend.key.size = grid::unit(7, "mm"),
+#'     plot.margin = margin(9, 12, 9, 12)) +
+#'   labs(title = "Site shapes anchor at recorded positions")
+#' site_comparison
 geom_site <- function(mapping = NULL, data = NULL, shape = "tick", size = 2,
     stat = "identity", position = "identity", ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
@@ -118,14 +200,14 @@ geom_site <- function(mapping = NULL, data = NULL, shape = "tick", size = 2,
   ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_annotation_layer(mapping, data, "site", shape, !missing(shape), size,
     stat, position, list(...), na.rm, show.legend, inherit.aes, id,
-    fixed_size = !missing(size), strict_shape = FALSE)
+    fixed_size = !missing(size))
 }
 
 #' Draw documented restriction cuts
 #' @export
 #' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
-#' @param shape Default shape. An explicitly supplied fixed shape takes priority over its mapping.
+#' @param shape Preset name or [shape_feature()] specification. A fixed shape takes priority over its mapping.
 #' @param size Fixed symbol size in millimetres. To map size to data, use
 #'   `aes(size = ...)` with a shared or [scale_for()] size scale.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
@@ -136,7 +218,17 @@ geom_site <- function(mapping = NULL, data = NULL, shape = "tick", size = 2,
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
 #' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
-#' @details Site data supplies `accver` and a one-based `pos`. A double-strand cut uses `cut_top` and `cut_bottom` as interbase positions. Add site labels separately or bind them to the site layer.
+#' @details The default `"cut"` draws a separate normal stroke for each
+#' known boundary in `cut_top` or `cut_bottom`. The top stroke extends in
+#' the positive normal direction and the bottom stroke in the negative
+#' direction. Cut legend keys place the top boundary mark at upper left
+#' and the bottom boundary mark at lower right.
+#' With neither boundary known, `unknown_cut = "site"` (default) draws a
+#' tick at `pos`, and `unknown_cut = "error"` reports an error.
+#' `"block"` draws a square on each known boundary's side. `"point"` and
+#' `"diamond"` centre a glyph at each known boundary. `"lollipop"` extends
+#' a stem and head outward from each known boundary. These four presets
+#' omit cuts whose boundaries are both missing.
 #' @examples
 #' library(ggplot2)
 #'
@@ -162,7 +254,7 @@ geom_restriction_site <- function(mapping = NULL, data = NULL, shape = "cut", si
   ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_annotation_layer(mapping, data, "cut", shape, !missing(shape), size,
     stat, position, list(...), na.rm, show.legend, inherit.aes, id,
-    fixed_size = !missing(size), strict_shape = FALSE)
+    fixed_size = !missing(size))
 }
 
 #' Label source point annotations
@@ -210,7 +302,8 @@ geom_site_label <- function(mapping = NULL, data = NULL, stat = "identity",
 
 ggchord_site_empty <- function() data.frame(
   x = numeric(), y = numeric(), group = integer(), accver = character(),
-  source_row = integer(), .component = character(), normal_offset = numeric()
+  source_row = integer(), .component = character(), normal_offset = numeric(),
+  .shape_spec = character(), .shape_part = character(), .block_size = numeric(), cut_side = character()
 )
 
 # Site dimensions enter the geometry before ggplot2 draws the marks. Train
@@ -232,8 +325,6 @@ ggchord_prepare_site_size_scales <- function(plot) {
 
   scopes <- Filter(function(scope) "size" %in% scope$aesthetics, ggchord_scale_scopes(plot))
   mapped <- which(lengths(mapping) > 0L)
-  independent <- ggchord_independent_layers(plot, "size", mapped, scopes)
-  scopes <- c(scopes, lapply(independent, function(i) list(selected = i)))
   global <- setdiff(mapped, unlist(lapply(scopes, `[[`, "selected")))
   domains <- c(scopes, list(list(selected = global, scale = plot$scales$get_scales("size"))))
   for (domain in domains) {
@@ -299,15 +390,21 @@ ggchord_site_geometry <- function(layer, input, layout, plot) {
     mapped <- rep_len(scale$map(transformed), nrow(input))
     if (channel == "shape") shape <- as.character(mapped) else size <- mapped
   }
-  allowed <- if (!isTRUE(p$strict_annotation_shape)) c("tick", "point", "cut") else
-    if (p$annotation_location == "cut") "cut" else c("tick", "point")
+  allowed <- ggchord_site_location_shapes(p$annotation_location)
+  values <- unique(shape)
+  specs <- lapply(values, ggchord_parse_feature_shape)
+  by_row <- specs[match(shape, values)]
+  shape_values <- shape
+  shape <- vapply(by_row, `[[`, character(1), "name")
   if (anyNA(shape) || any(!shape %in% allowed))
     ggchord_stop("geom_site(): shape scale must produce ", paste(allowed, collapse = ", "))
-  if (any(shape != "point") && "fill" %in% c(names(layer$aes_params), names(visual)))
-    ggchord_stop("geom_site(): fill applies only to point symbols")
+  if (any(!shape %in% ggchord_site_filled_shapes) &&
+      "fill" %in% c(names(layer$aes_params), names(visual)))
+    ggchord_stop("geom_site(): fill applies to point, diamond, block and lollipop symbols")
   if (any(shape != "cut") && p$explicit_cut)
     ggchord_stop("geom_site(): unknown_cut applies only to cut symbols")
-  if (any(shape == "cut") && identical(layout$sequence_unit, "aa"))
+  at_cut <- identical(p$annotation_location, "cut")
+  if ((at_cut || any(shape == "cut")) && identical(layout$sequence_unit, "aa"))
     ggchord_stop("geom_site(): cleavage boundaries require bp coordinates")
   boundary <- lapply(c("cut_top", "cut_bottom"), function(column) {
     values <- input[[column]] %||% rep(NA_real_, nrow(input))
@@ -317,31 +414,28 @@ ggchord_site_geometry <- function(layer, input, layout, plot) {
     values
   })
   pieces <- list()
+  mm <- ggchord_units_per_mm()
   for (row in seq_len(nrow(input))) {
-    if (is.na(size[row])) next
+    profile <- by_row[[row]]
+    width <- size[row]
+    if (profile$name %in% c("block", "tick", "cut")) width <- profile$body_width %||% width
+    if (profile$name %in% c("point", "diamond")) width <- profile$head_width %||% width
+    if (is.na(width)) next
     id <- ids[row]
-    mm <- ggchord_units_per_mm()
     offset <- offsets[[id]][[1L]]
-    add <- function(pos, extent, component) {
-      xy <- ggchord_track_point(rep(pos, length(extent)), id, 0, offset + extent, layout)
-      pieces[[length(pieces) + 1L]] <<- data.frame(x = xy[, 1L], y = xy[, 2L],
-        group = length(pieces) + 1L, accver = id, source_row = row,
-        .component = component, normal_offset = offset * mm)
-    }
-    half <- size[row] / 2
-    if (shape[row] == "point") {
-      add(input$pos[row], 0, "point")
-      next
-    }
     cut <- c(boundary[[1L]][row], boundary[[2L]][row])
-    if (shape[row] == "tick" || all(is.na(cut))) {
-      if (shape[row] == "cut" && p$unknown_cut == "error")
-        ggchord_stop("geom_site(): no documented cut for source row ", row)
-      add(input$pos[row], c(-half, half), "path")
-      next
+    if (profile$name == "cut" && p$unknown_cut == "error" && all(is.na(cut)))
+      ggchord_stop("geom_site(): no documented cut for source row ", row)
+    marks <- ggchord_anchor_mark(profile, p$annotation_location, input$pos[row], cut, width)
+    for (mark in marks) {
+      xy <- ggchord_track_point(rep(mark$pos, length(mark$normal)), id, 0,
+        offset + mark$normal, layout)
+      pieces[[length(pieces) + 1L]] <- data.frame(x = xy[, 1L], y = xy[, 2L],
+        group = length(pieces) + 1L, accver = id, source_row = row,
+        .component = mark$component, normal_offset = offset * mm,
+        .shape_spec = shape_values[row], .shape_part = mark$part,
+        .block_size = mark$width, cut_side = mark$side)
     }
-    if (!is.na(cut[1L])) add(cut[1L], c(0, half), "path")
-    if (!is.na(cut[2L])) add(cut[2L], c(-half, 0), "path")
   }
   ggchord_rbind_fill(pieces) %||% ggchord_site_empty()
 }

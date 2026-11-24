@@ -23,7 +23,7 @@ geom_restriction_site(
 
 \item{data}{Observation table or a data function. For ggchord layers, provide the required data-role columns.}
 
-\item{shape}{Default shape. An explicitly supplied fixed shape takes priority over its mapping.}
+\item{shape}{Preset name or \code{\link[=shape_feature]{shape_feature()}} specification. A fixed shape takes priority over its mapping.}
 
 \item{size}{Fixed symbol size in millimetres. To map size to data, use
 \code{aes(size = ...)} with a shared or \code{\link[=scale_for]{scale_for()}} size scale.}
@@ -49,7 +49,17 @@ A ggplot2 layer for addition to a plot.
 Draw documented restriction cuts
 }
 \details{
-Site data supplies \code{accver} and a one-based \code{pos}. A double-strand cut uses \code{cut_top} and \code{cut_bottom} as interbase positions. Add site labels separately or bind them to the site layer.
+The default \code{"cut"} draws a separate normal stroke for each
+known boundary in \code{cut_top} or \code{cut_bottom}. The top stroke extends in
+the positive normal direction and the bottom stroke in the negative
+direction. Cut legend keys place the top boundary mark at upper left
+and the bottom boundary mark at lower right.
+With neither boundary known, \code{unknown_cut = "site"} (default) draws a
+tick at \code{pos}, and \code{unknown_cut = "error"} reports an error.
+\code{"block"} draws a square on each known boundary's side. \code{"point"} and
+\code{"diamond"} centre a glyph at each known boundary. \code{"lollipop"} extends
+a stem and head outward from each known boundary. These four presets
+omit cuts whose boundaries are both missing.
 }
 \examples{
 library(ggplot2)

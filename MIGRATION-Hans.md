@@ -6,6 +6,11 @@
 
 | 原调用或设置 | v0.50.0 替代写法 |
 | --- | --- |
+| `shape = "primer_arc"` 或形状标度值 `"primer_arc"` | 在图层、`shape_feature()` 或标度中改用 `"arrow_arc"`。`geom_primer()` 默认使用改名后的形状。旧名称在 v0.50.0 移除。 |
+| `shape = "compact_arrow"`、`"promoter_arrow"` 或 `"primer_arrow"` | 用 `shape = shape_feature("arrow", head_length = 1)` 绘制短头箭头。映射形状时，把同一规格作为 `scale_shape_manual()` 的映射值。旧名称在 v0.50.0 移除。 |
+| `head_style = "shouldered"`、`"flush"` 或 `"triangle"` | 分别使用 `shape = "arrow"`、`"arrow_flush"` 或 `"arrow_triangle"`。显式 `geom_gene(shape = "arrow")` 现在使用带肩箭头。如需沿用旧轮廓，请用 `"arrow_flush"`。 |
+| 传给特征图层的 `head_length`、`head_width` 或 `short_feature` | 在规格中设置该形状支持的参数，例如 `shape = shape_feature("arrow", head_length = 1, short_feature = "block")`。旧图层参数在 v0.50.0 移除。 |
+| 从三点方向量角的 `coord_circular(start_angle = old_angle)` | 用 `coord_circular(start_angle = old_angle - 90)` 保留朝向。`coord_circular()` 从十二点方向起画。要从三点方向起画，设 `start_angle = -90`。 |
 | `geom_feature_label_repel()`、`geom_gene_label_repel()`、`geom_primer_label_repel()`、`geom_site_label_repel()` | 改用去掉 `_repel` 后缀的对应标签层，例如 `geom_feature_label(label_layout = layout_label_repel())`。 |
 | `label_layout_fixed()` 和 `label_layout_repel()` | 改用 `layout_label_fixed()` 和 `layout_label_repel()`。标签参数仍为 `label_layout`。 |
 | `label_layout_repel(leader = "elbow")` | 改用 `geom_feature_label(label_layout = layout_label_repel(), leader = "elbow")`。固定布局也可画引导线。 |

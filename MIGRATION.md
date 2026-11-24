@@ -6,6 +6,11 @@ Use v0.29.0 for code that relies on the previous API, because v0.50.0 and later 
 
 | Former call or setting | Replacement in v0.50.0 |
 | --- | --- |
+| `shape = "primer_arc"` or a shape scale value of `"primer_arc"` | Use `"arrow_arc"` in the layer, `shape_feature()` or the scale. `geom_primer()` uses the renamed shape by default. Removed in v0.50.0. |
+| `shape = "compact_arrow"`, `"promoter_arrow"` or `"primer_arrow"` | Use `shape = shape_feature("arrow", head_length = 1)` for a short head. Pass the same specification as a value in `scale_shape_manual()` for a mapped shape. Removed in v0.50.0. |
+| `head_style = "shouldered"`, `"flush"` or `"triangle"` | Use `shape = "arrow"`, `"arrow_flush"` or `"arrow_triangle"`, respectively. An explicit `geom_gene(shape = "arrow")` now draws a shouldered arrow. Use `"arrow_flush"` to retain its former silhouette. |
+| `head_length`, `head_width` or `short_feature` passed to a feature layer | Put supported settings in the specification, for example `shape = shape_feature("arrow", head_length = 1, short_feature = "block")`. The former layer arguments were removed in v0.50.0. |
+| `coord_circular(start_angle = old_angle)` measured from three o’clock | Use `coord_circular(start_angle = old_angle - 90)` to preserve the orientation. `coord_circular()` starts at twelve o’clock. Use `start_angle = -90` to start at three o’clock. |
 | `geom_feature_label_repel()`, `geom_gene_label_repel()`, `geom_primer_label_repel()`, `geom_site_label_repel()` | Use the corresponding label layer without the `_repel` suffix. For example, use `geom_feature_label(label_layout = layout_label_repel())`. |
 | `label_layout_fixed()` and `label_layout_repel()` | Use `layout_label_fixed()` and `layout_label_repel()`. The label argument remains `label_layout`. |
 | `label_layout_repel(leader = "elbow")` | Use `geom_feature_label(label_layout = layout_label_repel(), leader = "elbow")`. A fixed layout can also draw a leader. |

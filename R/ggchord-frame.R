@@ -275,12 +275,28 @@ prepare_ggchord_plot <- function(plot) {
     if (isTRUE(lyr$ggchord_params$user_feature_fill)) geometry$feature_fill_explicit <- NULL
     flow <- ggchord_ribbon_flow(lyr, geometry, layout, plot)
     lyr <- flow$layer; geometry <- flow$data
+    if (identical(lyr$ggchord_type, "gene_poly") && nrow(geometry)) {
+      for (field in c(".shape_part", ".shape_paint")) {
+        if (is.null(geometry[[field]])) geometry[[field]] <- rep(NA_character_, nrow(geometry))
+      }
+    }
     # An absent component can have no column prototype in the public layout.
     # Draw its empty build-local layer without evaluating nonexistent x/text
     # mappings. Keep the source layer and exported component unchanged.
     empty <- is.data.frame(geometry) && !nrow(geometry)
     new_layers[[i]] <- if (empty) reconstruct_layer(lyr, geometry, mapping = aes()) else
       ggchord_draw_layer(lyr, geometry, lyr$ggchord_resolved_input)
+    if (lyr$ggchord_type %in% c("gene_poly", "restriction_site")) {
+      fields <- c(names(lyr$aes_params), names(lyr$ggchord_input_mapping))
+      aliases <- lyr$ggchord_key_aliases
+      new_layers[[i]]$geom_params$body_style_explicit <-
+        intersect(c("fill", "colour"), c(fields, names(aliases)[aliases %in% fields]))
+    }
+    if (!empty && identical(lyr$ggchord_type, "gene_poly") &&
+        ggchord_circular_arrow_band(isTRUE(plot$coordinates$ggchord_circular),
+          lyr$ggchord_params$feature_role)) {
+      new_layers[[i]]$geom_params$arrow_key$fixed_body_width <- TRUE
+    }
     if (empty) new_layers[[i]]$inherit.aes <- FALSE
     # Domain geometry already owns its final panel, including explicit repeats.
     if (!is.null(layout$facet_keys)) new_layers[[i]]$layout <- NULL

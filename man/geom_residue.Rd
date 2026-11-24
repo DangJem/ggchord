@@ -52,6 +52,8 @@ Draw true aligned character cells
 }
 \details{
 Provide an aligned character table with source or alignment identity. Display wrapping does not change alignment columns, and a gap has no source position. Pair text and tiles explicitly with a residue fill scale when colour conveys alphabet symbols.
+With a discrete colour or fill scale mapped directly to the label column,
+a visible legend displays the corresponding residue characters.
 }
 \examples{
 library(ggplot2)

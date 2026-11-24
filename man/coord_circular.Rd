@@ -15,7 +15,9 @@ coord_circular(
 )
 }
 \arguments{
-\item{start_angle}{Initial angle in degrees counterclockwise from the right.}
+\item{start_angle}{Initial angle in degrees counterclockwise from the top.
+The default \code{0} starts at twelve o'clock. The reference direction controls
+whether increasing sequence positions move clockwise or counterclockwise.}
 
 \item{direction}{Direction of the positive reference frame.}
 
@@ -54,5 +56,5 @@ ggchord(data = one_seq) +
   geom_seq() +
   geom_gene(data = subset(genes, accver == "A"), aes(fill = type)) +
   layout_sequences(angular_gap = 12) +
-  coord_circular(start_angle = 90)
+  coord_circular()
 }

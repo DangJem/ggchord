@@ -7,7 +7,7 @@
 geom_gene(
   mapping = NULL,
   data = NULL,
-  shape = "arrow",
+  shape = "arrow_flush",
   thickness = 2,
   stat = "identity",
   position = position_strand(),
@@ -23,7 +23,7 @@ geom_gene(
 
 \item{data}{Observation table or a data function. For ggchord layers, provide the required data-role columns.}
 
-\item{shape}{Default shape. An explicitly supplied fixed shape takes priority over its mapping.}
+\item{shape}{Preset name or \code{\link[=shape_feature]{shape_feature()}} specification. A fixed shape takes priority over its mapping.}
 
 \item{thickness}{Physical thickness in mm or absolute grid units. Named values select references.}
 
@@ -54,7 +54,9 @@ Draw directional sequence features
 }
 \details{
 Provide one-based closed intervals with \code{accver}, \code{start} and \code{end}. A strand or disjoint segments can be supplied where appropriate. The gene shortcut uses strand placement and a shoulderless arrow by default.
-Set \code{head_style = "shouldered"} through \code{...} to use a wider arrowhead.
+Set \code{shape = "arrow"} to use a wider, shouldered arrowhead.
+This shortcut uses the interval shapes listed in \code{\link[=geom_feature]{geom_feature()}}.
+Gene arrows use \code{"arrow_flush"} by default.
 }
 \examples{
 library(ggplot2)

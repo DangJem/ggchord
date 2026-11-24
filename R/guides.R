@@ -228,6 +228,37 @@ ggchord_role_guide <- function(plot, role, colourbar = FALSE, order = 0,
 
 ggchord_identity_bar_width <- function() unit(2.8, "mm")
 
+ggchord_identity_title_gap <- function(guide) {
+  ggproto(NULL, guide, setup_elements = function(params, elements, theme) {
+    elements <- guide$setup_elements(params, elements, theme)
+    title <- elements$title
+    supplied <- theme$legend.title
+    if (!inherits(title, "element_text") ||
+        (inherits(supplied, "element_text") && !is.null(supplied@margin)))
+      return(elements)
+    # Endpoint labels are centred on the edge of the bar and extend past it.
+    position <- elements$title_position
+    facing <- match(position, c("bottom", "left", "top", "right"))
+    along <- (params$direction == "horizontal") == (position %in% c("left", "right"))
+    text <- elements$text
+    endpoint <- 0
+    if (along && inherits(text, "element_text") && length(params$key$.label)) {
+      label <- params$key$.label[c(1L, length(params$key$.label))]
+      measure <- if (params$direction == "horizontal") grobWidth else grobHeight
+      endpoint <- max(vapply(seq_along(label), function(i) {
+        glyph <- textGrob(label[i], rot = params$angle %||% text@angle %||% 0,
+          gp = gpar(fontsize = text@size, fontfamily = text@family, fontface = text@face))
+        convertUnit(measure(glyph), "mm", valueOnly = TRUE)
+      }, numeric(1)))
+    }
+    gap <- convertUnit(title@margin %||% margin(), "mm", valueOnly = TRUE)
+    gap[facing] <- max(gap[facing], endpoint / 2 + 1.2)
+    title@margin <- margin(gap[1L], gap[2L], gap[3L], gap[4L], unit = "mm")
+    elements$title <- title
+    elements
+  })
+}
+
 # Unequal numeric intervals occupy their actual share of the 0..100 domain.
 ggchord_identity_guide <- function(plot = NULL, aesthetic = "ribbon_fill") {
   spec <- if (!is.null(plot)) ggchord_role_guide_spec(plot,"ribbon",TRUE) else list()
@@ -280,9 +311,9 @@ ggchord_identity_guide <- function(plot = NULL, aesthetic = "ribbon_fill") {
   }
   if (is.null(plot))
     spec$theme <- theme(legend.key.width = ggchord_identity_bar_width())
-  guide_coloursteps(available_aes=aesthetic, even.steps=FALSE,
+  ggchord_identity_title_gap(guide_coloursteps(available_aes=aesthetic, even.steps=FALSE,
     show.limits=TRUE, position=spec$position, direction=spec$direction,
-    theme=spec$theme, order=2)
+    theme=spec$theme, order=2))
 }
 
 # Measure actual label envelopes before choosing a categorical guide grid.

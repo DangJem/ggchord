@@ -80,7 +80,7 @@ ggchord_legend_plan <- function(parts, size) {
 ggchord_legend_mark_mm <- function(part) {
   if (!part$builtin) return(0)
   style <- part$style
-  marker <- if (part$role == "site" && (part$site_marker || inherits(part$glyph, "points")))
+  marker <- if (part$role == "site" && part$shape %in% ggchord_site_filled_shapes)
     (style$size %||% 2) + (style$stroke %||% .4) else 0
   arrow <- part$params$arrow
   arrow_mm <- if (inherits(arrow, "arrow")) convertWidth(arrow$length[1L], "mm", TRUE) else 0
@@ -146,12 +146,44 @@ ggchord_legend_curve <- function(points, straight = FALSE) {
   cbind((1 - t)^3, 3 * (1 - t)^2 * t, 3 * (1 - t) * t^2, t^3) %*% points
 }
 
-ggchord_legend_seq_artist <- function(part, y, scale) {
+ggchord_legend_rounded_seq_arrow <- function(arrow, y, gp, scale) {
+  angle <- arrow$angle[1L] * pi / 180
+  head_length <- grid::unit.pmin(arrow$length[1L] * scale,
+    ggchord_legend_x(22) / cos(angle), unit(12 / 52, "npc") / sin(angle))
+  width <- head_length * cos(angle)
+  height <- head_length * sin(angle)
+  left <- ggchord_legend_x(8)
+  right <- ggchord_legend_x(57)
+  centre <- ggchord_legend_y(y)
+  first <- arrow$ends != 2L
+  last <- arrow$ends != 1L
+  shaft <- segmentsGrob(left + if (first) .42 * width else unit(0, "mm"), centre,
+    right - if (last) .42 * width else unit(0, "mm"), centre, gp = gp)
+
+  # Round the three corners without blunting the direction of the tip.
+  triangle <- rbind(c(0, 1), c(1, 0), c(0, -1))
+  progress <- seq(0, 1, length.out = 5L)
+  weights <- cbind((1 - progress)^2, 2 * progress * (1 - progress), progress^2)
+  outline <- do.call(rbind, lapply(seq_len(3L), function(i) {
+    corner <- triangle[i, ]
+    before <- .76 * corner + .24 * triangle[c(3L, 1L, 2L)[i], ]
+    after <- .76 * corner + .24 * triangle[c(2L, 3L, 1L)[i], ]
+    weights %*% rbind(before, corner, after)
+  }))
+  head <- function(end, direction) {
+    polygonGrob(end + direction * (outline[, 1L] - 1) * width,
+      centre + outline[, 2L] * height, gp = gpar(fill = gp$col, col = NA))
+  }
+  grobTree(shaft, if (first) head(left, -1), if (last) head(right, 1))
+}
+
+ggchord_legend_seq_artist <- function(part, y, scale, standalone, annotations) {
   glyph <- part$glyph
   if (inherits(glyph, "rect")) {
     gp <- ggchord_legend_pen(part, glyph$gp, .85, .9)
+    height <- if (standalone) 8 else 3.6
     grob <- grid::roundrectGrob(ggchord_legend_x(32.5), ggchord_legend_y(y),
-      ggchord_legend_x(49), unit(3.6 / 52, "npc"), r = unit(.08, "mm") * scale, gp = gp)
+      ggchord_legend_x(49), unit(height / 52, "npc"), r = unit(.08, "mm") * scale, gp = gp)
     return(list(grob = grob, upper = y, lower = y))
   }
   lines <- if (inherits(glyph, "gTree")) glyph$children else list(glyph)
@@ -159,10 +191,27 @@ ggchord_legend_seq_artist <- function(part, y, scale) {
   centres <- y + if (double) c(2, -2) else 0
   grobs <- lapply(seq_along(lines), function(i) {
     line <- lines[[i]]
-    gp <- ggchord_legend_pen(part, line$gp, if (double) 1.8 else 2.6, .9)
-    gp$lineend <- part$params$lineend %||% "round"
     arrow <- line$arrow
-    if (!is.null(arrow)) arrow$length <- arrow$length * scale
+    rounded <- standalone && !double && !is.null(arrow) && arrow$type == 2L &&
+      is.finite(arrow$angle[1L]) && arrow$angle[1L] > 0 && arrow$angle[1L] < 90
+    pen_width <- if (rounded) 3.75 else if (double) 1.8 else 2.6
+    gp <- ggchord_legend_pen(part, line$gp, pen_width, .9)
+    gp$lineend <- part$params$lineend %||% "round"
+    if (rounded) return(ggchord_legend_rounded_seq_arrow(arrow, centres[i], gp, scale))
+    if (!is.null(arrow)) {
+      arrow$length <- arrow$length * scale
+      angle <- arrow$angle[1L] * pi / 180
+      if (length(annotations) && is.finite(angle) && angle > 0 && angle < pi / 2) {
+        bounds <- do.call(rbind, annotations)
+        sides <- c(min(bounds[, 1L]) - 8, 57 - max(bounds[, 1L] + bounds[, 3L]))
+        side <- min(sides[switch(arrow$ends, 1L, 2L, 1:2)])
+        below <- centres[i] - max(bounds[, 2L] + bounds[, 4L])
+        # Either separation is enough to keep the tip clear of the annotations.
+        across <- ggchord_legend_x(max(0, side - 2)) / cos(angle)
+        vertical <- unit(max(0, below - 2) / 52, "npc") / sin(angle)
+        arrow$length <- grid::unit.pmin(arrow$length, grid::unit.pmax(across, vertical))
+      }
+    }
     segmentsGrob(ggchord_legend_x(8), ggchord_legend_y(centres[i]),
       ggchord_legend_x(57), ggchord_legend_y(centres[i]), gp = gp, arrow = arrow)
   })
@@ -171,7 +220,7 @@ ggchord_legend_seq_artist <- function(part, y, scale) {
 
 # Annotation boxes are left, top, width and height. Fit the final outlines,
 # keeping the head and body proportions of non-default feature shapes.
-ggchord_legend_annotation <- function(part, box, opacity, scale) {
+ggchord_legend_annotation <- function(part, box, opacity, scale, standalone) {
   glyph <- part$glyph
   left <- box[1L]
   top <- box[2L]
@@ -181,37 +230,55 @@ ggchord_legend_annotation <- function(part, box, opacity, scale) {
   reverse <- identical(strand, "-")
   edge <- c(left + if (reverse) 0 else width, top + height / 2)
   site_x <- left + width * if (reverse) .22 else .78
+  spec <- ggchord_feature_key_spec(part$style, part$params)
   if (identical(part$shape, "block")) {
-    gp <- ggchord_legend_pen(part, glyph$gp, .75, .25)
-    if (!part$alpha_fixed) gp$fill <- ggchord_legend_translucent(gp$fill, opacity)
-    rect <- grid::roundrectGrob(ggchord_legend_x(left + width / 2), ggchord_legend_y(top + height / 2),
+    gp <- ggchord_legend_pen(part, glyph$gp, if (standalone) 1.7 else .75, .25)
+    if (!part$alpha_fixed && is.null(spec$body_fill) &&
+        !"fill" %in% part$params$body_style_explicit)
+      gp$fill <- ggchord_legend_translucent(gp$fill, opacity)
+    centre <- top + height / 2
+    height <- height * diff(range(as.numeric(glyph$y))) / .52
+    rect <- grid::roundrectGrob(ggchord_legend_x(left + width / 2), ggchord_legend_y(centre),
       ggchord_legend_x(width), unit(height / 52, "npc"), r = unit(.12, "mm") * scale, gp = gp)
     return(list(grob = rect, edge = edge, site = c(site_x, top)))
   }
   outlines <- if (inherits(glyph, "gTree")) glyph$children else list(glyph)
   polygons <- vapply(outlines, inherits, logical(1), "polygon")
-  if (identical(part$shape, "primer_arc") && strand %in% c("+", "-") && all(polygons)) {
-    gp <- ggchord_legend_pen(part, outlines[[1L]]$gp, 1.8, .25)
+  edges <- vapply(outlines, inherits, logical(1), "polyline")
+  if (!standalone && identical(part$shape, "arrow_arc") && !isTRUE(spec$components) &&
+      strand %in% c("+", "-") && all(polygons)) {
+    gp <- ggchord_legend_pen(part, outlines[[1L]]$gp, if (standalone) 2.35 else 1.8, .25)
     gp$col <- if (is.null(gp$col) || is.na(gp$col)) gp$fill else gp$col
     gp$lineend <- "round"
     x <- function(t) left + width * if (reverse) (1 - t) else t
-    profile <- rbind(c(x(0), top + .80 * height), c(x(.24), top + .20 * height),
-      c(x(.52), top + .10 * height), c(x(.89), top + .69 * height))
+    shoulder <- c(x(.73), top + .58 * height)
+    tip <- c(x(1), top + .76 * height)
+    axis <- tip - shoulder
+    normal <- c(-axis[2L], axis[1L]) / sqrt(sum(axis^2))
+    profile <- rbind(c(x(0), top + .83 * height), c(x(.25), top - .10 * height),
+      shoulder - .48 * axis, shoulder)
     curve <- ggchord_legend_curve(profile)
     stroke <- grid::polylineGrob(ggchord_legend_x(curve[, 1L]), ggchord_legend_y(curve[, 2L]), gp = gp)
     gp <- ggchord_legend_pen(part, gp, .3, .25)
-    tip <- rbind(c(x(.67), top), c(x(1), top + .78 * height), c(x(.65), top + height))
-    return(list(grob = grobTree(stroke, ggchord_legend_polygon(tip, gp)), edge = tip[2L, ],
-      site = c(x(.77), top + .24 * height)))
+    wing <- normal * (.29 * height)
+    head <- rbind(shoulder + wing, tip, shoulder - wing)
+    return(list(grob = grobTree(stroke, ggchord_legend_polygon(head, gp)), edge = tip,
+      site = head[which.min(head[, 2L]), ]))
   }
-  if (all(polygons)) {
+  if (all(polygons | edges)) {
     xs <- range(unlist(lapply(outlines, function(g) as.numeric(g$x))))
     ys <- range(unlist(lapply(outlines, function(g) as.numeric(g$y))))
+    outline_width <- if (!standalone) .65 else
+      if (part$shape %in% c("capped_line", "arrow_arc")) 1 else 2.15
     result <- lapply(outlines, function(g) {
       x <- left + (as.numeric(g$x) - xs[1L]) / diff(xs) * width
       y <- top + (ys[2L] - as.numeric(g$y)) / diff(ys) * height
-      gp <- ggchord_legend_pen(part, g$gp, .65, .25)
-      if (!part$alpha_fixed) gp$fill <- ggchord_legend_translucent(gp$fill, opacity)
+      gp <- ggchord_legend_pen(part, g$gp, outline_width, .25)
+      if (!part$alpha_fixed && !any(grepl("_fill$", names(spec))) &&
+          !"fill" %in% part$params$body_style_explicit)
+        gp$fill <- ggchord_legend_translucent(gp$fill, opacity)
+      if (inherits(g, "polyline"))
+        return(grid::polylineGrob(ggchord_legend_x(x), ggchord_legend_y(y), gp = gp))
       ggchord_legend_polygon(cbind(x, y), gp)
     })
     x <- unlist(lapply(result, function(g) as.numeric(g$x) * 65))
@@ -219,7 +286,7 @@ ggchord_legend_annotation <- function(part, box, opacity, scale) {
     end <- abs(x - edge[1L]) < 1e-7
     edge[2L] <- mean(range(y[end]))
     site <- c(x[which.min(y)], min(y))
-    if (identical(part$shape, "arrow") && length(result) == 1L) {
+    if (part$shape %in% ggchord_block_arrow_shapes && length(result) == 1L) {
       x1 <- c(tail(x, -1L), x[1L])
       y1 <- c(tail(y, -1L), y[1L])
       crosses <- x != x1 & pmin(x, x1) <= site_x & pmax(x, x1) >= site_x
@@ -230,6 +297,13 @@ ggchord_legend_annotation <- function(part, box, opacity, scale) {
     }
     return(list(grob = do.call(grobTree, result), edge = edge, site = site))
   }
+  if (identical(part$shape, "lollipop") && !standalone) {
+    x <- left + width / 2
+    foot_y <- top + height
+    tip_y <- max(6, top - 3)
+    return(list(grob = ggchord_legend_lollipop(glyph, x, foot_y, tip_y, .60 * scale),
+      edge = c(x, foot_y), site = c(x, tip_y)))
+  }
   # Lollipops retain a round head even inside a narrow annotation box.
   v <- c((left + width / 2) / 65, 1 - (top + height / 2) / 52, width / 65, height / 52)
   list(grob = ggchord_legend_slot(glyph, v, scale),
@@ -237,31 +311,42 @@ ggchord_legend_annotation <- function(part, box, opacity, scale) {
     site = c(left + width / 2, top + .19 * height))
 }
 
+ggchord_legend_lollipop <- function(glyph, x, foot_y, tip_y, scale) {
+  stem <- glyph$children[[1L]]
+  stem$x0 <- stem$x1 <- ggchord_legend_x(x)
+  stem$y0 <- ggchord_legend_y(foot_y)
+  stem$y1 <- ggchord_legend_y(tip_y)
+  point <- glyph$children[[2L]]
+  point$x <- point$y <- unit(.5, "npc")
+  point <- ggchord_legend_slot(point,
+    c(x / 65, 1 - tip_y / 52, 1, 1), scale)
+  grobTree(stem, point)
+}
+
 ggchord_legend_site_artist <- function(part, foot, marker_y) {
   glyph <- part$glyph
-  gp <- glyph$gp
-  if (inherits(glyph, "points"))
-    gp$lwd <- (part$style$linewidth %||% .4) * ggplot2::.pt
+  if (identical(part$params$site_key_location, "cut")) {
+    return(ggchord_legend_slot(glyph,
+      c((foot[1L] - 3) / 65, 1 - foot[2L] / 52, .68, .66), .82))
+  }
+  if (identical(part$shape, "block"))
+    return(ggchord_legend_slot(glyph,
+      c(foot[1L] / 65, 1 - foot[2L] / 52, .62, .65), 1))
+  if (inherits(glyph, "points")) {
+    return(ggchord_legend_slot(glyph,
+      c(foot[1L] / 65, 1 - foot[2L] / 52, 1, 1), .52))
+  }
+  lollipop <- identical(part$shape, "lollipop")
+  gp <- if (lollipop) glyph$children[[1L]]$gp else glyph$gp
   gp <- ggchord_legend_pen(part, gp, 1.25, .4)
   gp$lineend <- "round"
-  if (inherits(glyph, "polyline")) {
-    x <- foot[1L] + c(-6, -6, 0, 0)
-    y <- c(marker_y, mean(c(marker_y, foot[2L])), mean(c(marker_y, foot[2L])), foot[2L])
-    return(grid::polylineGrob(ggchord_legend_x(x), ggchord_legend_y(y), gp = gp))
+  if (!lollipop) {
+    half <- (foot[2L] - marker_y) / 2
+    return(segmentsGrob(ggchord_legend_x(foot[1L]), ggchord_legend_y(foot[2L] + half),
+      ggchord_legend_x(foot[1L]), ggchord_legend_y(foot[2L] - half), gp = gp))
   }
-  stem <- segmentsGrob(ggchord_legend_x(foot[1L]), ggchord_legend_y(foot[2L]),
-    ggchord_legend_x(foot[1L]), ggchord_legend_y(marker_y), gp = gp)
-  if (!part$site_marker && !inherits(glyph, "points")) return(stem)
-  if (inherits(glyph, "points")) {
-    point <- ggchord_legend_slot(glyph, c(foot[1L] / 65, 1 - marker_y / 52, 1, 1), .36)
-  } else {
-    radius <- 3.6 * (part$style$size %||% 2) / 2
-    gp$fill <- gp$col
-    gp <- ggchord_legend_pen(part, gp, .55, .4)
-    xy <- cbind(foot[1L] + c(0, radius, 0, -radius), marker_y + c(-radius, 0, radius, 0))
-    point <- ggchord_legend_polygon(xy, gp)
-  }
-  grobTree(stem, point)
+  glyph$children[[1L]]$gp <- gp
+  ggchord_legend_lollipop(glyph, foot[1L], foot[2L], max(5.5, marker_y - 2), .52)
 }
 
 ggchord_legend_ribbon_artist <- function(part, left, right, opacity) {
@@ -300,14 +385,14 @@ ggchord_legend_link_artist <- function(part, points, scale) {
   grid::polylineGrob(ggchord_legend_x(points[, 1L]), ggchord_legend_y(points[, 2L]), gp = gp, arrow = arrow)
 }
 
-ggchord_legend_annotation_boxes <- function(roles, backbone, relations, nested) {
+ggchord_legend_annotation_boxes <- function(roles, backbone, relations, nested, anchor_reverse) {
   gene <- "gene" %in% roles
   feature <- "feature" %in% roles
   if (backbone) {
     boxes <- list(gene = c(22, if (relations) 15.5 else 17.5, 24, 7),
       feature = c(22, if (relations) 10 else 13, 25, 8),
       primer = c(19, if (relations) 9 else 14, 27, 9))
-    if (gene || feature) boxes$primer <- c(20, 22, 27, 7)
+    if (gene || feature) boxes$primer <- c(18, 23, 26, 6)
     if (gene && feature) {
       boxes$feature <- c(17, 8, 28, 14)
       boxes$gene <- c(24, 14.5, 19, 7)
@@ -317,7 +402,10 @@ ggchord_legend_annotation_boxes <- function(roles, backbone, relations, nested) 
     boxes <- list(gene = c(16, row - 4.5, 30, 9),
       feature = c(16, row - 5, 32, 10),
       primer = c(19, row - 7, 27, 9))
-    if (gene || feature) boxes$primer <- c(20, row + 7, 27, 9)
+    if (gene || feature) {
+      primer_left <- if (!relations) 20 else if (anchor_reverse) 30 else 10
+      boxes$primer <- c(primer_left, row + 7, 27, 9)
+    }
     if (gene && feature) {
       boxes$feature <- c(13, row - 8, 34, 14)
       boxes$gene <- c(23, row - 4.5, 19, 7)
@@ -376,9 +464,9 @@ ggchord_legend_relation_art <- function(parts, seq, anchor, from_annotation, fro
   list(ribbon = band$grob, link = line)
 }
 
-ggchord_legend_artwork_view <- function(room, role) {
-  # Keep the full template for a shared composition. In a separate slot,
-  # fit around the single symbol so its unused template margins take no space.
+ggchord_legend_artwork_view <- function(room, role, separated) {
+  # Centre the visible mark in a standalone key. Shared artwork keeps its
+  # original layout, and a separate slot fits around its single symbol.
   frame <- switch(role,
     seq = c(32.5, 35, 56, 24),
     gene = c(31, 25, 36, 18),
@@ -388,13 +476,14 @@ ggchord_legend_artwork_view <- function(room, role) {
     link = c(35.5, 29.5, 44, 43),
     ribbon = c(35, 29, 46, 44),
     c(32.5, 26, 65, 52))
+  if (!separated) frame[c(1L, 3L, 4L)] <- c(32.5, 65, 52)
   ratio <- min(room / (frame[3:4] / 10))
-  if (nzchar(role)) ratio <- min(ratio, 1)
+  if (separated) ratio <- min(ratio, 1)
   extent <- ggchord_legend_artwork_mm * ratio / pmax(room, .Machine$double.eps)
   offset <- c(.5 - frame[1L] / 65, frame[2L] / 52 - .5) * extent
   # Thin strokes can vanish when the key is displayed at screen resolution.
   # Keep a legible stroke in ordinary slots and keep scaling in tight slots.
-  ink <- if (nzchar(role)) max(ratio, min(room) / 3.6) else ratio
+  ink <- if (separated) max(ratio, min(room) / 3.6) else ratio
   list(box = c(.5 + offset, extent), scale = min(ratio, 1.25), ink = min(ink, 1.25))
 }
 
@@ -405,23 +494,37 @@ ggchord_contact_key <- function(parts, room, separated = FALSE) {
   has_seq <- !is.null(parts$seq)
   has_site <- !is.null(parts$site)
   has_relations <- any(c("link", "ribbon") %in% names(parts))
-  role <- if (separated) names(parts)[1L] else ""
-  view <- ggchord_legend_artwork_view(room, role)
-  seq <- if (has_seq) ggchord_legend_seq_artist(parts$seq,
-    if (has_annotations) 31 else if (has_relations) 18 else 35, view$scale)
-
+  role <- if (length(parts) == 1L) names(parts)[1L] else ""
+  standalone <- nzchar(role) && !separated
+  view <- ggchord_legend_artwork_view(room, role, separated)
+  if (standalone && role == "site")
+    return(ggchord_legend_slot(parts$site$glyph, c(.5, .5, .84, .92), view$ink))
   nested <- ggchord_legend_can_nest(parts$gene, parts$feature)
-  boxes <- ggchord_legend_annotation_boxes(roles, has_seq, has_relations, nested)
+  anchor_part <- parts$gene %||% parts$feature
+  boxes <- ggchord_legend_annotation_boxes(roles, has_seq, has_relations, nested,
+    identical(anchor_part$style$strand, "-"))
+  if (standalone && has_annotations) {
+    shape <- parts[[role]]$shape
+    if (shape %in% c(ggchord_block_arrow_shapes, "arrow_triangle", "chevron"))
+      boxes[[role]] <- c(12.5, 16.5, 40, 17)
+    if (shape == "diamond") boxes[[role]] <- c(16.5, 17.5, 32, 15)
+    if (shape == "arrow_arc") boxes[[role]] <- c(11.5, 19, 42, 10)
+    if (shape == "lollipop") boxes[[role]] <- c(12.5, 1, 40, 50)
+    if (shape == "tick") boxes[[role]] <- c(12.5, 8, 40, 34)
+  }
+  seq <- if (has_seq) ggchord_legend_seq_artist(parts$seq,
+    if (has_annotations) 31 else if (has_relations) 18 else 35, view$scale, standalone, boxes)
   annotations <- lapply(roles, function(role) {
     opacity <- if (role == "gene") .94 else if (nested) {
       if (has_seq) .25 else .23
     } else if (has_seq) .78 else .82
-    ggchord_legend_annotation(parts[[role]], boxes[[role]], opacity, view$scale)
+    ggchord_legend_annotation(parts[[role]], boxes[[role]], opacity, view$scale, standalone)
   })
   names(annotations) <- roles
   anchor_annotation <- annotations$gene %||% annotations$feature %||% annotations$primer
+  site_only_point <- identical(role, "site") && parts$site$shape %in% c("point", "diamond", "block")
   foot <- if (has_seq) c(if (has_annotations) 52 else 32, seq$upper) else
-    anchor_annotation$site %||% c(30, 25)
+    anchor_annotation$site %||% c(30, if (site_only_point) 18 else 25)
   site <- if (has_site) ggchord_legend_site_artist(parts$site, foot,
     max(5.5, foot[2L] - if (has_seq) 14 else 12))
   connectors <- if (has_relations) ggchord_legend_relation_art(parts, seq,

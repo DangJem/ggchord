@@ -24,7 +24,7 @@ geom_seq_region(
 
 \item{data}{Observation table or a data function. For ggchord layers, provide the required data-role columns.}
 
-\item{shape}{Default shape. An explicitly supplied fixed shape takes priority over its mapping.}
+\item{shape}{Preset name or \code{\link[=shape_feature]{shape_feature()}} specification. A fixed shape takes priority over its mapping.}
 
 \item{thickness}{Physical thickness in mm or absolute grid units. Named values select references.}
 
@@ -52,7 +52,10 @@ A ggplot2 layer for addition to a plot.
 Highlight reference intervals
 }
 \details{
-Provide one-based closed intervals with \code{accver}, \code{start} and \code{end}. A strand or disjoint segments can be supplied where appropriate. The gene shortcut defaults to an arrow and strand placement. The primer shortcut defaults to a directional narrow path, and the region shortcut defaults to a translucent block.
+Provide one-based closed intervals with \code{accver}, \code{start} and
+\code{end}. A strand or disjoint segments can be supplied where appropriate.
+This shortcut uses the interval shapes listed in \code{\link[=geom_feature]{geom_feature()}}.
+The default \code{"block"} is drawn with \code{alpha = 0.25}.
 }
 \examples{
 seqs <- data.frame(

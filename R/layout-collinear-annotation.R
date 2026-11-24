@@ -2,36 +2,47 @@
 # normal offsets always mean up, including on reverse-oriented sequences.
 
 ggchord_collinear_feature_parts <- function(shape, x0, x1, center, width,
-                                            backbone, p, head_width = NULL, draw_head = TRUE,
+                                            backbone, p, head_width = NA_real_,
+                                            head_length = p$arrow_head_length %||% .04,
+                                            short = "shrink", draw_head = TRUE,
                                             draw_start_head = FALSE,
-                                            bidirectional = FALSE) {
-  if (identical(shape, "lollipop")) {
-    mid <- (x0 + x1) / 2
-    stem_half <- max(.001, min(abs(x1 - x0) * .08, width * .1))
-    theta <- seq(0, 2 * pi, length.out = 48L)
-    return(list(
-      cbind(x = mid + c(-1, 1, 1, -1) * stem_half,
-        y = c(backbone, backbone, center, center)),
-      cbind(x = mid + width * .58 * cos(theta),
-        y = center + width * .58 * sin(theta))
-    ))
+                                            bidirectional = FALSE, profile = NULL,
+                                            nominal_width = width, draw_tail = TRUE) {
+  along_width <- width
+  normal <- p$feature_normal_axis
+  along <- if (!is.null(normal)) if (normal == "x") "y" else "x"
+  along_metric <- ggchord_units_per_mm(along)
+  normal_metric <- ggchord_units_per_mm(normal)
+  if (shape %in% ggchord_midpoint_shapes) {
+    parts <- ggchord_interval_anchor_parts(profile %||% ggchord_resolve_feature_profile(shape),
+      x0, x1, center, width, backbone, NULL, along_metric, normal_metric)
+    return(lapply(parts, function(part) {
+      xy <- part$xy
+      attr(xy, "part") <- part$part
+      attr(xy, "paint") <- part$paint
+      xy
+    }))
   }
   # These shape templates use two local coordinates. A unit reference makes
   # their along-interval dimensions linear; no circular reference, radius or
   # physical track is stored in the resulting layout or exported geometry.
-  short <- p$short_feature %||% "shrink"
-  if (identical(short, "auto")) short <- "arrow"
   parts <- ggchord_feature_geometry(
     shape, x0, x1, 1, width, 1, NULL,
-    arrow_head_length = p$arrow_head_length %||% .04,
-    arrow_head_width = if (is.null(head_width)) 1 else head_width / width,
-    arrow_head_style = p$arrow_head_style %||% "shouldered",
+    arrow_head_length = head_length,
+    arrow_head_width = if (is.finite(head_width)) head_width / width,
     short_feature = short,
     draw_head = draw_head, draw_start_head = draw_start_head,
-    bidirectional = bidirectional
+    bidirectional = bidirectional, along_width = along_width,
+    profile = profile, nominal_width = nominal_width,
+    along_metric = along_metric, normal_metric = normal_metric,
+    draw_tail = draw_tail
   )
-  lapply(parts, function(part) cbind(x = part$angle,
-    y = center + part$radius - 1))
+  lapply(parts, function(part) {
+    xy <- cbind(x = part$angle, y = center + part$radius - 1)
+    attr(xy, "part") <- part$part
+    attr(xy, "paint") <- part$paint
+    xy
+  })
 }
 
 ggchord_collinear_position_fields <- function(row) {
@@ -77,6 +88,9 @@ ggchord_collinear_gene_geometry <- function(p, layout) {
         x = xy[, 1L], y = xy[, 2L], group = i * 100L + part_index,
         anno = as.character(row$anno), strand = strand,
         feature_shape = if (identical(component, "point")) "point" else shape,
+        .shape_spec = row$.shape_spec %||% "block",
+        .shape_part = attr(xy, "part") %||% NA_character_,
+        .shape_paint = attr(xy, "paint") %||% NA_character_,
         biological_strand = biological,
         feature_fill_explicit = as.character(row$feature_color %||% NA_character_),
         accver = id, sequence_y = backbone,
@@ -96,7 +110,7 @@ ggchord_collinear_gene_geometry <- function(p, layout) {
         .component = component, stringsAsFactors = FALSE
       )
     }
-    if (row$start == row$end) {
+    if (row$start == row$end && !shape %in% ggchord_midpoint_shapes) {
       x <- ggchord_collinear_x(row$start, id, ref)
       half <- width / 2
       add_part(cbind(rep(x, 2L), center + c(-half, half)), "point")
@@ -107,11 +121,16 @@ ggchord_collinear_gene_geometry <- function(p, layout) {
       x <- ggchord_collinear_x(c(piece$start, piece$end), id, ref)
       parts <- ggchord_collinear_feature_parts(
         shape, x[1L], x[2L], center, width, backbone, p,
-        head_width = row$.feature_head_width,
+        head_width = row$.feature_head_width %||% NA_real_,
+        head_length = row$.feature_head_length %||% p$arrow_head_length %||% .04,
+        short = row$.feature_short %||% "shrink",
         draw_head = piece$draw_head && isTRUE(row$.feature_draw_head %||% TRUE) && !head_cut,
         draw_start_head = isTRUE(row$.feature_draw_start_head %||%
           identical(biological, "+/-")) && !start_head_cut,
-        bidirectional = identical(biological, "+/-")
+        bidirectional = identical(biological, "+/-"),
+        profile = row$.feature_profile[[1L]],
+        nominal_width = row$.feature_nominal_width %||% width,
+        draw_tail = !start_head_cut
       )
       for (xy in parts) add_part(xy)
     }
