@@ -203,18 +203,11 @@
     "read_vcf"
   ],
   "ggchord_fusion": [
-    "ggchord_fusion",
-    "magnify_ggchord"
+    "ggchord_fusion"
   ],
   "layout_fusion": [
     "layout_fusion",
     "layout_fusion_grid"
-  ],
-  "fusion_ribbon": [
-    "fusion_ribbon"
-  ],
-  "fusion_zoom": [
-    "fusion_zoom"
   ],
   "register_ggchord_alignment": [
     "register_ggchord_alignment",
@@ -260,5 +253,9 @@
     "scale_colour_link_pident",
     "scale_fill_signal",
     "scale_colour_signal"
+  ],
+  "fusion_magnify_auto": [
+    "fusion_magnify_auto",
+    "fusion_magnify_manual"
   ]
 }

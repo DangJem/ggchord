@@ -35,7 +35,8 @@
     },
     "stat": {
       "title": "Statistics",
-      "intro": "Compute coverage in source windows or use the interval ribbon statistics linked below."
+      "intro": "Compute coverage in source windows or summarize interval relationships.",
+      "shortcut_title": "Interval ribbon statistics"
     },
     "scale": {
       "title": "Scales and scope",
@@ -59,7 +60,7 @@
     },
     "composition": {
       "title": "Compose independent views",
-      "intro": "Arrange named panels and connect source intervals or mark zoom regions."
+      "intro": "Arrange views, connect observed points or intervals between them, and add source-aligned feature or residue details."
     },
     "alignment": {
       "title": "Character source registration",
@@ -212,7 +213,7 @@
       "details": "Each panel requires exactly one effective reference. Circular coordinates provide the double-ring backbone by default and dedicated placement for inward annotations and exterior callouts. Effective sequence topology and display windows govern whether features or tracks wrap across the origin. Set the radius or angular gap with [`layout_sequences()`](layout_sequences.html#api-layout_sequences). For reference arcs linked in a shared ring, see [`coord_chord()`](coord_chord.html#api-coord_chord).",
       "errors": "Multiple effective references in one panel are invalid. Use Chord for a shared multi-reference circle.",
       "roles": [],
-      "example_setup": "Draw one circular reference with the default double backbone and a centre label. A 12° gap marks the origin."
+      "example_setup": "Draw one reference on a circle."
     },
     "coord_collinear": {
       "title": "Draw collinear sequences on parallel paths",
@@ -247,7 +248,7 @@
       "details": "Draw parallel reference paths. `axis = \"x\"` (default) draws horizontal paths and `\"y\"` draws vertical ones. Positive offsets are above horizontal paths or to the right of vertical paths. Use [`layout_sequences()`](layout_sequences.html#api-layout_sequences) to set order, orientation, alignment, and physical row spacing. [`curvature`](layout_sequences.html#parameter-curvature) bends the paths and the features, axes and link endpoints follow them. Automatic spacing accounts for visible features, labels and leaders. Use fixed facet scales.",
       "errors": "Use fixed facets. Use a track value domain for panel-specific quantitative heights.",
       "roles": [],
-      "example_setup": "Draw two horizontal references, reverse B and bend the paths in opposite directions with `layout_sequences()`."
+      "example_setup": "Use horizontal paths for the two reference sequences."
     },
     "coord_radial_synteny": {
       "title": "Draw synteny along radial sequence paths",
@@ -282,7 +283,7 @@
       "details": "Project sequences onto radial paths and connect source intervals or points across spokes. `start_angle` and `direction` set the angular frame. Use [`layout_sequences()`](layout_sequences.html#api-layout_sequences) for individual orientations, the central opening ([`inner_radius`](layout_sequences.html#parameter-inner_radius)), and signed [`curvature`](layout_sequences.html#parameter-curvature). The opening starts at 0.12 of the longest outer radius by default and grows as needed for stroke and feature clearance. Features, axes and connection endpoints follow their reference paths. Use fixed facet scales.",
       "errors": "Only layout options applicable to radial paths are accepted. Free facet axes are unsupported.",
       "roles": [],
-      "example_setup": "Set the start angle in the projection and use the layout to set the opening and bend the spokes. `fit = \"labels\"` makes room for annotation text."
+      "example_setup": "Begin the first spoke at 35°."
     },
     "coord_sankey": {
       "title": "Draw mirrored sequence paths and links",
@@ -317,7 +318,7 @@
       "details": "Draw two facing sets of reference paths. `axis = \"y\"` (default) draws vertical paths in left and right columns. Set `axis = \"x\"` for horizontal paths. A reference may appear in both sets while each display instance retains its source identity. Use [`layout_sequences()`](layout_sequences.html#api-layout_sequences) to set within-set `row_gap`, between-set [`column_gap`](layout_sequences.html#parameter-column_gap) in millimetres, and [`curvature`](layout_sequences.html#parameter-curvature). Features, axes and connection endpoints follow the bent reference paths. Automatic gaps allow room for visible annotations and leaders. Use fixed facet scales.",
       "errors": "Use explicit endpoint information when a connection is ambiguous. Fixed facet scales are required.",
       "roles": [],
-      "example_setup": "Place two facing sets of vertical paths and use a 64 mm column gap. Both the gap and the signed curvature are set in `layout_sequences()`."
+      "example_setup": "Place the linked references in facing columns."
     },
     "coord_dotplot": {
       "title": "Draw HSPs on two reference axes",
@@ -1522,7 +1523,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use `qaccver/qpos` and `saccver/spos` for the endpoints. Curved and straight paths retain the exact point origins. A shared route uses a physical corridor and retains the source members.\n\nOn a curved collinear link that spans intervening rows, a positive bulge sets the outer clearance as a fraction of the longest visible backbone. A radial outer route clears intervening spoke tips.",
+      "details": "Use `qaccver/qpos` and `saccver/spos` for the endpoints. Curved and straight paths retain the exact point origins. A shared route uses a physical corridor and retains the source members.\n\nOn a curved collinear link that spans intervening rows, a positive bulge sets the outer clearance as a fraction of the longest visible backbone. A radial outer route clears intervening spoke tips.\n\nOn Fusion, supply an explicit relationship table. Optional q/s panel paths, instances, and named facet selectors must resolve each endpoint to one leaf. Use identity Stat and Position, and curve or straight routing.",
       "errors": "Interval-only input needs an explicit choice of representative point. Unknown references, invalid endpoints and unsupported route options are errors.",
       "roles": [
         "Query and subject reference identities.",
@@ -1594,7 +1595,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use query and subject endpoints with explicit direction evidence. A one-residue interval has its full front. Self-links and nonadjacent links are preserved when supported. Endpoint fills, shared routes and optional tips are visual controls.\n\nOn a curved collinear link that spans intervening rows, a positive bulge sets the outer clearance as a fraction of the longest visible backbone. A radial outer route clears intervening spoke tips.\n\nRibbon clearance and obstacle avoidance adjust the drawn fronts while preserving the source intervals.",
+      "details": "Use query and subject endpoints with explicit direction evidence. A one-residue interval has its full front. Self-links and nonadjacent links are preserved when supported. Endpoint fills, shared routes and optional tips are visual controls.\n\nOn a curved collinear link that spans intervening rows, a positive bulge sets the outer clearance as a fraction of the longest visible backbone. A radial outer route clears intervening spoke tips.\n\nRibbon clearance and obstacle avoidance adjust the drawn fronts while preserving the source intervals.\n\nOn Fusion, supply an explicit relationship table. Optional q/s panel paths, instances, and named facet selectors must resolve each endpoint to one leaf. Use identity Stat and Position, and curve or straight routing.",
       "errors": "Unknown references and invalid interval endpoints are rejected. Route controls and direction evidence must be compatible with the selected geometry.",
       "roles": [
         "Reference identities that locate source observations.",
@@ -2802,8 +2803,8 @@
           "description": "A visual scale or a continuous Y scale for complete tracks."
         },
         {
-          "format": "character vector or NULL",
-          "description": "Layer IDs. If both selectors are omitted, the most recently added layer or track supplies the scope."
+          "format": "layer IDs or structured table",
+          "description": "Character IDs select local layers. On Fusion, provide panel_path and layer_id columns to jointly train a visual scale across views."
         },
         {
           "format": "character vector or NULL",
@@ -2818,7 +2819,7 @@
       "details": "The scoped scale takes precedence on the selected mappings. Other layers keep training together by aesthetic under the ordinary scale. Put Guide settings on the scoped scale. Custom Stats still receive public aesthetic names such as `colour`.\n\nScope controls training. Compatible discrete colour and fill guides for genomic layers can use one legend when both map the same category column and the trained breaks, order, labels and Guide settings agree. Each category key can compose both glyphs with their own mapped palettes and fixed styles. Other independently scoped palettes can have separate guides. If a native shared Guide has no verified common category identity, the glyphs use separate slots.\n\nFor track Y, use a native continuous scale. One declaration can give several tracks a common domain, or train that selection separately in each facet with `by = \"panel\"`.",
       "errors": "Each selected layer needs a mapped aesthetic handled by the scale. Use a colour scale for `aes(colour = ...)` and a fill scale for `aes(fill = ...)`. Unknown targets and overlapping explicit scopes for the same aesthetic raise an error.",
       "roles": [],
-      "example_setup": "First assign a fill scale to a named gene layer. The next two plots compare a scoped Viridis colour scale and an ordinary Viridis colour scale. Both show one legend with an A key and a B key, each containing a Viridis backbone and a half-transparent, independently filled gene arrow. The last plot trains one signal band's Y domain independently in each sample facet."
+      "example_setup": "Apply the strand fill scale only to the named gene layer. The ribbon retains its own identity scale."
     },
     "scale_fill_residue": {
       "title": "Choose an alphabet palette for residue cells",
@@ -4314,25 +4315,25 @@
       "example_setup": ""
     },
     "ggchord_fusion": {
-      "title": "Compose named independent plots",
-      "intro": "Compose named independent plots.",
+      "title": "Compose independent views",
+      "intro": "Arrange independent plots while retaining their own data coordinates.",
       "arguments": [
         {
-          "format": "named list",
-          "description": "Uniquely named list of ggchord plots, Cartesian ggplots or nested compositions. Source endpoints require a registered source map."
+          "format": "list of plots",
+          "description": "ggchord, ggplot or nested Fusion. Unnamed views receive stable IDs."
         },
         {
-          "format": "Fusion layout",
-          "description": "Panel allocation from `layout_fusion()` or `layout_fusion_grid()`."
+          "format": "Fusion layout or NULL",
+          "description": "NULL selects an automatic grid. A layout added with + replaces the current declaration."
         },
         {
-          "format": "\"keep\" / \"collect\"",
-          "description": "Keep child guides local, or collect semantically equivalent guides."
+          "format": "\"auto\" / \"keep\" / \"collect\"",
+          "description": "Auto permits collection by a parent. Keep preserves a local boundary. Collect gathers outside legends."
         }
       ],
-      "value": "A composition accepted by print and `ggplot2::ggsave()`.",
-      "details": "Combine named plots in an explicit regional layout, nesting panels when needed. Each child retains its coordinate and scale. Guide collection arranges existing guides; compatible numeric limits remain explicit.",
-      "errors": "Use distinct panel IDs and compatible layout regions. Select a leaf by its full path for cross-panel relationships.",
+      "value": "A composition accepted by print and ggsave().",
+      "details": "Add a grid or rectangular layout. Use Link Geoms at the root for observed relationships and Magnify to mark a shared source interval. Root visual scales apply to root Links. Structured scale_for() selectors can train selected child layers together. Root theme and labs control composition furniture and its outside legends.",
+      "errors": "At final build every direct view requires a valid area. An unregistered ordinary ggplot can be placed in a layout but cannot identify a biological endpoint.",
       "roles": [],
       "example_setup": ""
     },
@@ -4374,135 +4375,23 @@
         {
           "format": "positive numberscalar / vector",
           "description": "Positive column and row weights."
+        },
+        {
+          "format": "positive integer or NULL",
+          "description": "Number of rows. Omit to infer from the design or view count."
+        },
+        {
+          "format": "positive integer or NULL",
+          "description": "Number of columns. Omit to infer from the design or view count."
+        },
+        {
+          "format": "absolute distance",
+          "description": "Inter-cell gap in millimetres or a single absolute grid unit."
         }
       ],
       "value": "A Fusion layout declaration.",
-      "details": "Translate the grid and relative row or column weights into the same region table used by the explicit layout. Rectangular areas can span adjacent cells.",
+      "details": "Translate the grid and relative row or column weights into the same region table used by the explicit layout. Rectangular areas can span adjacent cells.\n\nResolve the grid at final rendering and reserve physical gaps before applying weights.",
       "errors": "Unknown panel names, nonrectangular regions or incompatible weight lengths are errors.",
-      "roles": [],
-      "example_setup": ""
-    },
-    "fusion_ribbon": {
-      "title": "Connect source intervals across panels",
-      "intro": "Connect source intervals across panels.",
-      "arguments": [
-        {
-          "format": "aes / NULL",
-          "description": "Optional aesthetic mappings, including interval and path roles."
-        },
-        {
-          "format": "Canonical relationship table",
-          "description": "Relationship table with q/s endpoints and qpanel_path/spanel_path."
-        },
-        {
-          "format": "\"curve\" / \"straight\"",
-          "description": "Curve or straight ribbon routing."
-        },
-        {
-          "format": "0–1 numeric value",
-          "description": "Curve strength in the interval `[0, 1]`."
-        },
-        {
-          "format": "visual /geometry parameters",
-          "description": "Fixed visual attributes, lineend or key_glyph."
-        },
-        {
-          "format": "logical",
-          "description": "Remove incomplete relationships without a warning."
-        },
-        {
-          "format": "logical / named logical",
-          "description": "Whether the layer contributes to composition guides."
-        },
-        {
-          "format": "auto_id() / character(1) / NULL / NA",
-          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
-        }
-      ],
-      "value": "A component for `ggchord_fusion()`.",
-      "details": "Supply two explicit leaf paths and interval fronts. Each endpoint must resolve to a source entity and an unambiguous display instance. True character panels require registered residue evidence.",
-      "errors": "Unknown or identical leaf paths, incompatible source units and unavailable fronts are errors. An export retains other valid layers.",
-      "roles": [
-        "Visual attributes supported by the selected mark. Map through a scale or set fixed values.",
-        "Observation grouping within the reference and panel."
-      ],
-      "example_setup": ""
-    },
-    "fusion_zoom": {
-      "title": "Mark an expanded region across views",
-      "intro": "Mark an expanded region across views.",
-      "arguments": [
-        {
-          "format": "panel ID / ID path",
-          "description": "Character vector identifying the source and detail panel paths."
-        },
-        {
-          "format": "interval table",
-          "description": "Source intervals with accver, start and end, and optional from_instance and to_instance selectors."
-        },
-        {
-          "format": "logical",
-          "description": "Whether to draw a highlighter on the source interval."
-        },
-        {
-          "format": "colour",
-          "description": "Fixed appearance of the decoration."
-        },
-        {
-          "format": "0–1 numeric value",
-          "description": "Fixed appearance of the decoration."
-        },
-        {
-          "format": "Nonnegative number",
-          "description": "Fixed appearance of the decoration."
-        },
-        {
-          "format": "string / NULL",
-          "description": "Optional root layer ID."
-        },
-        {
-          "format": "character(1)",
-          "description": "Use `\"interval\"` to connect the selected intervals, or `\"border\"` for leaders to the facing edge of the detail panel."
-        },
-        {
-          "format": "line type / NULL",
-          "description": "With NULL, border leaders are dashed and interval outlines are solid. Supply a line type to override this."
-        }
-      ],
-      "value": "A decorative component for `ggchord_fusion()`.",
-      "details": "Use the declared panel paths and region to mark corresponding areas. Export labels the result as decoration with its actual geometry.",
-      "errors": "A zoom requires a valid region and panel assignment. It does not create a scientific observation record.",
-      "roles": [],
-      "example_setup": ""
-    },
-    "magnify_ggchord": {
-      "title": "Pair an overview with an expanded detail view",
-      "intro": "Pair an overview with an expanded detail view.",
-      "arguments": [
-        {
-          "format": "independent plot object",
-          "description": "Independent plots."
-        },
-        {
-          "format": "source interval table",
-          "description": "Source intervals passed to `fusion_zoom()`."
-        },
-        {
-          "format": "Fusion layout / NULL",
-          "description": "An optional layout for the overview and detail."
-        },
-        {
-          "format": "\"keep\" / \"collect\"",
-          "description": "Policy passed to `ggchord_fusion()`."
-        },
-        {
-          "format": "zoom parameters",
-          "description": "Fixed zoom styles or a root decoration ID. Pass `connector` and `linetype` to configure the zoom leaders."
-        }
-      ],
-      "value": "A Fusion with the two plots and a zoom decoration.",
-      "details": "Construct a Fusion from a source plot, explicit region and a detailed view. Inspect the generated panel arrangement and zoom marks separately.",
-      "errors": "",
       "roles": [],
       "example_setup": ""
     },
@@ -4617,7 +4506,7 @@
         }
       ],
       "value": "Per-layer stage tables, geometry components, stage status, reference and provenance information, diagnostics and measurement conditions.",
-      "details": "Select layers by ID and nested panel path. Source-only export uses the layer's source contract. Physical geometry needs both dimensions; a device-backed measurement is recorded separately from an estimate.\n\nWith the source stage selected, each layer’s `provenance` includes available `data_report()` lineage. The stage tables retain their original roles.",
+      "details": "Select layers by ID and nested panel path. Source-only export uses the layer's source contract. Physical geometry needs both dimensions; a device-backed measurement is recorded separately from an estimate.\n\nWith the source stage selected, each layer’s `provenance` includes available `data_report()` lineage. The stage tables retain their original roles.\n\nA Fusion export reports the requested and effective Magnify levels and the actually displayed residue cells, including their view path and source positions.",
       "errors": "Unknown stages or layer paths and partial dimensions fail. Failed Fusion ribbons and panels identify their path, while valid components remain available.",
       "roles": [],
       "example_setup": ""
@@ -4665,6 +4554,10 @@
         {
           "format": "positive number",
           "description": "Raster device resolution."
+        },
+        {
+          "format": "named list or NULL",
+          "description": "Select actual facet variable values in a display query."
         }
       ],
       "value": "A correspondence table retaining all matching instances and recording reasons for unavailable positions.",
@@ -4941,7 +4834,7 @@
       "details": "Omit `id` to update the latest track. With an explicit ID, declare its layout before or after its layers. Multiple updates apply field by field, and `NULL` leaves an existing field intact. A declaration without layers occupies no space.\n\nTracks default to the positive side, 4 mm thick with a 1 mm preceding gap. On each side, explicit orders reserve their slots. Other tracks take the smallest available positive orders in the order their first layers were added. Order 1 is closest to the reference.\n\nAdd a native `scale_y_*()` to set the latest track's numeric domain. Layout, theme and coordinate settings do not move that binding. Use `scale_for(..., tracks = ids)` to target named tracks.",
       "errors": "Supply an ID or add a track before using the implicit target. Two occupied tracks on the same side cannot have the same explicit order.",
       "roles": [],
-      "example_setup": "First modify an automatically identified band. Then reserve order 2 for the named line band and let the independently added point band fill order 1."
+      "example_setup": "Give the named signal band an 8 mm thickness and a 2 mm gap."
     },
     "scale_seq_continuous": {
       "title": "Describe the linear sequence position scale",
@@ -5302,6 +5195,96 @@
       ],
       "roles": [],
       "example_setup": ""
+    },
+    "fusion_magnify_auto": {
+      "title": "Derive an editable display window from an existing sequence plot",
+      "intro": "Derive an editable feature window or a source-backed character view.",
+      "arguments": [
+        {
+          "format": "ggchord plot or NULL",
+          "description": "Source plot for a standalone composition. Use from and to in addition mode."
+        },
+        {
+          "format": "source interval table",
+          "description": "One-based closed accver, start and end, with optional from/to instance and facet fields."
+        },
+        {
+          "format": "Coord",
+          "description": "Sequence-path Coord for the new detail."
+        },
+        {
+          "format": "nonnegative integer",
+          "description": "Source-unit padding, clipped to the selected source view."
+        },
+        {
+          "format": "Fusion layout or NULL",
+          "description": "Standalone layout. The default gives overview and detail relative widths 2 and 1."
+        },
+        {
+          "format": "\"auto\" / \"keep\" / \"collect\"",
+          "description": "Standalone guide policy."
+        },
+        {
+          "format": "named settings",
+          "description": "Connector, highlight, fill, colour, alpha, linewidth, linetype and decoration ID."
+        },
+        {
+          "format": "function or NULL",
+          "description": "Optional editor preserving the source window or character registration. In Auto, an editor selects Feature unless the source is a registered character view."
+        },
+        {
+          "format": "view ID paths",
+          "description": "Source and target paths for addition to a Fusion. Auto creates a direct child named to."
+        },
+        {
+          "format": "\"auto\" / \"feature\" / \"residue\"",
+          "description": "Auto selects residue detail when the real glyphs fit the measured panel. Feature always uses a sequence window. Residue requires registered characters."
+        }
+      ],
+      "value": "A Fusion or a Magnify declaration for +.",
+      "details": "Auto preserves the source observations and parent visual domains. The guide can connect interval fronts or the detail border.\n\nResidue mode uses a registered character plot or true ungapped reference strings. Specify the alphabet when the reference cannot distinguish DNA and RNA. Existing alignment gaps retain their columns and lack a source position. Use ordered regions on each side of a circular origin.",
+      "errors": "Complex faceted feature geometry needs Manual. Explicit residue requires a supported alphabet and real source-mapped characters. Auto falls back to Feature when characters are absent or cannot fit.",
+      "roles": [],
+      "example_setup": ""
+    },
+    "fusion_magnify_manual": {
+      "title": "Mark a shared source region in two prepared views",
+      "intro": "Mark a shared source region in two prepared views.",
+      "arguments": [
+        {
+          "format": "ggchord plot or NULL",
+          "description": "Source plot for a standalone composition. Use from and to in addition mode."
+        },
+        {
+          "format": "plot or NULL",
+          "description": "A prepared detail plot for a standalone pair."
+        },
+        {
+          "format": "source interval table",
+          "description": "One-based closed accver, start and end, with optional from/to instance and facet fields."
+        },
+        {
+          "format": "Fusion layout or NULL",
+          "description": "Standalone layout. The default gives overview and detail relative widths 2 and 1."
+        },
+        {
+          "format": "\"auto\" / \"keep\" / \"collect\"",
+          "description": "Standalone guide policy."
+        },
+        {
+          "format": "named settings",
+          "description": "Connector, highlight, fill, colour, alpha, linewidth, linetype and decoration ID."
+        },
+        {
+          "format": "view ID paths",
+          "description": "Source and target paths for addition to a Fusion. Auto creates a direct child named to."
+        }
+      ],
+      "value": "A Fusion or a Magnify declaration for +.",
+      "details": "Both views must show the same declared source region. A registered character panel can provide a detail.",
+      "errors": "Unknown views, ambiguous endpoints and conflicting units are errors.",
+      "roles": [],
+      "example_setup": ""
     }
   },
   "families": {
@@ -5352,8 +5335,6 @@
     "read_vcf": "Variant files",
     "ggchord_fusion": "Compose and magnify views",
     "layout_fusion": "Fusion panel layouts",
-    "fusion_ribbon": "Ribbons between panels",
-    "fusion_zoom": "Mark a zoom region across views",
     "register_ggchord_alignment": "Alignment registration and positions",
     "view_ggchord": "Plot dimensions and preview",
     "export_ggchord_layout": "Layout export and inspection",
@@ -5362,7 +5343,8 @@
     "track_limits": "Numerical track ranges",
     "scales_ggchord": "Opt into traditional ggchord palettes",
     "pal_ggchord": "Categorical ggchord colours",
-    "scale_colour_ggchord": "Categorical ggchord colour scale"
+    "scale_colour_ggchord": "Categorical ggchord colour scale",
+    "fusion_magnify_auto": "Source-aligned magnification"
   },
   "articles": {
     "geom_seq": {
@@ -5381,8 +5363,8 @@
       "example_intro": "These examples use the same two illustrative reference sequences.",
       "examples": {
         "geom_seq": {
-          "title": "Plain line and filled band",
-          "description": "First register the reference in the backbone layer and draw plain lines. Then register it in the plot and draw a filled band for each sequence with its own thickness."
+          "title": "Draw a reference band",
+          "description": "Set the band thickness in millimetres."
         },
         "geom_seq_arrow": {
           "title": "Arrowheads for display direction",
@@ -5426,8 +5408,8 @@
       "example_intro": "Compare the nine interval shapes on one synthetic 2,200 bp sequence. Numbers in each panel match the legend. All intervals have the same span and forward strand. The last plot shows a site lollipop and a staggered cut.",
       "examples": {
         "geom_feature": {
-          "title": "Compare all interval shapes and draw a site and cut",
-          "description": "The first two figures use the same input, shape mapping and visual styles. The collinear panel reads left to right. The circular panel starts at the top and reads clockwise."
+          "title": "Draw an interval annotation",
+          "description": "Use block shapes and map the feature type to fill."
         },
         "geom_gene": {
           "title": "Use strand-positioned gene arrows",
@@ -5442,16 +5424,16 @@
           "description": "Draw wide, translucent regions first and add the sequence backbone above them."
         },
         "geom_site": {
-          "title": "Compare all site shapes",
-          "description": "Each symbol uses its recorded position. The lollipop extends outward from the anchor."
+          "title": "Mark an observed position",
+          "description": "Draw a tick at the supplied position."
         },
         "geom_restriction_site": {
-          "title": "Compare all cut shapes",
-          "description": "Each cut has a known boundary on both chains. The legend shows both boundary marks."
+          "title": "Draw a two-strand cut",
+          "description": "Provide the top and bottom cleavage boundaries."
         },
         "shape_feature": {
-          "title": "Configure the common prototype",
-          "description": "Compare arrow and cap dimensions, then use the same block or lollipop specification with multiple location types."
+          "title": "Customize an arrow",
+          "description": "Set the arrowhead length with head_length."
         }
       }
     },
@@ -5472,12 +5454,12 @@
       "example_intro": "Connect fixed labels with leaders, repel a site label and compare two layouts for the same group of genes.",
       "examples": {
         "geom_feature_label": {
-          "title": "Label intervals and sites",
-          "description": "Draw fixed gene text with straight leaders, then use the same label entry with a collision-aware layout for a site."
+          "title": "Bind a label to a named layer",
+          "description": "Use anchor_layer to select the gene layer."
         },
         "geom_gene_label": {
-          "title": "Compare fixed and repelling placement",
-          "description": "Use one crowded gene layer and identical text size in both layouts."
+          "title": "Repel gene labels",
+          "description": "Use repelling labels for nearby features."
         },
         "geom_primer_label": {
           "title": "Label a primer at its 3′ end",
@@ -5508,8 +5490,8 @@
       "example_intro": "Start with original intervals, then colour by the bundle member count or by computed density.",
       "examples": {
         "geom_link_ribbon": {
-          "title": "Draw original interval links",
-          "description": "Use the source intervals as ribbon endpoints and map percent identity to fill."
+          "title": "Draw observed interval ribbons",
+          "description": "Map percent identity to fill."
         },
         "stat_link_bundle": {
           "title": "Group links by both endpoint bins",
@@ -5547,12 +5529,12 @@
           "description": "Map source positions and measured values."
         },
         "geom_track_line": {
-          "title": "Connect samples in coordinate order",
-          "description": "Use an out-of-order input table. The line sorts samples by increasing source position."
+          "title": "Connect values in position order",
+          "description": "The line connects by reference position even when input rows are out of order."
         },
         "geom_track_path": {
-          "title": "Connect samples in input order",
-          "description": "Use the same out-of-order table and connect samples in the order supplied."
+          "title": "Connect values in input order",
+          "description": "The path preserves input order."
         },
         "geom_track_step": {
           "title": "Draw step changes",
@@ -5597,25 +5579,174 @@
         }
       }
     },
-    "ggchord_fusion": {
-      "intro": "Combine named plots with `ggchord_fusion()`. Use `magnify_ggchord()` for a pair of overview and detail plots with a marked source region. It constructs a two-panel Fusion and adds [`fusion_zoom()`](fusion_zoom.html#api-fusion_zoom).",
+    "fusion_magnify_auto": {
+      "intro": "Use Auto to derive a feature or residue detail. Use Manual to connect independent views you have prepared.",
+      "roles": "Both modes use one-based closed source intervals and optional instance selectors.",
+      "details": "The connector marks the same one-based closed source interval in both views. In Auto, padding expands the detail window within the visible source while the highlight stays on the requested interval. Feature detail preserves the parent’s effective visual scales and source statistics. Fully visible HSPs retain their source endpoints. Partially visible HSPs are omitted and reported in the layout export. For Manual, both prepared views must show the complete requested interval with compatible source identities and units.\n\nUse `level = \"feature\"` for an annotation window or `level = \"residue\"` for real DNA, RNA or amino-acid characters from a stored reference sequence or a registered character plot. Residue mode requires source-mapped characters. Set the reference alphabet explicitly when the available characters cannot distinguish DNA and RNA. A registered alignment keeps its observed columns and gaps. Provide separate intervals on each side of a circular origin. With `level = \"auto\"`, the output device and glyph measurements determine if the characters fit. Without characters or enough space, a sequence source yields a Feature view. The layout export records the choice.\n\nTo add the next level to an existing Fusion, set `from` to a registered view path and `to` to a new direct child ID. The new detail can serve as the source for another level. Manual can also use `from` and `to` to connect two registered views.",
       "arguments": {
-        "layout": "A Fusion layout declaration from [`layout_fusion()`](layout_fusion.html#api-layout_fusion) or [`layout_fusion_grid()`](layout_fusion.html#api-layout_fusion_grid). The general constructor defaults to an automatic grid. The magnifier defaults to named `overview` and `detail` panels in one row, with relative widths 2 and 1.",
-        "guides": "Defaults to `\"keep\"` in both entry points. Use `\"collect\"` to collect compatible guides."
+        "detail": "Auto accepts an editing function. Manual accepts a prepared plot in standalone mode.",
+        "guides": "Standalone Auto defaults to collect and Manual defaults to keep."
       },
-      "roles": "The general constructor takes a named list of independent views. The magnifier takes its two views directly and a source region with `accver`, `start` and `end`. Use `...` on the magnifier for the supported zoom connector and highlight styles.",
-      "details": "Both return a Fusion composition. Layout and zoom marks operate on rendered views and preserve the underlying source data. To calculate statistics on a selected region, construct the detail plot with the desired data first.",
-      "example_intro": "Build a small composition from two plots, then pair an overview with a detail plot for a named source region.",
+      "example_intro": "Compare automatic and prepared windows, and see how to enlarge observed bases.",
       "examples": {
-        "ggchord_fusion": {
-          "title": "Compose named panels",
-          "description": "Use the convenient automatic layout to assemble independent views."
+        "fusion_magnify_auto": {
+          "title": "Derive a window and a residue view",
+          "description": "The first call adds 80 bp on each side of the selected interval. The second enlarges eight observed bases from a registered character view."
         },
-        "magnify_ggchord": {
-          "title": "Mark an overview-to-detail zoom",
-          "description": "Create a focused view and identify the matching interval on the overview."
+        "fusion_magnify_manual": {
+          "title": "Connect a prepared window",
+          "description": "Prepare the detail with a display window, then connect the same source interval in both views."
         }
       }
+    },
+    "layer_id": {
+      "intro": "Identify a layer, or let a label find its target automatically.",
+      "details": "Use `layer_id()` for an existing ggplot2 layer. In ggchord layer constructors, use the `id` argument for an explicit name and `auto_id()` for a generated ID. Pass `auto_anchor()` as a label’s `anchor_layer` to resolve a compatible layer in the same plot.",
+      "value": "A layer or a declaration consumed by a ggchord layer or label."
+    },
+    "facet_null": {
+      "intro": "Use native ggplot2 facets to separate observations into panels.",
+      "details": "`facet_null()` uses a single panel, `facet_wrap()` wraps a set of panels, and `facet_grid()` crosses row and column variables. Ensure each faceted ggchord panel has the reference data required by its Coord.",
+      "value": "A native ggplot2 facet specification."
+    },
+    "layout_sequences": {
+      "intro": "Arrange references and display windows in a sequence-path coordinate system.",
+      "details": "Use `layout_sequences()` to choose the displayed instances and the Coord’s supported layout parameters. `suggest_sequence_layout()` derives ordering and orientation from observed relationships and returns the evidence for review before applying its layout.",
+      "value": "A sequence layout or a proposal containing a layout and its evidence."
+    },
+    "geom_residue": {
+      "intro": "Draw aligned characters, colored cells, or both in a Cartesian panel.",
+      "details": "`geom_residue()` controls representation and overflow explicitly. `geom_residue_text()` and `geom_residue_tile()` select one representation. Use a fixed aspect ratio for square cells and `scale_fill_residue()` for an alphabet palette. Gaps retain their alignment columns and have no source position.",
+      "value": "A ggplot2 layer for aligned character cells."
+    },
+    "layout_label_fixed": {
+      "intro": "Place labels at prescribed offsets or adjust positions to resolve collisions.",
+      "details": "Use `layout_label_fixed()` when the anchor, offset and orientation should control placement. Use `layout_label_repel()` for crowded labels. Pass the layout to a compatible label geom, then inspect the result at its intended size.",
+      "value": "A label layout declaration."
+    },
+    "position_offset": {
+      "intro": "Move sequence-bound geometry relative to its reference path.",
+      "details": "Use `position_offset()` for a direct offset, `position_strand()` for offsets that depend on strand, and `position_feature_stack()` to separate overlapping features. These operations retain the observations’ source coordinates.",
+      "value": "A position adjustment for compatible ggchord layers."
+    },
+    "scale_colour_sequence": {
+      "intro": "Apply palettes for reference IDs, strands, feature types, or alignment identity.",
+      "details": "`scale_colour_sequence()` maps reference IDs to colour. The fill scales map strand and feature type as categories, and alignment percent identity as a continuous measure. Map the corresponding variable in `aes()` before adding its scale.",
+      "value": "A ggplot2 scale for the selected data role."
+    },
+    "guide_seq_axis": {
+      "intro": "Position the coordinate guide for a reference or the numeric guide for a track.",
+      "details": "Set `guide_seq_axis()` on `scale_seq_continuous()` to control the position ruler. Set `guide_track_axis()` on the track’s numeric scale to control value ticks. A selected reference can limit which rows show each guide.",
+      "value": "An axis guide for the receiving scale."
+    },
+    "theme_ggchord": {
+      "intro": "Set the appearance of a ggchord plot with a theme preset.",
+      "details": "The base, minimal, dark, publication, and plasmid presets select presentation defaults. Add a preset to the finished layers and use `theme()` for individual elements.",
+      "value": "A ggplot2 theme."
+    },
+    "as_ggchord_seq": {
+      "intro": "Convert references, features, relationships, or aligned characters to ggchord data.",
+      "details": "Select the converter by input role. References register identifiers and lengths. Features use a reference and positions. Links use two endpoints. Character alignments preserve alignment columns and map to source positions when source data is supplied.",
+      "value": "A role-specific data frame in ggchord’s field conventions."
+    },
+    "validate_ggchord_data": {
+      "intro": "Validate data contracts, clean explicitly repairable input, and inspect provenance.",
+      "details": "Validate a single role or a bundle with `validate_ggchord_data()`. Use `validate_ggchord_hierarchy()` for the reference hierarchy, `clean_ggchord_data()` when you want the declared repairs, and `data_report()` to inspect issues, changes or lineage.",
+      "value": "A validation report, a cleaned object, or a report from an existing object."
+    },
+    "filter_ggchord_links": {
+      "intro": "Filter, deduplicate, combine, or derive relationship records.",
+      "details": "Use a filter for explicit thresholds and deduplication for repeated records. Merging combines nearby compatible intervals, while bundling uses bins on both endpoints. `link_ggchord_clusters()` derives links from declared feature membership and reference pairs.",
+      "value": "A relationship table with the output fields and provenance of the selected operation."
+    },
+    "find_ggchord_loci": {
+      "intro": "Find annotation neighborhoods, focus observations on them, or build several display windows.",
+      "details": "Find regions from named targets with `find_ggchord_loci()`. Use `focus_ggchord_data()` for a data bundle and `focus_ggchord_track()` for track observations. `segment_ggchord_data()` prepares coordinated data and a layout for multiple displayed windows.",
+      "value": "A locus table, focused observations, or segmented data with a layout."
+    },
+    "primer_catalog": {
+      "intro": "Look up primer definitions or search a reference for primer binding sites.",
+      "details": "Use `primer_catalog()` to select primer records and `find_primer_bindings()` to search supplied sequences. Set the topology and matching requirements explicitly when the search depends on them.",
+      "value": "Primer catalog records or source-positioned binding observations."
+    },
+    "find_restriction_sites": {
+      "intro": "Find enzyme recognition sites and select which observations to keep.",
+      "details": "Use `find_restriction_sites()` to generate observations from sequence strings. Use `filter_restriction_sites()` to select existing results. Recognition positions and strand-specific cleavage boundaries remain separate fields.",
+      "value": "Restriction-site observations with source positions and available cleavage boundaries."
+    },
+    "build_ggchord_cds": {
+      "intro": "Build a coding-coordinate model and translate its source sequence.",
+      "details": "Build the model from ordered CDS segments. Translation uses the model plus the source characters and respects strand, phase and the configured genetic code.",
+      "value": "A coding-coordinate model or its translation with source-linked residues."
+    },
+    "project_ggchord_features": {
+      "intro": "Project feature intervals or paired endpoints through a coding-coordinate model.",
+      "details": "Choose `project_ggchord_features()` for one reference interval per observation and `project_ggchord_links()` for two related endpoints. Supply a CDS model and preserve each projected segment where a result crosses a coding junction.",
+      "value": "Projected features or links with their source mapping and segmentation."
+    },
+    "read_fasta_lengths": {
+      "intro": "Read reference lengths or aligned characters from FASTA.",
+      "details": "`read_fasta_lengths()` reads a reference table and can retain sequence strings. `read_aligned_fasta()` returns individual aligned cells, including gaps, with an explicit alphabet and any declared source mapping.",
+      "value": "Reference records or an alignment cell table."
+    },
+    "read_bed": {
+      "intro": "Read interval observations, paired intervals, or numeric tracks.",
+      "details": "Use BED for one interval, BEDPE for a pair, and bedGraph or BigWig for numeric values over intervals. These formats use their own source coordinate conventions; read the normalized coordinates from the returned object.",
+      "value": "A feature, relation, or track table with source coordinates."
+    },
+    "read_blast": {
+      "intro": "Read aligner output as source-aware links and, when available, aligned characters.",
+      "details": "Select the reader matching the original format. BLAST and PAF expose endpoint records directly. Chain and delta describe gapped blocks. Use MAF when the file contains explicit aligned characters. Check each reader’s optional decoder requirements.",
+      "value": "Relationship records or a data bundle. Aligned characters are available from formats that supply them."
+    },
+    "read_genbank": {
+      "intro": "Import biological annotations and their relationships.",
+      "details": "GenBank and GFF3 provide reference annotations. Use the relationship reader for links between annotated features and the signature reader for protein or feature signatures. Consult the format-specific arguments for reference IDs and optional dependencies.",
+      "value": "Annotation rows or a bundle containing features, references or relationships."
+    },
+    "register_ggchord_alignment": {
+      "intro": "Register a character panel for source-aware graphics or query coordinates in its data.",
+      "details": "`register_ggchord_alignment()` attaches the character-to-source contract to a plot. `map_alignment_position()` queries alignment columns and source positions from the character table. Gap cells do not acquire a source position.",
+      "value": "A registered plot or a coordinate mapping table."
+    },
+    "view_ggchord": {
+      "intro": "Preview a figure at an output size and control which rendering adjustments are allowed.",
+      "details": "`view_ggchord()` measures a named device or preview size. Add `render_policy()` to control the freedom available to layout at that size. Use the same physical dimensions when evaluating the final render.",
+      "value": "A preview with its measurement, or a rendering policy declaration."
+    },
+    "export_ggchord_layout": {
+      "intro": "Inspect source positions, exported stages, and device-dependent geometry.",
+      "details": "Use `export_ggchord_layout()` for source, mapped, statistic or geometry tables. Use `map_ggchord_position()` to query a location and `diagnose_ggchord()` to inspect issues. Supply physical dimensions and an output device for measured geometry.",
+      "value": "Stage and provenance tables, a location result, or diagnostic records."
+    },
+    "layout_track": {
+      "intro": "Group layers in a track band and arrange bands alongside the reference.",
+      "details": "`add_track()` registers several layers in one band. `layout_track()` sets the layout of an assigned band or declares the layout for a named target. The axis and numerical domain are configured by the track’s scale.",
+      "value": "A track layer declaration or track layout declaration."
+    },
+    "pal_ggchord": {
+      "intro": "Get ggchord’s preset colours as vectors for categories, residue symbols, or continuous mappings.",
+      "details": "| Use | Functions | Result |\n| --- | --- | --- |\n| General categories | `pal_ggchord()` | One colour per requested category. |\n| Named categories | `pal_sequence()`, `pal_strand()`, `pal_feature_type()`, `pal_plasmid()` | Colours keyed by identifiers, strands or feature types. |\n| Continuous values | `pal_pident()`, `pal_link_pident()`, `pal_signal()` | Ordered colour stops for ribbon identity, point-link identity or numeric signal. |\n| Residue symbols | `pal_residue()` | Colours keyed by symbols in the selected DNA, RNA or amino-acid alphabet, including gaps. |\n\nUse a named categorical palette as the `values` of a manual scale. Pass ordered stops as `colours` to a gradient scale.",
+      "value": "A character vector of colour values. Categorical lookups and residue palettes retain their keys as names.",
+      "examples": {
+        "pal_sequence": {
+          "title": "Name colours by sequence",
+          "description": ""
+        },
+        "pal_pident": {
+          "title": "Get continuous colour stops",
+          "description": ""
+        },
+        "pal_residue": {
+          "title": "Get colours for DNA symbols",
+          "description": ""
+        }
+      }
+    },
+    "scale_colour_ggchord": {
+      "intro": "Apply ggchord’s preset colours as native ggplot2 scales.",
+      "details": "Choose colour or fill to match the mapping in `aes()`. The categorical scales use discrete colours or the feature-type palette. Point-link percent identity and signal scales use continuous gradients.",
+      "value": "A ggplot2 scale."
     }
   }
 }

@@ -101,7 +101,8 @@ def check_article_directories(doc, main_content, rel, lang, local, navigation, p
             rel+': chapter links differ from the handbook registry or repeat entries')
 
     excluded = {h for box in styled(main_content, 'lesson-extension', 'details') for h in box.iter()}
-    grouped_api = len(main_content.findall('.//section[@data-api]')) > 1
+    grouped_api = (main_content.find('.//div[@data-api-article]') is not None or
+                   len(main_content.findall('.//section[@data-api]')) > 1)
     levels = {'h2'} if local=='gallery.html' or grouped_api else {'h2','h3'}
     headings = [h for h in main_content.iter() if h.tag in levels and h.get('id') and h not in excluded]
     require(len(outlines)==int(bool(headings)),rel+': outline must be omitted when there are no article headings')
@@ -505,18 +506,29 @@ def main():
                     continue
                 scope = articles[0]
                 headings = [h.get('id') for h in scope.findall('./section/h2')]
-                require(headings==['ref-usage','ref-arguments','ref-roles','ref-details','ref-examples','ref-related'],
+                order = ['ref-usage','ref-arguments','ref-roles','ref-value','ref-details','ref-examples','ref-related']
+                require(headings==[id_ for id_ in order if id_ in headings] and
+                        {'ref-usage','ref-value','ref-details','ref-examples'} <= set(headings),
                         rel+': incorrect shared API sections')
-                signature_nodes = scope.findall('./section[@aria-labelledby="ref-usage"]/div[@data-api-signature]')
+                usage = scope.findall('./section[@aria-labelledby="ref-usage"]/pre/code')
+                signature_nodes = usage[0].findall('./span[@data-api-signature]') if len(usage)==1 else []
                 require([node.get('data-api-signature') for node in signature_nodes]==members,
-                        rel+': signatures must appear together in the shared usage')
+                        rel+': signatures must appear in one usage block')
+                examples = scope.find('./section[@aria-labelledby="ref-examples"]')
+                featured = shared_articles[path.stem]['featured_examples']
+                visible = [h.get('id') for h in examples.findall('./section/h3')] if examples is not None else []
+                require(visible==['example-'+name if name==path.stem else bookmark(name,'ref-examples')
+                                  for name in featured],
+                        rel+': representative examples differ from the family plan')
+                require(len(styled(scope,'reference-more-examples','details'))==int(len(featured)<len(members)),
+                        rel+': other examples must be available in one disclosure')
                 terms = styled(scope,'argument-term')
                 expected_terms = list(dict.fromkeys(key for name in members for key in api[name]['defaults']))
                 require([text(term.find('code')) for term in terms]==expected_terms,
                         rel+': shared arguments must appear once in signature order')
                 shared_badges = set()
                 for topic in members:
-                    shared_badges.update(flex.get(topic,{}))
+                    shared_badges.update(flex.get(topic,{}).items())
                 require(len(styled(scope,'flexible-parameter'))==len(shared_badges), rel+': stray shared flexible badge')
             for topic in members:
                 if topic not in entries:
@@ -553,7 +565,8 @@ def main():
                     folder = args.reference_inputs/lang
                     folder.mkdir(parents=True, exist_ok=True)
                     (folder/(topic+'.R')).write_text(copied+'\n')
-                sigs = [clipboard(b) for b in styled(entry,'code-disclosure','details') if b.get('data-code-kind')=='signature']
+                sigs = ([text(entry)] if shared else
+                        [clipboard(b) for b in styled(entry,'code-disclosure','details') if b.get('data-code-kind')=='signature'])
                 signatures[(lang,topic)] = sigs
                 callable_name = api[topic]['usage'].split('(',1)[0]
                 args_shown = ['  '+key+(' = '+value if value else '') for key,value in api[topic]['defaults'].items()]
@@ -582,11 +595,13 @@ def main():
                         argument_terms[(lang,topic,arg)] = ids
                         badges = styled(name,'flexible-parameter','a')
                         kind = flex.get(topic,{}).get(arg)
+                        if shared:
+                            badges = [badge for badge in badges if badge.get('data-flexible-kind')==kind]
                         require(len(badges)==int(bool(kind)), f'{rel}: badge count for {arg}')
                         if badges and kind:
                             marked.add(arg)
                             badge = badges[0]
-                            require(list(name)[-2:]==[code,badge] and text(badge)==label and
+                            require((shared or list(name)[-2:]==[code,badge]) and text(badge)==label and
                                     badge.get('href')=='../parameters.html#'+sections_by_kind[kind],
                                     f'{rel}: wrong inline label or destination for {arg}')
                 if not shared:
@@ -609,22 +624,29 @@ def main():
             require(len(groups_here)==len(manual['groups']), rel+': missing reference index category')
             for group, (key, spec) in zip(groups_here,manual['groups'].items()):
                 family_heads = list(dict.fromkeys(owner[name] for name in spec['topics']))
-                terms = group.findall('./dl/dt')
-                definitions = group.findall('./dl/dd')
-                require(not group.findall('./dl/dd/ul') and
-                        all(term.tag==('dt' if i%2==0 else 'dd')
-                            for i,term in enumerate(group.findall('./dl/*'))),
-                        rel+': group should have one index row per document')
+                rows = group.findall('./dl/div')
+                family_rows = [row for row in rows if 'reference-shortcuts' not in row.get('class','').split()]
+                shortcuts_rows = [row for row in rows if 'reference-shortcuts' in row.get('class','').split()]
+                require(all('reference-index-row' in row.get('class','').split() and
+                            [child.tag for child in row]==['dt','dd'] for row in rows),
+                        rel+': index titles and links must stay in one row')
+                for row in rows:
+                    links_to_wrap = row.findall('./dd/a')
+                    require(all((item.tail or '').isspace() for item in links_to_wrap[:-1]),
+                            rel+': adjacent function links must be separated by whitespace')
                 require(group.find(f'./h2[@id="family-{key}"]') is not None and
-                        len(terms)==len(definitions)==len(family_heads),rel+': incorrect API families for '+key)
-                for head, term, definition in zip(family_heads,terms,definitions):
+                        len(family_rows)==len(family_heads),rel+': incorrect API families for '+key)
+                for head, row in zip(family_heads,family_rows):
+                    term, definition = row.find('dt'), row.find('dd')
                     links_to = [destination(rel,a.get('href','')) for a in term.iter('a')]
                     members = [destination(rel,a.get('href','')) for a in definition.iter('a')]
                     family_path = lang+'/'+api_path(head)
                     require(links_to==[(family_path,'')] and
                             members==[(family_path,bookmark(name)) for name in families[head]],
                             rel+': reference index links do not match the '+head+' family')
-                shortcuts = group.findall('./p[@class="reference-shortcuts"]/a')
+                require(len(shortcuts_rows)==int(bool(spec.get('shortcuts'))),
+                        rel+': shortcuts must have one labelled index row')
+                shortcuts = [a for row in shortcuts_rows for a in row.findall('./dd/a')]
                 require([destination(rel,a.get('href','')) for a in shortcuts]==
                         [(lang+'/'+api_path(name), bookmark(name)) for name in spec.get('shortcuts',[])],
                         rel+': wrong shortcuts to functions documented in another category')
@@ -765,14 +787,11 @@ def main():
         require(sorted(parameter_hits)==sorted(expected_hits),lang+': parameter search destinations differ from the runtime formals')
         example_queries = {query: row['url'] for row in search if row.get('kind')=='tool'
                            for query in row.get('queries',[])}
-        subjects = {name for primary in shared_articles for name in families[primary]}
-        subjects.update(manual['previous_family_members'])
-        subjects.update(name for names in manual['previous_family_members'].values() for name in names)
         function_queries = {query: row['url'] for row in search if row.get('kind')=='function'
                             for query in row.get('queries',[])}
         parameter_queries = {query: row['url'] for row in search if row.get('kind')=='parameter'
                              for query in row.get('queries',[])}
-        for name in subjects:
+        for name in api:
             require(function_queries.get(name)==api_path(name)+'#'+bookmark(name),
                     f'{lang}: exact function search must open its signature for {name}')
             for key in api[name]['defaults']:

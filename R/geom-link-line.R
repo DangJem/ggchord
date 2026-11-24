@@ -32,6 +32,14 @@ ggchord_link_route <- function(route, dots, caller) {
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
 #' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
+#' @details On a Fusion root, provide a relationship data frame and use
+#'   `qpanel_path` and `spanel_path`, `qinstance` and `sinstance`, and
+#'   `qfacet` and `sfacet` as optional endpoint roles in the data or in `aes()`.
+#'   Facets are named lists of facet values. Paths can be single IDs or list
+#'   columns of character vectors. Omitted selectors must resolve uniquely.
+#'   Fusion uses identity Stat and Position, straight or curved routes, and
+#'   native visual scales. Endpoints are projected on the actual backbone
+#'   without an additional gap or obstacle routing.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Source references are `qaccver` and `saccver`. Point links consume `qpos` and `spos`. Interval links and alignment segments consume closed interval endpoints on both references. Supply reliable `qstrand` and `sstrand` or explicit relative direction when the geometry requires it.
 #' @examples

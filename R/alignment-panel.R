@@ -114,7 +114,7 @@ ggchord_alignment_layout <- function(built, data) {
     sequence_unit = unique(data$sequence_unit))
 }
 
-ggchord_alignment_interval <- function(panel, id, entity, start, end, instance) {
+ggchord_alignment_interval <- function(panel, id, entity, start, end, instance, point = FALSE) {
   d <- panel$layout$character_data
   candidates <- list()
   for (row in unique(d$display_row[d$source_accver == entity])) {
@@ -129,10 +129,13 @@ ggchord_alignment_interval <- function(panel, id, entity, start, end, instance) 
     ends <- match(c(start, end), a$source_position)
     direction <- sign * if (end >= start) 1 else -1
     # Source boundaries flank exact endpoint cells; interior gap columns are retained.
-    x <- a$display_column[ends] + c(-.5, .5) * direction
+    x <- if (point) a$display_column[ends[1L]] else
+      a$display_column[ends] + c(-.5, .5) * direction
     candidates[[length(candidates) + 1L]] <- list(panel = id, key = row, instance = row,
       entity = entity, origin = 1, start = start, end = end, unit = a$sequence_unit[1L],
-      character_x = x, character_y = row,
+      character_x = x, character_y = row, point = point, facet = 1L, facet_key = list(),
+      reference_length = if (length(unique(a$source_length)) == 1L) unique(a$source_length),
+      reference_namespace = if (length(unique(a$reference_namespace)) == 1L) unique(a$reference_namespace),
       fragment = identical(unique(a$source_scope), "fragment"))
   }
   candidates
@@ -151,7 +154,10 @@ ggchord_alignment_front <- function(panel, endpoint) {
       any(projected$x < 0 | projected$x > 1 | projected$y < 0 | projected$y > 1))
     ggchord_stop("Registered character panel: selected source boundary is outside visible limits")
   bounds <- panel$context$panel_bounds_mm
-  data.frame(position_boundary = if (endpoint$end >= endpoint$start) c(endpoint$start - 1, endpoint$end) else c(endpoint$start, endpoint$end - 1),
+  data.frame(position_boundary = if (isTRUE(endpoint$point)) NA_real_ else
+      if (endpoint$end >= endpoint$start) c(endpoint$start - 1, endpoint$end) else
+        c(endpoint$start, endpoint$end - 1),
+    source_position = if (isTRUE(endpoint$point)) endpoint$start else NA_real_, facet_panel = 1L,
     local_x = endpoint$character_x, local_y = as.numeric(xy$y),
     x = bounds[1] + projected$x * diff(bounds[1:2]), y = bounds[3] + projected$y * diff(bounds[3:4]),
     normal_x = 0, normal_y = 1, tangent_x = -1, tangent_y = 0,

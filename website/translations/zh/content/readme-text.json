@@ -1,5 +1,5 @@
 {
-  "source_sha256": "2ddde0e50f2d8c532dcf669c189000554d5aea7759c567aa2711ca80cd0cff95",
+  "source_sha256": "8c077b6568e18018615fc2336cb08195878c2bfbb0b6a0172f7f1ad851102975",
   "strings": {
     "title": {
       "source_sha256": "3dae9df0bcd52f7b79153e9d60c16ec82d9899fcc87119dabe6c9dfdef8303a1",
@@ -192,9 +192,9 @@
       "translation": "显示 32 条原始 HSP，颜色表示原始一致性，线宽表示原始比对长度。"
     },
     "fusion-caption": {
-      "source_sha256": "969fe1fb5962681e12fd75c74a645174b7937f5a8cb2ba89ed44281bb1ba104c",
+      "source_sha256": "306d72a854364ec7d5ff1122f8c567a7e0badba79e99eedb02a61a209b9518a0",
       "status": "reviewed",
-      "translation": "同一组比对关系用三种视图呈现，随后逐步放大至源区间、比对窗口和可逐碱基阅读的细节。"
+      "translation": "同一组关系先从三种视图观察，再沿源区间进入比对窗口，最后看到逐个碱基。用 Auto Magnify 派生详图窗口，或用 Manual Magnify 连接已准备好的字符视图。"
     },
     "dotplot-guide": {
       "source_sha256": "bfb1fc1ae841b7db4962192dcdb143f910db3d62692d89356f7787a925384ee8",

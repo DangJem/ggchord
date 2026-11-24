@@ -238,9 +238,8 @@
         "ggchord_fusion",
         "layout_fusion",
         "layout_fusion_grid",
-        "fusion_ribbon",
-        "fusion_zoom",
-        "magnify_ggchord"
+        "fusion_magnify_auto",
+        "fusion_magnify_manual"
       ],
       "previous_anchors": [
         "compose-panels",
@@ -282,7 +281,7 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(data = seqs) +\n  geom_seq() + geom_gene(data = genes) + coord_collinear()\n\nggchord() +\n  geom_seq(data = seqs) + geom_gene(data = genes) + coord_chord()\n\n# 有参考即可绘制观察层，不必显示骨架\nggchord(data = seqs) + geom_gene(data = genes) + coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_gene(data = genes) +\n  coord_collinear()",
       "related": [
         "geom_seq",
         "as_ggchord_seq",
@@ -297,7 +296,11 @@
         "data": "NULL",
         "mapping": "aes()",
         "...": ""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "ggchord_data": {
       "usage": "ggchord_data(sequences, features = list(), links = list(),\n             tracks = list(), alignments = list())",
@@ -333,7 +336,12 @@
         "links": "list()",
         "tracks": "list()",
         "alignments": "list()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes",
+        "links"
+      ]
     },
     "layer_id": {
       "usage": "layer_id(layer, id)",
@@ -356,7 +364,10 @@
       "defaults": {
         "layer": "",
         "id": ""
-      }
+      },
+      "example_fixtures": [
+        "seqs"
+      ]
     },
     "coord_chord": {
       "usage": "coord_chord(\n  start_angle = 0, direction = \"counterclockwise\",\n  xlim = NULL, ylim = NULL, expand = FALSE,\n  clip = \"on\", fit = \"geometry\"\n)",
@@ -400,7 +411,12 @@
         "expand": "FALSE",
         "clip": "\"on\"",
         "fit": "\"geometry\""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes",
+        "links"
+      ]
     },
     "coord_circular": {
       "usage": "coord_circular(\n  start_angle = 0, direction = \"clockwise\",\n  xlim = NULL, ylim = NULL, expand = FALSE,\n  clip = \"on\", fit = \"geometry\"\n)",
@@ -426,7 +442,7 @@
         ]
       ],
       "roles": [],
-      "examples": "circular_seq <- data.frame(\n  accver = \"A\", length = 1000, sequence_unit = \"bp\", topology = \"circular\"\n)\nggchord(circular_seq) +\n  geom_seq() +\n  geom_seq_label_center(aes(label = accver), size = 5) +\n  layout_sequences(angular_gap = 12) +\n  coord_circular()",
+      "examples": "ggchord(one_seq) +\n  geom_seq() +\n  coord_circular()",
       "related": [
         "geom_seq",
         "geom_gene",
@@ -443,7 +459,11 @@
         "expand": "FALSE",
         "clip": "\"on\"",
         "fit": "\"geometry\""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "one_seq"
+      ]
     },
     "coord_collinear": {
       "usage": "coord_collinear(\n  axis = \"x\", ratio = NULL,\n  xlim = NULL, ylim = NULL, expand = FALSE,\n  clip = \"on\", fit = \"geometry\"\n)",
@@ -469,7 +489,7 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(data = seqs) +\n  geom_seq() +\n  geom_gene(data = genes) +\n  geom_link_ribbon(data = links) +\n  layout_sequences(\n    orientation = c(A = 1, B = -1),\n    curvature = c(A = 0.4, B = -0.3)\n  ) +\n  coord_collinear(axis = \"x\")",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_link_ribbon(data = links) +\n  coord_collinear()",
       "related": [
         "layout_sequences",
         "suggest_sequence_layout",
@@ -484,7 +504,11 @@
         "expand": "FALSE",
         "clip": "\"on\"",
         "fit": "\"geometry\""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "links"
+      ]
     },
     "coord_radial_synteny": {
       "usage": "coord_radial_synteny(\n  start_angle = 0, direction = \"clockwise\",\n  xlim = NULL, ylim = NULL, expand = FALSE,\n  clip = \"on\", fit = \"geometry\"\n)",
@@ -510,7 +534,7 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(data = seqs) +\n  geom_seq() +\n  geom_gene(data = genes) +\n  geom_link_ribbon(data = links) +\n  layout_sequences(inner_radius = 0.3, curvature = c(A = 0.6, B = -0.4)) +\n  coord_radial_synteny(start_angle = 35, fit = \"labels\")",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_link_ribbon(data = links) +\n  coord_radial_synteny(start_angle = 35)",
       "related": [
         "layout_sequences",
         "geom_link_ribbon",
@@ -525,7 +549,11 @@
         "expand": "FALSE",
         "clip": "\"on\"",
         "fit": "\"geometry\""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "links"
+      ]
     },
     "coord_sankey": {
       "usage": "coord_sankey(\n  axis = \"y\", ratio = NULL,\n  xlim = NULL, ylim = NULL, expand = FALSE,\n  clip = \"on\", fit = \"geometry\"\n)",
@@ -551,7 +579,7 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(data = seqs) +\n  geom_seq() +\n  geom_gene(data = genes) +\n  geom_link_ribbon(data = links) +\n  layout_sequences(column_gap = 64, curvature = c(A = 0.45, B = -0.3)) +\n  coord_sankey()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_link_ribbon(data = links) +\n  coord_sankey()",
       "related": [
         "layout_sequences",
         "geom_link_ribbon",
@@ -566,7 +594,11 @@
         "expand": "FALSE",
         "clip": "\"on\"",
         "fit": "\"geometry\""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "links"
+      ]
     },
     "coord_dotplot": {
       "usage": "coord_dotplot(\n  ratio = 1, xlim = NULL, ylim = NULL,\n  expand = FALSE, clip = \"on\", fit = \"geometry\"\n)",
@@ -603,7 +635,11 @@
         "expand": "FALSE",
         "clip": "\"on\"",
         "fit": "\"geometry\""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "links"
+      ]
     },
     "facet_null": {
       "usage": "ggplot2::facet_null(shrink = TRUE)",
@@ -622,7 +658,11 @@
       "native": true,
       "defaults": {
         "shrink": "TRUE"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "facet_wrap": {
       "usage": "ggplot2::facet_wrap(\n  facets, nrow = NULL, ncol = NULL, scales = \"fixed\", space = \"fixed\",\n  shrink = TRUE, labeller = \"label_value\", as.table = TRUE,\n  switch = deprecated(), drop = TRUE, dir = \"h\",\n  strip.position = \"top\", axes = \"margins\", axis.labels = \"all\"\n)",
@@ -691,7 +731,11 @@
         "strip.position": "\"top\"",
         "axes": "\"margins\"",
         "axis.labels": "\"all\""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "facet_grid": {
       "usage": "ggplot2::facet_grid(\n  rows = NULL, cols = NULL, scales = \"fixed\", space = \"fixed\",\n  shrink = TRUE, labeller = \"label_value\", as.table = TRUE,\n  switch = NULL, drop = TRUE, margins = FALSE,\n  axes = \"margins\", axis.labels = \"all\", facets = deprecated()\n)",
@@ -755,7 +799,11 @@
         "axes": "\"margins\"",
         "axis.labels": "\"all\"",
         "facets": "deprecated()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "layout_sequences": {
       "usage": "layout_sequences(\n  order = NULL, orientation = 1, length_mode = \"proportional\",\n  angular_gap = NULL, row_gap = NULL, segment_gap = NULL,\n  column_gap = NULL, radius = NULL, inner_radius = NULL,\n  curvature = NULL, align = NULL, anchor = NULL, windows = NULL\n)",
@@ -801,7 +849,7 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(data = seqs) +\n  geom_seq() +\n  geom_gene(data = genes) +\n  layout_sequences(\n    order = c(\"B\", \"A\"), orientation = c(A = 1, B = -1),\n    align = \"center\", curvature = c(A = 0.4, B = -0.3)\n  ) +\n  coord_collinear()\n\n# 同一来源显示两个窗口，不重新计算源统计\nw <- data.frame(instance_id = c(\"A_left\", \"A_right\"),\n                accver = \"A\", start = c(1, 501), end = c(500, 1000),\n                row_id = \"A_split\")\nggchord(data = one_seq) + geom_seq() +\n  layout_sequences(windows = w, segment_gap = 3) + coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_gene(data = genes) +\n  layout_sequences(order = c(\"B\", \"A\"), orientation = c(A = 1, B = -1)) +\n  coord_collinear()",
       "related": [
         "layout_dotplot",
         "suggest_sequence_layout",
@@ -826,7 +874,11 @@
         "align": "NULL",
         "anchor": "NULL",
         "windows": "NULL"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "layout_dotplot": {
       "usage": "layout_dotplot(\n  x_order = NULL, y_order = NULL,\n  x_orientation = 1, y_orientation = 1,\n  x_gap = 0, y_gap = 0\n)",
@@ -859,7 +911,11 @@
         "y_orientation": "1",
         "x_gap": "0",
         "y_gap": "0"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "links"
+      ]
     },
     "suggest_sequence_layout": {
       "usage": "suggest_sequence_layout(\n  sequences, links, order = NULL, reference = NULL,\n  weight = \"aligned_length\", min_support = 0.1\n)",
@@ -884,7 +940,7 @@
         ]
       ],
       "roles": [],
-      "examples": "suggestion <- suggest_sequence_layout(seqs, links, weight = \"count\")\nsuggestion$evidence\nggchord(data = seqs) + geom_seq() + geom_link_ribbon(data = links) +\n  do.call(layout_sequences, suggestion$layout) + coord_collinear()",
+      "examples": "suggestion <- suggest_sequence_layout(seqs, links, weight = \"count\")\nsuggestion$layout",
       "related": [
         "layout_sequences",
         "coord_collinear",
@@ -898,7 +954,11 @@
         "reference": "NULL",
         "weight": "\"aligned_length\"",
         "min_support": "0.1"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "links"
+      ]
     },
     "geom_seq": {
       "usage": "geom_seq(\n  mapping = NULL,\n  data = NULL,\n  geometry = \"auto\",\n  thickness = 1,\n  stat = \"identity\",\n  position = \"identity\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -941,7 +1001,7 @@
         "`colour, linewidth, linetype, alpha`",
         "`fill`"
       ],
-      "examples": "ggchord() +\n  geom_seq(data = seqs, colour = \"#187B77\", linewidth = 0.8) +\n  coord_collinear()\n\nggchord(seqs) +\n  geom_seq(\n    geometry = \"band\",\n    thickness = c(A = 2, B = 3),\n    fill = \"#B3DED3\",\n    colour = \"#187B77\"\n  ) +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq(geometry = \"band\", thickness = 2) +\n  coord_collinear()",
       "related": [
         "geom_seq_arrow",
         "ggchord",
@@ -962,7 +1022,10 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs"
+      ]
     },
     "geom_seq_label": {
       "usage": "geom_seq_label(\n  mapping = NULL,\n  data = NULL,\n  anchor = \"middle\",\n  position = \"identity\",\n  label_layout = layout_label_fixed(orientation = \"horizontal\"),\n  leader = \"auto\",\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -1024,7 +1087,10 @@
         "show.legend": "FALSE",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs"
+      ]
     },
     "geom_seq_label_center": {
       "usage": "geom_seq_label_center(\n  mapping = NULL,\n  data = NULL,\n  position = \"identity\",\n  label_layout = layout_label_fixed(orientation = \"horizontal\"),\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -1078,7 +1144,11 @@
         "show.legend": "FALSE",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "one_seq"
+      ]
     },
     "geom_seq_break": {
       "usage": "geom_seq_break(\n  mapping = NULL,\n  data = NULL,\n  mark = \"slash\",\n  size = 2,\n  position = \"identity\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -1135,7 +1205,11 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "one_seq"
+      ]
     },
     "geom_feature": {
       "usage": "geom_feature(\n  mapping = NULL,\n  data = NULL,\n  location = \"auto\",\n  shape = NULL,\n  thickness = 2,\n  stat = \"identity\",\n  position = \"identity\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -1185,7 +1259,7 @@
         "`fill, colour, alpha, linewidth, linetype`",
         "`group`"
       ],
-      "examples": "interval_shapes <- c(\n  \"block\", \"arrow\", \"arrow_flush\", \"arrow_triangle\", \"diamond\",\n  \"capped_line\", \"arrow_arc\", \"chevron\", \"lollipop\", \"point\", \"tick\"\n)\nshape_numbers <- sprintf(\"%02d\", seq_along(interval_shapes))\n\nshape_reference <- data.frame(\n  accver = \"demo\", length = 2650L, sequence_unit = \"bp\", topology = \"circular\"\n)\nshape_intervals <- data.frame(\n  accver = \"demo\",\n  start = seq(45L, by = 240L, length.out = length(interval_shapes)),\n  strand = \"+\",\n  label = shape_numbers,\n  glyph = factor(interval_shapes, levels = interval_shapes)\n)\nshape_intervals$end <- shape_intervals$start + 165L\n\nshape_comparison <- ggchord(shape_reference) +\n  geom_seq(geometry = \"line\", colour = \"#89979A\", show.legend = FALSE) +\n  geom_feature(\n    aes(shape = glyph), data = shape_intervals, location = \"interval\",\n    id = \"interval_marks\", position = position_offset(6), thickness = 3,\n    fill = \"#77B5AE\", colour = \"#24474A\"\n  ) +\n  geom_feature_label(\n    aes(label = label), anchor_layer = \"interval_marks\", anchor = \"middle\",\n    label_layout = layout_label_fixed(orientation = \"horizontal\", offset = 5),\n    leader = \"none\", colour = \"#24474A\", size = 3.2\n  ) +\n  scale_shape_manual(\n    name = \"Interval shape\",\n    values = stats::setNames(interval_shapes, interval_shapes),\n    breaks = interval_shapes,\n    labels = paste(shape_numbers, interval_shapes),\n    guide = guide_legend(ncol = 4, theme = theme(legend.byrow = TRUE))\n  ) +\n  scale_seq_continuous(guide = \"none\") +\n  theme_ggchord_minimal() +\n  theme(\n    legend.position = \"bottom\",\n    legend.title.position = \"top\",\n    legend.key.width = grid::unit(11, \"mm\"),\n    legend.key.height = grid::unit(6, \"mm\"),\n    legend.text = element_text(size = 10),\n    plot.margin = margin(9, 12, 9, 12)\n  )\n\ncollinear_shapes <- shape_comparison + coord_collinear() +\n  labs(title = \"Interval shapes in collinear coordinates\")\ncircular_shapes <- shape_comparison + coord_circular(fit = \"labels\") +\n  guides(shape = guide_legend(ncol = 1)) +\n  theme(legend.position = \"right\") +\n  labs(title = \"Interval shapes in circular coordinates\")\n\ncollinear_shapes\ncircular_shapes\n\n# Draw a recorded site as a point and mark a staggered cut.\ncut <- data.frame(accver = \"A\", pos = 700, cut_top = 700, cut_bottom = 704)\nggchord(one_seq) +\n  geom_seq() +\n  geom_feature(data = sites, shape = \"lollipop\", colour = \"#187B77\") +\n  geom_feature(data = cut, location = \"cut\", colour = \"#915525\") +\n  coord_circular() +\n  labs(title = \"A site lollipop and a staggered cut\")",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_feature(aes(fill = type), data = genes, shape = \"block\") +\n  coord_collinear()",
       "related": [
         "geom_gene",
         "geom_primer",
@@ -1207,7 +1281,11 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "geom_gene": {
       "usage": "geom_gene(\n  mapping = NULL,\n  data = NULL,\n  shape = \"arrow_flush\",\n  thickness = 2,\n  stat = \"identity\",\n  position = position_strand(),\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -1254,7 +1332,7 @@
         "`fill, colour, alpha, linewidth, linetype`",
         "`group`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_gene(aes(fill = type), data = genes) +\n  scale_fill_manual(values = gene_colours) +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_gene(aes(fill = type), data = genes) +\n  coord_collinear()",
       "related": [
         "geom_feature",
         "geom_primer",
@@ -1278,7 +1356,11 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "geom_primer": {
       "usage": "geom_primer(\n  mapping = NULL,\n  data = NULL,\n  shape = \"arrow_arc\",\n  thickness = 2,\n  stat = \"identity\",\n  position = position_offset(0),\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -1325,7 +1407,7 @@
         "`fill, colour, alpha, linewidth, linetype`",
         "`group`"
       ],
-      "examples": "primers <- data.frame(\n  accver = \"A\", feature_id = c(\"p1\", \"p2\"),\n  start = c(80, 700), end = c(100, 720),\n  strand = c(\"+\", \"-\"), label = c(\"Forward\", \"Reverse\")\n)\nggchord(one_seq) +\n  geom_seq(geometry = \"double\", thickness = 3) +\n  geom_primer(data = primers, thickness = 0.6) +\n  coord_circular()",
+      "examples": "primers <- data.frame(accver = \"A\", start = c(80, 700),\n  end = c(100, 720), strand = c(\"+\", \"-\"))\nggchord(one_seq) +\n  geom_seq() +\n  geom_primer(data = primers) +\n  coord_circular()",
       "related": [
         "geom_feature",
         "geom_gene",
@@ -1346,7 +1428,11 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "one_seq"
+      ]
     },
     "geom_seq_region": {
       "usage": "geom_seq_region(\n  mapping = NULL,\n  data = NULL,\n  shape = \"block\",\n  thickness = 2,\n  stat = \"identity\",\n  position = position_offset(0),\n  alpha = 0.25,\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -1418,7 +1504,11 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "geom_feature_label": {
       "usage": "geom_feature_label(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  anchor_layer = auto_anchor(),\n  anchor = \"auto\",\n  position = NULL,\n  label_layout = layout_label_fixed(),\n  leader = \"auto\",\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -1470,7 +1560,7 @@
         "`label`",
         "`colour, fill, size, family, fontface, angle, alpha`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_gene(data = genes, id = \"genes\") +\n  geom_feature_label(\n    aes(label = label),\n    anchor_layer = \"genes\",\n    label_layout = layout_label_fixed(offset = 3),\n    leader = \"straight\",\n    segment_linewidth = 0.35\n  ) +\n  coord_collinear()\n\nggchord(one_seq) +\n  geom_seq() +\n  geom_feature(data = sites, location = \"site\") +\n  geom_feature_label(\n    aes(label = label),\n    label_layout = layout_label_repel(arrangement = \"columns\"),\n    leader = \"auto\"\n  ) +\n  coord_circular()",
+      "examples": "ggchord(seqs) +\n  geom_gene(data = genes, id = \"genes\") +\n  geom_feature_label(aes(label = label), anchor_layer = \"genes\") +\n  coord_collinear()",
       "related": [
         "auto_anchor",
         "geom_gene_label",
@@ -1492,7 +1582,11 @@
         "show.legend": "FALSE",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "geom_gene_label": {
       "usage": "geom_gene_label(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  anchor_layer = auto_anchor(),\n  anchor = \"middle\",\n  position = NULL,\n  label_layout = layout_label_fixed(orientation = \"horizontal\"),\n  leader = \"auto\",\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -1544,7 +1638,7 @@
         "`label`",
         "`colour, fill, size, family, fontface, angle, alpha`"
       ],
-      "examples": "label_plot +\n  geom_gene_label(aes(label = label), size = 3.5)\n\nlabel_plot +\n  geom_gene_label(\n    aes(label = label), size = 3.5,\n    label_layout = layout_label_repel()\n  )",
+      "examples": "label_plot +\n  geom_gene_label(aes(label = label), label_layout = layout_label_repel())",
       "related": [
         "auto_anchor",
         "geom_feature_label",
@@ -1567,7 +1661,12 @@
         "show.legend": "FALSE",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "label_seq",
+        "crowded_genes",
+        "label_plot"
+      ]
     },
     "geom_primer_label": {
       "usage": "geom_primer_label(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  anchor_layer = auto_anchor(),\n  anchor = \"head\",\n  position = NULL,\n  label_layout = layout_label_fixed(),\n  leader = \"auto\",\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -1642,7 +1741,11 @@
         "show.legend": "FALSE",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "geom_site": {
       "usage": "geom_site(\n  mapping = NULL,\n  data = NULL,\n  shape = \"tick\",\n  size = 2,\n  stat = \"identity\",\n  position = \"identity\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -1688,7 +1791,7 @@
         "`shape`",
         "`colour, fill, alpha, size, linewidth, linetype`"
       ],
-      "examples": "# Site shapes are anchored at recorded residue positions.\nsite_reference <- data.frame(\n  accver = \"demo\", length = 2200L, sequence_unit = \"bp\", topology = \"circular\"\n)\nsite_kinds <- c(\"tick\", \"point\", \"diamond\", \"block\", \"lollipop\")\nposition_sites <- data.frame(\n  accver = \"demo\",\n  pos = c(300L, 700L, 1100L, 1500L, 1900L),\n  kind = factor(site_kinds, levels = site_kinds),\n  label = c(\"300\", \"700\", \"1100\", \"1500\", \"1900\")\n)\nsite_comparison <- ggchord(site_reference) +\n  geom_seq(geometry = \"line\", colour = \"#89979A\", show.legend = FALSE) +\n  geom_site(aes(shape = kind), data = position_sites, id = \"position_marks\", size = 3,\n    colour = \"#24474A\") +\n  geom_site_label(aes(label = label), anchor_layer = \"position_marks\",\n    label_layout = layout_label_fixed(orientation = \"horizontal\", offset = 13),\n    leader = \"none\", size = 3.2) +\n  scale_shape_manual(name = \"Site shape\", values = stats::setNames(site_kinds, site_kinds),\n    breaks = site_kinds, guide = guide_legend(nrow = 1)) +\n  scale_seq_continuous(guide = \"none\") +\n  coord_circular(fit = \"labels\") +\n  theme_ggchord_minimal() +\n  theme(legend.position = \"bottom\", legend.key.size = grid::unit(7, \"mm\"),\n    plot.margin = margin(9, 12, 9, 12)) +\n  labs(title = \"Site shapes anchor at recorded positions\")\nsite_comparison",
+      "examples": "ggchord(one_seq) +\n  geom_seq() +\n  geom_site(data = sites, shape = \"tick\") +\n  coord_collinear()",
       "related": [
         "geom_restriction_site",
         "geom_site_label",
@@ -1707,7 +1810,12 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "one_seq",
+        "sites"
+      ]
     },
     "geom_restriction_site": {
       "usage": "geom_restriction_site(\n  mapping = NULL,\n  data = NULL,\n  shape = \"cut\",\n  size = 2,\n  stat = \"identity\",\n  position = \"identity\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -1753,7 +1861,7 @@
         "`shape`",
         "`colour, fill, alpha, size, linewidth, linetype`"
       ],
-      "examples": "cut_reference <- data.frame(\n  accver = \"A\", length = 2000L, sequence_unit = \"bp\", topology = \"circular\"\n)\ncut_shapes <- c(\"cut\", \"block\", \"point\", \"diamond\", \"lollipop\")\ncuts <- data.frame(\n  accver = \"A\", pos = c(160L, 540L, 920L, 1300L, 1680L),\n  kind = factor(cut_shapes, levels = cut_shapes)\n)\ncuts <- transform(cuts, cut_top = pos, cut_bottom = pos + 60L)\n\nggchord(cut_reference) +\n  geom_seq(geometry = \"line\", show.legend = FALSE) +\n  geom_restriction_site(aes(shape = kind), data = cuts, size = 2.8) +\n  scale_shape_manual(\"Cut shape\", values = stats::setNames(cut_shapes, cut_shapes)) +\n  scale_seq_continuous(guide = \"none\") +\n  theme_ggchord_minimal() +\n  coord_circular()",
+      "examples": "cuts <- data.frame(accver = \"A\", pos = 300, cut_top = 300, cut_bottom = 306)\nggchord(one_seq) +\n  geom_seq() +\n  geom_restriction_site(data = cuts) +\n  coord_collinear()",
       "related": [
         "geom_site",
         "geom_site_label",
@@ -1772,7 +1880,11 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "one_seq"
+      ]
     },
     "geom_site_label": {
       "usage": "geom_site_label(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  anchor_layer = auto_anchor(),\n  position = NULL,\n  label_layout = layout_label_fixed(),\n  leader = \"auto\",\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -1843,7 +1955,12 @@
         "show.legend": "FALSE",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "one_seq",
+        "sites"
+      ]
     },
     "geom_link_line": {
       "usage": "geom_link_line(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  route = \"curve\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -1885,7 +2002,7 @@
         "`colour, alpha, linewidth, linetype`",
         "`group`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_link_line(data = points, route = \"curve\", colour = \"#187B77\") +\n  coord_chord()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_link_line(data = points) +\n  coord_chord()",
       "related": [
         "geom_link_ribbon",
         "coord_chord",
@@ -1903,7 +2020,11 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "points"
+      ]
     },
     "geom_link_ribbon": {
       "usage": "geom_link_ribbon(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  route = \"curve\",\n  fill_mode = \"solid\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id(),\n  gap = 0.4,\n  avoid = \"none\",\n  avoid_strength = 0.5\n)",
@@ -1958,7 +2079,7 @@
         "`fill_from, fill_to`",
         "`group`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_link_ribbon(aes(fill = pident), data = links) +\n  scale_fill_gradient(name = \"Identity (%)\", limits = c(0, 100)) +\n  coord_chord()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_link_ribbon(aes(fill = pident), data = links) +\n  coord_chord()",
       "related": [
         "geom_link_line",
         "stat_link_bundle",
@@ -1981,7 +2102,11 @@
         "gap": "0.4",
         "avoid": "\"none\"",
         "avoid_strength": "0.5"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "links"
+      ]
     },
     "geom_alignment_segment": {
       "usage": "geom_alignment_segment(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -2037,7 +2162,11 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "links"
+      ]
     },
     "geom_residue": {
       "usage": "geom_residue(\n  mapping = NULL,\n  data = NULL,\n  representation = \"tile_text\",\n  overflow = \"tile\",\n  line_width = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -2300,7 +2429,11 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "signal"
+      ]
     },
     "geom_track_point": {
       "usage": "geom_track_point(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  track = NULL,\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -2362,7 +2495,11 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "signal"
+      ]
     },
     "geom_track_line": {
       "usage": "geom_track_line(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  track = NULL,\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -2405,7 +2542,7 @@
         "`group`",
         "`colour, fill, alpha, linewidth, linetype`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_line(\n    aes(x = pos, y = value), data = unordered_signal,\n    colour = \"#187B77\", linewidth = 0.8\n  ) +\n  geom_track_point(\n    aes(x = pos, y = value), data = unordered_signal,\n    colour = \"#187B77\", size = 2\n  ) +\n  scale_y_continuous(name = \"Signal\") +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_track_line(aes(x = pos, y = value), data = unordered_signal) +\n  coord_collinear()",
       "related": [
         "geom_track",
         "layout_track",
@@ -2424,7 +2561,12 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "signal",
+        "unordered_signal"
+      ]
     },
     "geom_track_path": {
       "usage": "geom_track_path(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  track = NULL,\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -2467,7 +2609,7 @@
         "`group`",
         "`colour, fill, alpha, linewidth, linetype`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_path(\n    aes(x = pos, y = value), data = unordered_signal,\n    colour = \"#187B77\", linewidth = 0.8\n  ) +\n  geom_track_point(\n    aes(x = pos, y = value), data = unordered_signal,\n    colour = \"#187B77\", size = 2\n  ) +\n  scale_y_continuous(name = \"Signal\") +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_track_path(aes(x = pos, y = value), data = unordered_signal) +\n  coord_collinear()",
       "related": [
         "geom_track",
         "layout_track",
@@ -2486,7 +2628,12 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "signal",
+        "unordered_signal"
+      ]
     },
     "geom_track_step": {
       "usage": "geom_track_step(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  track = NULL,\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -2548,7 +2695,11 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "signal"
+      ]
     },
     "geom_track_col": {
       "usage": "geom_track_col(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"stack\",\n  track = NULL,\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -2610,7 +2761,11 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "signal"
+      ]
     },
     "geom_track_bar": {
       "usage": "geom_track_bar(\n  mapping = NULL,\n  data = NULL,\n  stat = \"count\",\n  position = \"stack\",\n  track = NULL,\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -2672,7 +2827,11 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "signal"
+      ]
     },
     "geom_track_area": {
       "usage": "geom_track_area(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"stack\",\n  track = NULL,\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -2734,7 +2893,11 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "signal"
+      ]
     },
     "geom_track_tile": {
       "usage": "geom_track_tile(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  track = NULL,\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -2796,7 +2959,11 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "signal"
+      ]
     },
     "geom_track_interval": {
       "usage": "geom_track_interval(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  track = NULL,\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -2855,7 +3022,13 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes",
+        "states",
+        "gene_colours"
+      ]
     },
     "annotation_seq_scalebar": {
       "usage": "annotation_seq_scalebar(\n  length,\n  sequence = NULL,\n  instance = NULL,\n  location = \"bottomleft\",\n  label = NULL,\n  height = 1,\n  text_size = 3,\n  colour = \"black\",\n  id = auto_id()\n)",
@@ -2906,7 +3079,11 @@
         "text_size": "3",
         "colour": "\"black\"",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "one_seq"
+      ]
     },
     "layout_label_fixed": {
       "usage": "layout_label_fixed(\n  orientation = \"feature\",\n  side = \"positive\",\n  offset = 1,\n  along = 0,\n  overlap = \"hide\",\n  fit = \"none\",\n  wrap = NULL\n)",
@@ -2934,7 +3111,7 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(seqs) +\n  geom_gene(data = genes) +\n  geom_feature_label(\n    aes(label = label),\n    label_layout = layout_label_fixed(\n      orientation = \"horizontal\", offset = 2, overlap = \"allow\"\n    )\n  ) +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_gene(data = genes) +\n  geom_gene_label(aes(label = label), label_layout = layout_label_fixed(offset = 2)) +\n  coord_collinear()",
       "related": [
         "layout_label_repel",
         "geom_feature_label",
@@ -2949,7 +3126,11 @@
         "overlap": "\"hide\"",
         "fit": "\"none\"",
         "wrap": "NULL"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "layout_label_repel": {
       "usage": "layout_label_repel(\n  arrangement = \"auto\",\n  orientation = \"auto\",\n  side = \"both\",\n  offset = 1,\n  padding = 1,\n  fit = \"wrap\",\n  wrap = NULL,\n  max_lines = 2,\n  min_size = 1.5,\n  max_overlaps = Inf,\n  outer_size = NULL\n)",
@@ -2989,7 +3170,7 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(one_seq) +\n  geom_feature(data = subset(genes, accver == \"A\")) +\n  geom_feature_label(\n    aes(label = label),\n    label_layout = layout_label_repel(\n      arrangement = \"columns\", side = \"positive\", padding = 1.5, outer_size = 3.3\n    )\n  ) +\n  coord_circular()",
+      "examples": "label_plot +\n  geom_gene_label(aes(label = label), label_layout = layout_label_repel())",
       "related": [
         "layout_label_fixed",
         "geom_feature_label",
@@ -3008,7 +3189,12 @@
         "min_size": "1.5",
         "max_overlaps": "Inf",
         "outer_size": "NULL"
-      }
+      },
+      "example_fixtures": [
+        "label_seq",
+        "crowded_genes",
+        "label_plot"
+      ]
     },
     "position_offset": {
       "usage": "position_offset(offset = 0)",
@@ -3027,7 +3213,11 @@
       "native": false,
       "defaults": {
         "offset": "0"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "position_strand": {
       "usage": "position_strand(offset = 1)",
@@ -3046,7 +3236,11 @@
       "native": false,
       "defaults": {
         "offset": "1"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "position_feature_stack": {
       "usage": "position_feature_stack(\n  spacing = 1, base_position = position_identity(),\n  direction = \"positive\",\n  order = \"source\"\n)",
@@ -3065,7 +3259,7 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(data = one_seq) + geom_seq() +\n  geom_feature(data = subset(genes, accver == \"A\"), shape = \"arrow\",\n    position = position_feature_stack(\n      base_position = position_offset(-2), spacing = 1,\n      direction = \"negative\", order = \"priority\")) +\n  geom_feature_label(aes(label = label), label_layout = layout_label_repel()) +\n  coord_circular()",
+      "examples": "ggchord(one_seq) +\n  geom_seq() +\n  geom_feature(data = subset(genes, accver == \"A\"),\n    position = position_feature_stack(spacing = 1)) +\n  coord_circular()",
       "related": [
         "position_offset",
         "position_strand",
@@ -3078,7 +3272,12 @@
         "base_position": "position_identity()",
         "direction": "\"positive\"",
         "order": "\"source\""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "one_seq",
+        "genes"
+      ]
     },
     "stat_coverage": {
       "usage": "stat_coverage(\n  mapping = NULL, data = NULL,\n  geom = \"track_col\", position = \"identity\",\n  binwidth = NULL, windows = NULL, bounds = \"error\",\n  track = NULL, ..., na.rm = FALSE,\n  show.legend = NA, inherit.aes = TRUE, id = auto_id()\n)",
@@ -3129,7 +3328,7 @@
         "`y`",
         "`fill, colour, alpha`"
       ],
-      "examples": "ggchord(data = seqs) + geom_seq() +\n  layout_track(\"coverage\", thickness = 5) +\n  stat_coverage(data = intervals, binwidth = 100, track = \"coverage\") +\n  scale_y_continuous(limits = c(0, 1),\n                    labels = scales::label_percent()) +\n  coord_collinear()\n\n# 同一个统计通过Geom入口调用\nggchord(data = seqs) +\n  geom_track_line(data = intervals, aes(y = after_stat(mean_depth)),\n                  stat = \"coverage\", binwidth = 100) +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  stat_coverage(data = intervals, binwidth = 100) +\n  coord_collinear()",
       "related": [
         "geom_track",
         "geom_track_interval",
@@ -3152,7 +3351,12 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes",
+        "intervals"
+      ]
     },
     "stat_link_bundle": {
       "usage": "stat_link_bundle(\n  mapping = NULL, data = NULL,\n  geom = \"link_ribbon\", position = \"identity\",\n  bins = 80, min_bundle = 2, ...,\n  na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()\n)",
@@ -3197,7 +3401,7 @@
         "`group`",
         "`fill, colour, alpha`"
       ],
-      "examples": "ggchord(data = seqs) + geom_seq() +\n  stat_link_bundle(data = links, bins = c(q = 20, s = 20),\n    min_bundle = 2, aes(fill = after_stat(n_members))) +\n  scale_fill_viridis_c(name = \"Members\") + coord_chord()",
+      "examples": "ggchord(seqs) +\n  stat_link_bundle(aes(fill = after_stat(n_members)),\n    data = nearby_links, bins = 5, min_bundle = 2) +\n  coord_chord()",
       "related": [
         "bundle_ggchord_links",
         "stat_link_density",
@@ -3216,7 +3420,12 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "links",
+        "nearby_links"
+      ]
     },
     "stat_link_density": {
       "usage": "stat_link_density(\n  mapping = NULL, data = NULL,\n  geom = \"link_ribbon\", position = \"identity\",\n  bins = 80, normalization = \"none\", ...,\n  na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()\n)",
@@ -3260,7 +3469,7 @@
         "`weight, group`",
         "`fill, colour, alpha`"
       ],
-      "examples": "ggchord(data = seqs) + geom_seq() +\n  stat_link_density(data = links,\n    aes(fill = after_stat(density)), bins = 20,\n    normalization = \"pair_max\") +\n  scale_fill_viridis_c(name = \"Relative density\", limits = c(0, 1)) +\n  coord_chord()",
+      "examples": "ggchord(seqs) +\n  stat_link_density(aes(fill = after_stat(density)), data = nearby_links,\n    bins = 5, normalization = \"pair_max\") +\n  coord_chord()",
       "related": [
         "stat_link_bundle",
         "geom_link_ribbon",
@@ -3279,7 +3488,12 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "links",
+        "nearby_links"
+      ]
     },
     "scale_for": {
       "usage": "scale_for(scale, layers = NULL, tracks = NULL, by = \"shared\")",
@@ -3298,7 +3512,7 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(seqs) +\n  geom_link_ribbon(aes(fill = pident), data = links) +\n  geom_gene(aes(fill = strand), data = genes, id = \"genes\") +\n  scale_for(scale_fill_strand(), layers = \"genes\")\n\nggchord(seqs) +\n  geom_seq(aes(colour = accver)) +\n  scale_for(scale_colour_viridis_d()) +\n  geom_gene(aes(fill = accver), data = genes, alpha = 0.5)\n\nggchord(seqs) +\n  geom_seq(aes(colour = accver)) +\n  scale_colour_viridis_d() +\n  geom_gene(aes(fill = accver), data = genes, alpha = 0.5)\n\nsignal_by_sample <- rbind(\n  transform(signal, sample = \"Control\"),\n  transform(signal, value = 10 * value, sample = \"Treatment\")\n)\n\nggchord(seqs) +\n  geom_seq() +\n  layout_track(\"signal\", thickness = 12, gap = 3) +\n  geom_track_point(aes(x = pos, y = value), data = signal_by_sample, track = \"signal\") +\n  scale_for(\n    scale_y_continuous(name = \"Signal\", n.breaks = 3, guide = guide_track_axis()),\n    tracks = \"signal\",\n    by = \"panel\"\n  ) +\n  scale_seq_continuous(guide = \"none\") +\n  facet_wrap(vars(sample)) +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_link_ribbon(aes(fill = pident), data = links) +\n  geom_gene(aes(fill = strand), data = genes, id = \"genes\") +\n  scale_for(scale_fill_strand(), layers = \"genes\")",
       "related": [
         "auto_id",
         "layout_track",
@@ -3317,7 +3531,12 @@
         "layers": "NULL",
         "tracks": "NULL",
         "by": "\"shared\""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes",
+        "links"
+      ]
     },
     "scale_fill_residue": {
       "usage": "scale_fill_residue(\n  alphabet = \"DNA\", name = waiver(), values = NULL,\n  na.value = \"#B8C1C5\", guide = \"legend\", ...\n)",
@@ -3378,7 +3597,11 @@
       "defaults": {
         "plots": "",
         "tracks": "NULL"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "signal"
+      ]
     },
     "guide_seq_axis": {
       "usage": "guide_seq_axis(\n  sequences = NULL,\n  side = \"positive\",\n  angle = \"auto\",\n  check.overlap = TRUE,\n  theme = NULL,\n  gap = NULL,\n  orientation = \"auto\"\n)",
@@ -3406,7 +3629,7 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(data = seqs) + geom_seq() +\n  scale_seq_continuous(breaks = scales::breaks_width(200),\n    guide = guide_seq_axis(sequences = \"A\", side = \"negative\",\n      gap = grid::unit(1, \"mm\"), orientation = \"parallel\",\n      theme = theme(axis.text = element_text(size = 8)))) +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  scale_seq_continuous(guide = guide_seq_axis(sequences = \"A\", side = \"negative\")) +\n  coord_collinear()",
       "related": [
         "scale_seq_continuous",
         "theme_ggchord",
@@ -3421,7 +3644,10 @@
         "theme": "NULL",
         "gap": "NULL",
         "orientation": "\"auto\""
-      }
+      },
+      "example_fixtures": [
+        "seqs"
+      ]
     },
     "guide_track_axis": {
       "usage": "guide_track_axis(\n  position = \"start\", sequences = NULL,\n  angle = waiver(), check.overlap = FALSE, theme = NULL\n)",
@@ -3443,7 +3669,7 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(data = seqs) + layout_track(\"signal\") +\n  geom_track_line(data = signal, aes(x = pos, y = value), track = \"signal\") +\n  scale_y_continuous(guide = guide_track_axis(\n    position = \"end\", sequences = \"A\", angle = 0)) +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_track_line(aes(x = pos, y = value), data = signal) +\n  scale_y_continuous(guide = guide_track_axis(position = \"end\")) +\n  coord_collinear()",
       "related": [
         "track_limits",
         "layout_track",
@@ -3458,7 +3684,11 @@
         "angle": "waiver()",
         "check.overlap": "FALSE",
         "theme": "NULL"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "signal"
+      ]
     },
     "theme_ggchord": {
       "usage": "theme_ggchord(\n  base_size = 11,\n  base_family = \"\"\n)",
@@ -3471,7 +3701,7 @@
         ]
       ],
       "roles": [],
-      "examples": "p_basic + theme_ggchord(base_size = 12) +\n  theme(legend.position = \"bottom\", ggchord.axis.text = element_text(colour = \"#40545A\"))",
+      "examples": "p_basic + theme_ggchord(base_size = 12)",
       "related": [
         "theme_ggchord_minimal",
         "theme_ggchord_dark",
@@ -3484,7 +3714,12 @@
       "defaults": {
         "base_size": "11",
         "base_family": "\"\""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes",
+        "p_basic"
+      ]
     },
     "theme_ggchord_minimal": {
       "usage": "theme_ggchord_minimal(\n  base_size = 11,\n  base_family = \"\"\n)",
@@ -3507,7 +3742,12 @@
       "defaults": {
         "base_size": "11",
         "base_family": "\"\""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes",
+        "p_basic"
+      ]
     },
     "theme_ggchord_dark": {
       "usage": "theme_ggchord_dark(\n  base_size = 11,\n  base_family = \"\"\n)",
@@ -3530,7 +3770,12 @@
       "defaults": {
         "base_size": "11",
         "base_family": "\"\""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes",
+        "p_basic"
+      ]
     },
     "theme_ggchord_publication": {
       "usage": "theme_ggchord_publication(\n  base_size = 10,\n  base_family = \"\"\n)",
@@ -3553,7 +3798,12 @@
       "defaults": {
         "base_size": "10",
         "base_family": "\"\""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes",
+        "p_basic"
+      ]
     },
     "theme_ggchord_plasmid": {
       "usage": "theme_ggchord_plasmid(\n  base_size = 11,\n  base_family = \"\"\n)",
@@ -3576,7 +3826,12 @@
       "defaults": {
         "base_size": "11",
         "base_family": "\"\""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "one_seq",
+        "genes"
+      ]
     },
     "as_ggchord_seq": {
       "usage": "as_ggchord_seq(\n  x,\n  columns = NULL,\n  lengths = NULL,\n  ids = NULL,\n  sequence_unit = NULL,\n  topology = NULL\n)",
@@ -3601,7 +3856,7 @@
         ]
       ],
       "roles": [],
-      "examples": "raw <- data.frame(chrom = c(\"A\", \"B\"), size = c(1000, 800))\nref <- as_ggchord_seq(raw, columns = c(accver = \"chrom\", length = \"size\"),\n                       sequence_unit = \"bp\")\nggchord(ref) + geom_seq()",
+      "examples": "raw <- data.frame(chrom = c(\"A\", \"B\"), size = c(1000, 800))\nas_ggchord_seq(raw, columns = c(accver = \"chrom\", length = \"size\"), sequence_unit = \"bp\")",
       "related": [
         "ggchord",
         "geom_seq",
@@ -3635,7 +3890,7 @@
         ]
       ],
       "roles": [],
-      "examples": "raw <- data.frame(chrom = \"A\", begin = 100, finish = 240, direction = \"+\")\nfeatures <- as_ggchord_feature(raw, columns = c(\n  accver = \"chrom\", start = \"begin\", end = \"finish\", strand = \"direction\"))\nggchord(seqs) + geom_feature(data = features)",
+      "examples": "raw <- data.frame(chrom = \"A\", begin = 100, finish = 240, direction = \"+\")\nas_ggchord_feature(raw,\n  columns = c(accver = \"chrom\", start = \"begin\", end = \"finish\", strand = \"direction\"))",
       "related": [
         "geom_feature",
         "geom_gene",
@@ -3667,7 +3922,7 @@
         ]
       ],
       "roles": [],
-      "examples": "paired <- as_ggchord_link(links, kind = \"interval\", sequence_unit = \"bp\")\nggchord(seqs) + geom_link_ribbon(data = paired)",
+      "examples": "paired <- as_ggchord_link(links, kind = \"interval\", sequence_unit = \"bp\")\npaired[c(\"qaccver\", \"qstart\", \"qend\", \"saccver\", \"sstart\", \"send\")]",
       "related": [
         "geom_link_line",
         "geom_link_ribbon",
@@ -3680,7 +3935,10 @@
         "columns": "NULL",
         "kind": "\"interval\"",
         "sequence_unit": "NULL"
-      }
+      },
+      "example_fixtures": [
+        "links"
+      ]
     },
     "as_ggchord_alignment": {
       "usage": "as_ggchord_alignment(\n  sequences,\n  alphabet,\n  source_data = NULL,\n  circular = FALSE\n)",
@@ -3699,7 +3957,7 @@
         ]
       ],
       "roles": [],
-      "examples": "cells <- as_ggchord_alignment(c(A = \"AC-G\", B = \"ACTG\"), alphabet = \"DNA\")\nggplot(cells, aes(alignment_column, accver, label = symbol)) +\n  geom_residue(aes(fill = symbol))",
+      "examples": "cells <- as_ggchord_alignment(c(A = \"AC-G\", B = \"ACTG\"), alphabet = \"DNA\")\ncells[c(\"accver\", \"alignment_column\", \"symbol\", \"is_gap\")]",
       "related": [
         "read_aligned_fasta",
         "geom_residue",
@@ -3734,7 +3992,7 @@
         ]
       ],
       "roles": [],
-      "examples": "bundle <- ggchord_data(seqs, features=list(genes=genes), links=list(blast=links))\nreport <- validate_ggchord_data(bundle)\nreport$issues\nvalidate_ggchord_data(genes, role=\"feature\", sequences=seqs, action=\"error\")",
+      "examples": "outside <- transform(genes[1, ], end = 1050)\nreport <- validate_ggchord_data(outside, role = \"feature\", sequences = seqs)\nreport$issues[c(\"code\", \"row\", \"column\")]",
       "related": [
         "validate_ggchord_hierarchy",
         "clean_ggchord_data",
@@ -3747,7 +4005,11 @@
         "sequences": "NULL",
         "action": "\"report\"",
         "checks": "c(\"schema\", \"coordinates\", \"units\", \"references\", \"provenance\")"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "validate_ggchord_hierarchy": {
       "usage": "validate_ggchord_hierarchy(\n  sequences,\n  genomes,\n  action = \"report\"\n)",
@@ -3773,7 +4035,10 @@
         "sequences": "",
         "genomes": "",
         "action": "\"report\""
-      }
+      },
+      "example_fixtures": [
+        "seqs"
+      ]
     },
     "clean_ggchord_data": {
       "usage": "clean_ggchord_data(\n  x,\n  unknown_id = \"error\",\n  out_of_range = \"error\",\n  reversed_interval = \"error\",\n  invalid_pident = \"error\",\n  empty_label = \"keep\",\n  replacement_label = \"unannotated\"\n)",
@@ -3801,7 +4066,7 @@
         ]
       ],
       "roles": [],
-      "examples": "bundle <- ggchord_data(seqs, features=list(genes=genes))\ncleaned <- clean_ggchord_data(bundle, out_of_range=\"clip\")\ndata_report(cleaned)$changes",
+      "examples": "outside <- transform(genes[1, ], end = 1050)\ndata <- ggchord_data(seqs, features = list(genes = outside))\ncleaned <- clean_ggchord_data(data, out_of_range = \"clip\")\ndata_report(cleaned)$changes[c(\"column\", \"before\", \"after\")]",
       "related": [
         "validate_ggchord_data",
         "focus_ggchord_data",
@@ -3816,7 +4081,11 @@
         "invalid_pident": "\"error\"",
         "empty_label": "\"keep\"",
         "replacement_label": "\"unannotated\""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "data_report": {
       "usage": "data_report(\n  x,\n  sections = NULL\n)",
@@ -3829,7 +4098,7 @@
         ]
       ],
       "roles": [],
-      "examples": "selected <- filter_ggchord_links(links, min_pident=95)\ndata_report(selected)\ndata_report(selected, sections=c(\"changes\", \"lineage\"))",
+      "examples": "selected <- filter_ggchord_links(links, min_pident = 95)\ndata_report(selected, sections = \"lineage\")$lineage",
       "related": [
         "validate_ggchord_data",
         "filter_ggchord_links",
@@ -3839,7 +4108,10 @@
       "defaults": {
         "x": "",
         "sections": "NULL"
-      }
+      },
+      "example_fixtures": [
+        "links"
+      ]
     },
     "filter_ggchord_links": {
       "usage": "filter_ggchord_links(\n  data,\n  seq_ids = NULL,\n  min_pident = NULL,\n  max_pident = NULL,\n  min_length = NULL,\n  max_evalue = NULL,\n  min_bitscore = NULL,\n  min_query_coverage = NULL,\n  min_subject_coverage = NULL,\n  keep_pairs = NULL,\n  drop_self_links = FALSE,\n  sort_by = NULL\n)",
@@ -3882,7 +4154,7 @@
         ]
       ],
       "roles": [],
-      "examples": "strong <- filter_ggchord_links(links, min_pident=95, drop_self_links=TRUE)\nggchord(seqs) + geom_link_ribbon(data=strong)\ndata_report(strong)",
+      "examples": "strong <- filter_ggchord_links(links, min_pident = 95)\nstrong[c(\"qaccver\", \"saccver\", \"pident\")]",
       "related": [
         "deduplicate_ggchord_links",
         "merge_ggchord_links",
@@ -3902,7 +4174,10 @@
         "keep_pairs": "NULL",
         "drop_self_links": "FALSE",
         "sort_by": "NULL"
-      }
+      },
+      "example_fixtures": [
+        "links"
+      ]
     },
     "deduplicate_ggchord_links": {
       "usage": "deduplicate_ggchord_links(\n  data,\n  by = \"exact\",\n  tolerance = 0,\n  keep = \"first\",\n  min_reciprocal_overlap = 0.9\n)",
@@ -3937,7 +4212,10 @@
         "tolerance": "0",
         "keep": "\"first\"",
         "min_reciprocal_overlap": "0.9"
-      }
+      },
+      "example_fixtures": [
+        "links"
+      ]
     },
     "merge_ggchord_links": {
       "usage": "merge_ggchord_links(\n  data,\n  max_gap = 0,\n  max_pident_difference = NULL,\n  group_by = NULL,\n  extra_columns = \"consistent\",\n  identity_summary = \"none\"\n)",
@@ -3962,7 +4240,7 @@
         ]
       ],
       "roles": [],
-      "examples": "summaries <- merge_ggchord_links(links, max_gap=20, extra_columns=\"consistent\")\nggchord(seqs) + geom_link_ribbon(data=summaries)\ndata_report(summaries)$lineage",
+      "examples": "merged <- merge_ggchord_links(links, max_gap = 20)\nmerged[c(\"qaccver\", \"qstart\", \"qend\", \"saccver\", \"sstart\", \"send\")]",
       "related": [
         "bundle_ggchord_links",
         "deduplicate_ggchord_links",
@@ -3976,7 +4254,10 @@
         "group_by": "NULL",
         "extra_columns": "\"consistent\"",
         "identity_summary": "\"none\""
-      }
+      },
+      "example_fixtures": [
+        "links"
+      ]
     },
     "bundle_ggchord_links": {
       "usage": "bundle_ggchord_links(\n  data,\n  sequences,\n  bins = 80,\n  min_bundle = 2,\n  weight = NULL,\n  group_by = NULL\n)",
@@ -4001,7 +4282,7 @@
         ]
       ],
       "roles": [],
-      "examples": "bundled <- bundle_ggchord_links(links, seqs, bins=c(q=20, s=20), min_bundle=2)\nggchord(seqs) + geom_link_ribbon(data=bundled)",
+      "examples": "bundled <- bundle_ggchord_links(nearby_links, seqs, bins = 5, min_bundle = 2)\nbundled[c(\"qaccver\", \"saccver\", \"n_members\")]",
       "related": [
         "stat_link_bundle",
         "merge_ggchord_links",
@@ -4015,7 +4296,12 @@
         "min_bundle": "2",
         "weight": "NULL",
         "group_by": "NULL"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "links",
+        "nearby_links"
+      ]
     },
     "link_ggchord_clusters": {
       "usage": "link_ggchord_clusters(\n  features,\n  membership,\n  pairs,\n  paralogs = \"drop\",\n  segment_policy = \"error\",\n  unmatched = \"error\",\n  max_links = 10000\n)",
@@ -4043,7 +4329,7 @@
         ]
       ],
       "roles": [],
-      "examples": "membership <- data.frame(feature_id=c(\"g1\",\"g3\"), cluster_id=\"cluster1\")\npairs <- data.frame(qaccver=\"A\", saccver=\"B\")\ncluster_links <- link_ggchord_clusters(genes, membership, pairs)\nggchord(seqs) + geom_link_ribbon(data=cluster_links)",
+      "examples": "groups <- data.frame(feature_id = c(\"g1\", \"g3\"), cluster_id = \"c1\")\npairs <- data.frame(qaccver = \"A\", saccver = \"B\")\nlink_ggchord_clusters(genes, groups, pairs)",
       "related": [
         "read_feature_relations",
         "find_common_features",
@@ -4058,7 +4344,10 @@
         "segment_policy": "\"error\"",
         "unmatched": "\"error\"",
         "max_links": "10000"
-      }
+      },
+      "example_fixtures": [
+        "genes"
+      ]
     },
     "find_ggchord_loci": {
       "usage": "find_ggchord_loci(\n  sequences,\n  features,\n  targets,\n  upstream = 0,\n  downstream = 0\n)",
@@ -4093,7 +4382,11 @@
         "targets": "",
         "upstream": "0",
         "downstream": "0"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "focus_ggchord_data": {
       "usage": "focus_ggchord_data(\n  x,\n  loci,\n  expand = 0,\n  boundary = \"trim\"\n)",
@@ -4125,7 +4418,12 @@
         "loci": "",
         "expand": "0",
         "boundary": "\"trim\""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes",
+        "links"
+      ]
     },
     "focus_ggchord_track": {
       "usage": "focus_ggchord_track(\n  data,\n  sequences,\n  loci,\n  type = \"point\",\n  boundary = \"trim\"\n)",
@@ -4160,7 +4458,11 @@
         "loci": "",
         "type": "\"point\"",
         "boundary": "\"trim\""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "signal"
+      ]
     },
     "segment_ggchord_data": {
       "usage": "segment_ggchord_data(\n  x,\n  loci,\n  boundary = \"trim\",\n  orientation = 1,\n  segment_gap = 2\n)",
@@ -4195,7 +4497,11 @@
         "boundary": "\"trim\"",
         "orientation": "1",
         "segment_gap": "2"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "primer_catalog": {
       "usage": "primer_catalog(\n  set = \"all\",\n  aliases = FALSE\n)",
@@ -4246,7 +4552,7 @@
         ]
       ],
       "roles": [],
-      "examples": "target <- c(A=\"TTGCAAAAACG\")\nbindings <- find_primer_bindings(target, primers=c(test=\"ACGTTGCA\"),\n                                circular=TRUE, min_annealed_bases=8)\nref <- as_ggchord_seq(data.frame(accver=\"A\", length=nchar(target)), sequence_unit=\"bp\", topology=\"circular\")\nggchord(ref) + geom_primer(data=bindings) + coord_circular()",
+      "examples": "target <- c(A = \"TTGCAAAAACG\")\nfind_primer_bindings(target, primers = c(test = \"ACGTTGCA\"),\n  circular = TRUE, min_annealed_bases = 8)",
       "related": [
         "primer_catalog",
         "geom_primer",
@@ -4286,7 +4592,7 @@
         ]
       ],
       "roles": [],
-      "examples": "target <- c(A=\"ACGGAATTCGTT\")\nfound <- find_restriction_sites(target, enzymes=\"EcoRI\", circular=FALSE)\nref <- as_ggchord_seq(data.frame(accver=\"A\", length=nchar(target)), sequence_unit=\"bp\")\nggchord(ref) + geom_restriction_site(data=found) + coord_collinear()",
+      "examples": "sites <- find_restriction_sites(c(A = \"ACGGAATTCGTT\"), enzymes = \"EcoRI\",\n  circular = FALSE)\nsites[c(\"label\", \"pos\", \"cut_top\", \"cut_bottom\")]",
       "related": [
         "filter_restriction_sites",
         "geom_restriction_site",
@@ -4300,7 +4606,10 @@
         "circular": "NULL",
         "database": "NULL",
         "methylation": "\"unknown\""
-      }
+      },
+      "example_fixtures": [
+        "sites"
+      ]
     },
     "filter_restriction_sites": {
       "usage": "filter_restriction_sites(\n  sites,\n  enzymes = NULL,\n  min_site_length = NULL,\n  cuts = NULL,\n  window = NULL,\n  commercial_only = FALSE,\n  representatives = \"all\",\n  profile = NULL\n)",
@@ -4572,7 +4881,7 @@
         ]
       ],
       "roles": [],
-      "examples": "f <- tempfile(fileext = \".bed\")\nwriteLines(\"A\\t99\\t240\\tregion1\\t0\\t+\", f)\nbed <- read_bed(f)\nggchord(seqs) + geom_feature(data = bed)\ninvisible(unlink(f))",
+      "examples": "f <- tempfile(fileext = \".bed\")\nwriteLines(\"A\\t99\\t240\\tregion1\\t0\\t+\", f)\nbed <- read_bed(f)\nbed[c(\"accver\", \"start\", \"end\", \"strand\")]",
       "related": [
         "as_ggchord_feature",
         "read_gff3",
@@ -4719,7 +5028,7 @@
         ]
       ],
       "roles": [],
-      "examples": "file <- tempfile(fileext = \".chain\")\nwriteLines(c(\n  \"chain 100 chr1 1000 + 49 100 chr1 800 + 99 150 1\", \"51\", \"\"\n), file)\nchain <- read_chain(\n  file, query_ids = c(chr1 = \"query_chr1\"),\n  subject_ids = c(chr1 = \"target_chr1\"),\n  python = Sys.getenv(\"GGCHORD_PYTHON\", \"python3\")\n)\nggchord(chain$sequences) + geom_link_ribbon(data = chain$links$chain)",
+      "examples": "f <- tempfile(fileext = \".chain\")\nwriteLines(c(\"chain 100 chr1 1000 + 49 100 chr1 800 + 99 150 1\", \"51\", \"\"), f)\nchain <- read_chain(f, query_ids = c(chr1 = \"query\"),\n  subject_ids = c(chr1 = \"subject\"), python = Sys.getenv(\"GGCHORD_PYTHON\", \"python3\"))\nchain$links$chain[c(\"qaccver\", \"qstart\", \"qend\", \"saccver\", \"sstart\", \"send\")]",
       "related": [
         "read_maf",
         "read_delta",
@@ -4733,7 +5042,10 @@
         "sequence_unit": "\"bp\"",
         "python": "\"python3\"",
         "source_file": "FALSE"
-      }
+      },
+      "example_fixtures": [
+        "links"
+      ]
     },
     "read_delta": {
       "usage": "read_delta(\n  file,\n  executable = \"show-coords\",\n  query_ids = NULL,\n  subject_ids = NULL,\n  source_file = FALSE\n)",
@@ -4768,7 +5080,10 @@
         "query_ids": "NULL",
         "subject_ids": "NULL",
         "source_file": "FALSE"
-      }
+      },
+      "example_fixtures": [
+        "links"
+      ]
     },
     "read_fasta_lengths": {
       "usage": "read_fasta_lengths(\n  file,\n  sequence_unit,\n  header_delim = NULL,\n  keep_sequence = FALSE,\n  source_file = FALSE\n)",
@@ -4825,7 +5140,7 @@
         ]
       ],
       "roles": [],
-      "examples": "f <- tempfile(fileext=\".txt\")\nwriteLines(\"g1 g3\", f)\nrelations <- read_feature_relations(f, features=genes)\nggchord(seqs) + geom_link_ribbon(data=relations$links$feature_relations)\ninvisible(unlink(f))",
+      "examples": "f <- tempfile()\nwriteLines(\"g1 g3\", f)\nread_feature_relations(f, features = genes)$links$feature_relations",
       "related": [
         "link_ggchord_clusters",
         "as_ggchord_link",
@@ -4838,7 +5153,11 @@
         "features": "NULL",
         "unmatched": "\"error\"",
         "source_file": "FALSE"
-      }
+      },
+      "example_fixtures": [
+        "genes",
+        "links"
+      ]
     },
     "read_genbank": {
       "usage": "read_genbank(\n  file,\n  feature_types = NULL,\n  lengths = NULL,\n  python = \"python3\",\n  unsupported = \"error\",\n  source_file = FALSE\n)",
@@ -4863,7 +5182,7 @@
         ]
       ],
       "roles": [],
-      "examples": "file <- system.file(\"extdata\", \"tutorial\", \"pUC19c-L09137.2.gb\", package = \"ggchord\")\nimported <- read_genbank(file, unsupported=\"report\",\n  python = Sys.getenv(\"GGCHORD_PYTHON\", \"python3\"))\nggchord(imported$sequences) +\n  geom_feature(data=imported$features$annotation) + coord_circular()",
+      "examples": "f <- system.file(\"extdata\", \"tutorial\", \"pUC19c-L09137.2.gb\", package = \"ggchord\")\ngb <- read_genbank(f, unsupported = \"report\", python = Sys.getenv(\"GGCHORD_PYTHON\", \"python3\"))\nhead(gb$features$annotation[c(\"accver\", \"start\", \"end\", \"type\")], 3)",
       "related": [
         "read_gff3",
         "as_ggchord_feature",
@@ -4931,7 +5250,7 @@
         ]
       ],
       "roles": [],
-      "examples": "file <- system.file(\"extdata\", \"tutorial\", \"ucsc_mm9_chr10.maf\", package = \"ggchord\")\nmaf <- read_maf(file, alphabet=\"DNA\",\n  python = Sys.getenv(\"GGCHORD_PYTHON\", \"python3\"))\ncells <- subset(maf$alignments$maf, source_input == 1 & source_block == 1)\nggplot(cells, aes(alignment_column, accver, label=symbol)) + geom_residue()",
+      "examples": "f <- system.file(\"extdata\", \"tutorial\", \"ucsc_mm9_chr10.maf\", package = \"ggchord\")\nmaf <- read_maf(f, alphabet = \"DNA\", python = Sys.getenv(\"GGCHORD_PYTHON\", \"python3\"))\nhead(maf$alignments$maf[c(\"accver\", \"alignment_column\", \"symbol\", \"is_gap\")], 4)",
       "related": [
         "read_aligned_fasta",
         "as_ggchord_alignment",
@@ -4982,7 +5301,7 @@
         ]
       ],
       "roles": [],
-      "examples": "file <- system.file(\"extdata\", \"P00517-signatures.tsv\", package = \"ggchord\")\nsignatures <- read_signature_matches(file, format=\"scan_tsv\")\nggchord(signatures$sequences) +\n  geom_feature(data=signatures$features$signature) + coord_collinear()",
+      "examples": "f <- system.file(\"extdata\", \"P00517-signatures.tsv\", package = \"ggchord\")\nsignatures <- read_signature_matches(f, format = \"scan_tsv\")\nhead(signatures$features$signature[c(\"accver\", \"start\", \"end\")], 3)",
       "related": [
         "as_ggchord_feature",
         "project_ggchord_features",
@@ -5027,7 +5346,7 @@
       }
     },
     "ggchord_fusion": {
-      "usage": "ggchord_fusion(panels, layout = layout_fusion_grid(), guides = \"keep\")",
+      "usage": "ggchord_fusion(panels, layout = NULL, guides = \"auto\")",
       "arguments": [
         [
           "panels"
@@ -5040,20 +5359,24 @@
         ]
       ],
       "roles": [],
-      "examples": "p_over <- ggchord(seqs) + geom_seq() +\n  geom_link_ribbon(data = links) + coord_chord()\np_detail <- ggchord(seqs) + geom_seq() +\n  geom_gene(data = genes) + coord_collinear()\nggchord_fusion(list(overview = p_over, detail = p_detail))",
+      "examples": "ggchord_fusion(list(overview = p_basic, detail = p_basic)) +\n  layout_fusion_grid(ncol = 2, gap = 3)",
       "related": [
         "layout_fusion",
-        "layout_fusion_grid",
-        "fusion_ribbon",
-        "fusion_zoom",
-        "export_ggchord_layout"
+        "fusion_magnify_auto",
+        "geom_link_ribbon",
+        "scale_for"
       ],
       "native": false,
       "defaults": {
         "panels": "",
-        "layout": "layout_fusion_grid()",
-        "guides": "\"keep\""
-      }
+        "layout": "NULL",
+        "guides": "\"auto\""
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes",
+        "p_basic"
+      ]
     },
     "layout_fusion": {
       "usage": "layout_fusion(areas, units = \"relative\", allow_overlap = FALSE)",
@@ -5079,10 +5402,15 @@
         "areas": "",
         "units": "\"relative\"",
         "allow_overlap": "FALSE"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes",
+        "p_basic"
+      ]
     },
     "layout_fusion_grid": {
-      "usage": "layout_fusion_grid(design = NULL, widths = 1, heights = 1)",
+      "usage": "layout_fusion_grid(design = NULL, widths = 1, heights = 1,\n                   nrow = NULL, ncol = NULL, gap = 0)",
       "arguments": [
         [
           "design"
@@ -5092,10 +5420,19 @@
         ],
         [
           "heights"
+        ],
+        [
+          "nrow"
+        ],
+        [
+          "ncol"
+        ],
+        [
+          "gap"
         ]
       ],
       "roles": [],
-      "examples": "ggchord_fusion(list(a = p_basic, b = p_basic),\n  layout = layout_fusion_grid(matrix(c(\"a\", \"b\"), nrow = 1),\n                             widths = c(2, 1)))",
+      "examples": "ggchord_fusion(list(a = p_basic, b = p_basic)) +\n  layout_fusion_grid(ncol = 2, widths = c(2, 1), gap = 3)",
       "related": [
         "layout_fusion"
       ],
@@ -5103,149 +5440,16 @@
       "defaults": {
         "design": "NULL",
         "widths": "1",
-        "heights": "1"
-      }
-    },
-    "fusion_ribbon": {
-      "usage": "fusion_ribbon(mapping = NULL, data = NULL, route = \"curve\",\n              curvature = 0.5, ..., na.rm = FALSE,\n              show.legend = NA, id = auto_id())",
-      "arguments": [
-        [
-          "mapping"
-        ],
-        [
-          "data"
-        ],
-        [
-          "route"
-        ],
-        [
-          "curvature"
-        ],
-        [
-          "..."
-        ],
-        [
-          "na.rm"
-        ],
-        [
-          "show.legend"
-        ],
-        [
-          "id"
-        ]
-      ],
-      "roles": [
-        "`fill/colour/alpha/linewidth/linetype`",
-        "`group`"
-      ],
-      "examples": "cross <- links[1, ]\ncross$qpanel_path <- \"overview\"\ncross$spanel_path <- \"detail\"\nf <- ggchord_fusion(list(overview = p_basic, detail = p_basic))\nf + fusion_ribbon(aes(fill = pident), data = cross) +\n  scale_fill_gradient(limits = c(0, 100))",
-      "related": [
-        "ggchord_fusion",
-        "fusion_zoom",
-        "register_ggchord_alignment",
-        "scale_for"
-      ],
-      "native": false,
-      "defaults": {
-        "mapping": "NULL",
-        "data": "NULL",
-        "route": "\"curve\"",
-        "curvature": "0.5",
-        "...": "",
-        "na.rm": "FALSE",
-        "show.legend": "NA",
-        "id": "auto_id()"
-      }
-    },
-    "fusion_zoom": {
-      "usage": "fusion_zoom(from, to, region, highlight = TRUE,\n            fill = \"#187B77\", alpha = 0.12, colour = \"#187B77\",\n            linewidth = 0.4, id = NULL,\n            connector = \"interval\", linetype = NULL)",
-      "arguments": [
-        [
-          "from",
-          "to"
-        ],
-        [
-          "region"
-        ],
-        [
-          "highlight"
-        ],
-        [
-          "fill",
-          "colour"
-        ],
-        [
-          "alpha"
-        ],
-        [
-          "linewidth"
-        ],
-        [
-          "id"
-        ],
-        [
-          "connector"
-        ],
-        [
-          "linetype"
-        ]
-      ],
-      "roles": [],
-      "examples": "f <- ggchord_fusion(list(overview = p_basic, detail = p_basic))\nregion <- data.frame(accver = \"A\", start = 100, end = 240)\nf + fusion_zoom(\"overview\", \"detail\", region, connector = \"border\")",
-      "related": [
-        "magnify_ggchord",
-        "fusion_ribbon"
-      ],
-      "native": false,
-      "defaults": {
-        "from": "",
-        "to": "",
-        "region": "",
-        "highlight": "TRUE",
-        "fill": "\"#187B77\"",
-        "alpha": "0.12",
-        "colour": "\"#187B77\"",
-        "linewidth": "0.4",
-        "id": "NULL",
-        "connector": "\"interval\"",
-        "linetype": "NULL"
-      }
-    },
-    "magnify_ggchord": {
-      "usage": "magnify_ggchord(overview, detail, region, layout = NULL,\n                guides = \"keep\", ...)",
-      "arguments": [
-        [
-          "overview",
-          "detail"
-        ],
-        [
-          "region"
-        ],
-        [
-          "layout"
-        ],
-        [
-          "guides"
-        ],
-        [
-          "..."
-        ]
-      ],
-      "roles": [],
-      "examples": "region <- data.frame(accver = \"A\", start = 100, end = 240)\np_detail <- ggchord(seqs) + geom_seq() +\n  geom_gene(data = genes) +\n  layout_sequences(windows = data.frame(instance_id = \"A_zoom\", accver = \"A\",\n    start = 80, end = 260, row_id = \"r1\")) + coord_collinear()\nmagnify_ggchord(p_basic, p_detail, region)",
-      "related": [
-        "ggchord_fusion",
-        "fusion_zoom"
-      ],
-      "native": false,
-      "defaults": {
-        "overview": "",
-        "detail": "",
-        "region": "",
-        "layout": "NULL",
-        "guides": "\"keep\"",
-        "...": ""
-      }
+        "heights": "1",
+        "nrow": "NULL",
+        "ncol": "NULL",
+        "gap": "0"
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes",
+        "p_basic"
+      ]
     },
     "register_ggchord_alignment": {
       "usage": "register_ggchord_alignment(plot, data)",
@@ -5263,7 +5467,7 @@
         "as_ggchord_alignment",
         "geom_residue",
         "map_alignment_position",
-        "fusion_ribbon"
+        "geom_link_ribbon"
       ],
       "native": false,
       "defaults": {
@@ -5336,7 +5540,12 @@
         "units": "\"in\"",
         "text_scale_range": "c(0.8, 1.2)",
         "min_text_size": "NULL"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes",
+        "p_basic"
+      ]
     },
     "export_ggchord_layout": {
       "usage": "export_ggchord_layout(plot, layers = NULL, stages = \"geometry\",\n                     width = NULL, height = NULL, units = \"in\",\n                     device = NULL, dpi = 300)",
@@ -5381,10 +5590,15 @@
         "units": "\"in\"",
         "device": "NULL",
         "dpi": "300"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes",
+        "p_basic"
+      ]
     },
     "map_ggchord_position": {
-      "usage": "map_ggchord_position(plot, data, from = \"source\", to = \"display\",\n                    axis = NULL, panel = NULL, instance = NULL,\n                    width = NULL, height = NULL, units = \"in\",\n                    device = NULL, dpi = 300)",
+      "usage": "map_ggchord_position(plot, data, from = \"source\", to = \"display\",\n                    axis = NULL, panel = NULL, instance = NULL,\n                    width = NULL, height = NULL, units = \"in\",\n                    device = NULL, dpi = 300, facet = NULL)",
       "arguments": [
         [
           "plot"
@@ -5417,6 +5631,9 @@
         ],
         [
           "dpi"
+        ],
+        [
+          "facet"
         ]
       ],
       "roles": [],
@@ -5438,8 +5655,14 @@
         "height": "NULL",
         "units": "\"in\"",
         "device": "NULL",
-        "dpi": "300"
-      }
+        "dpi": "300",
+        "facet": "NULL"
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes",
+        "p_basic"
+      ]
     },
     "view_ggchord": {
       "usage": "view_ggchord(plot, width = 8, height = 6, units = \"in\",\n            device = \"png\", dpi = 150)",
@@ -5475,7 +5698,12 @@
         "units": "\"in\"",
         "device": "\"png\"",
         "dpi": "150"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes",
+        "p_basic"
+      ]
     },
     "diagnose_ggchord": {
       "usage": "diagnose_ggchord(plot, width = NULL, height = NULL, units = \"in\",\n                device = NULL, dpi = 300, action = \"report\")",
@@ -5516,7 +5744,12 @@
         "device": "NULL",
         "dpi": "300",
         "action": "\"report\""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes",
+        "p_basic"
+      ]
     },
     "geom_seq_arrow": {
       "usage": "geom_seq_arrow(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  ...,\n  arrow = grid::arrow(length = grid::unit(2, \"mm\"), type = \"closed\"),\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
@@ -5573,7 +5806,10 @@
         "show.legend": "NA",
         "inherit.aes": "TRUE",
         "id": "auto_id()"
-      }
+      },
+      "example_fixtures": [
+        "seqs"
+      ]
     },
     "scale_colour_sequence": {
       "usage": "scale_colour_sequence(\n  name = waiver(),\n  ...,\n  aesthetics = \"colour\"\n)",
@@ -5601,7 +5837,10 @@
         "name": "waiver()",
         "...": "",
         "aesthetics": "\"colour\""
-      }
+      },
+      "example_fixtures": [
+        "seqs"
+      ]
     },
     "scale_fill_strand": {
       "usage": "scale_fill_strand(\n  name = waiver(),\n  ...,\n  aesthetics = \"fill\"\n)",
@@ -5627,7 +5866,11 @@
         "name": "waiver()",
         "...": "",
         "aesthetics": "\"fill\""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "scale_fill_feature_type": {
       "usage": "scale_fill_feature_type(\n  name = waiver(),\n  ...,\n  aesthetics = \"fill\"\n)",
@@ -5653,7 +5896,11 @@
         "name": "waiver()",
         "...": "",
         "aesthetics": "\"fill\""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "scale_fill_pident": {
       "usage": "scale_fill_pident(\n  name = \"Identity (%)\",\n  ...,\n  limits = c(0, 100),\n  breaks = c(0, 50, 80, 90, 95, 100),\n  guide = waiver()\n)",
@@ -5687,7 +5934,11 @@
         "limits": "c(0, 100)",
         "breaks": "c(0, 50, 80, 90, 95, 100)",
         "guide": "waiver()"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "links"
+      ]
     },
     "auto_id": {
       "usage": "auto_id()",
@@ -5702,13 +5953,16 @@
         "layout_track"
       ],
       "native": false,
-      "defaults": {}
+      "defaults": {},
+      "example_fixtures": [
+        "seqs"
+      ]
     },
     "auto_anchor": {
       "usage": "auto_anchor()",
       "arguments": [],
       "roles": [],
-      "examples": "ggchord(seqs) +\n  geom_gene(data = genes) +\n  geom_gene_label(aes(label = label)) +\n  coord_collinear()\n\nggchord(seqs) +\n  geom_gene(data = subset(genes, type == \"CDS\"), id = \"coding\") +\n  geom_gene(data = subset(genes, type == \"tRNA\")) +\n  geom_gene_label(aes(label = label), anchor_layer = \"coding\") +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_gene(data = genes) +\n  geom_gene_label(aes(label = label), anchor_layer = auto_anchor()) +\n  coord_collinear()",
       "related": [
         "geom_feature_label",
         "geom_gene_label",
@@ -5717,7 +5971,11 @@
         "auto_id"
       ],
       "native": false,
-      "defaults": {}
+      "defaults": {},
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "layout_track": {
       "usage": "layout_track(id = NULL, side = NULL, order = NULL, thickness = NULL, gap = NULL)",
@@ -5739,7 +5997,7 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_line(aes(x = pos, y = value), data = signal) +\n  layout_track(thickness = 5, gap = 2) +\n  scale_y_continuous(name = \"Signal\") +\n  coord_collinear()\n\nggchord(seqs) +\n  geom_seq() +\n  layout_track(\"signal\", order = 2, thickness = 12, gap = 3) +\n  geom_track_line(aes(x = pos, y = value), data = signal, track = \"signal\") +\n  scale_y_continuous(name = \"Signal\", limits = c(0, 6), breaks = c(0, 3, 6)) +\n  geom_track_point(aes(x = pos, y = value), data = signal) +\n  layout_track(thickness = 10, gap = 2) +\n  scale_y_continuous(name = \"Measurements\", limits = c(0, 8), breaks = c(0, 4, 8)) +\n  scale_seq_continuous(guide = \"none\") +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_track_line(aes(x = pos, y = value), data = signal, track = \"signal\") +\n  layout_track(\"signal\", thickness = 8, gap = 2) +\n  coord_collinear()",
       "related": [
         "add_track",
         "geom_track",
@@ -5754,7 +6012,11 @@
         "order": "NULL",
         "thickness": "NULL",
         "gap": "NULL"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "signal"
+      ]
     },
     "scale_seq_continuous": {
       "usage": "scale_seq_continuous(\n  name = waiver(), breaks = waiver(), minor_breaks = waiver(),\n  labels = waiver(), coordinates = \"local\",\n  guide = guide_seq_axis()\n)",
@@ -5794,7 +6056,10 @@
         "labels": "waiver()",
         "coordinates": "\"local\"",
         "guide": "guide_seq_axis()"
-      }
+      },
+      "example_fixtures": [
+        "seqs"
+      ]
     },
     "add_track": {
       "usage": "add_track(..., id = auto_id(), side = NULL, order = NULL, thickness = NULL, gap = NULL)",
@@ -5834,7 +6099,11 @@
         "order": "NULL",
         "thickness": "NULL",
         "gap": "NULL"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "signal"
+      ]
     },
     "scales_ggchord": {
       "usage": "scales_ggchord(roles = \"auto\")",
@@ -5957,7 +6226,7 @@
         ]
       ],
       "roles": [],
-      "examples": "pal_residue(\"DNA\")",
+      "examples": "pal_residue(\"DNA\")[c(\"A\", \"C\", \"G\", \"T\")]",
       "related": [],
       "native": false,
       "defaults": {
@@ -5976,13 +6245,16 @@
         ]
       ],
       "roles": [],
-      "examples": "scale_colour_ggchord()$aesthetics",
+      "examples": "ggchord(seqs) +\n  geom_seq(aes(colour = accver)) +\n  scale_colour_ggchord()",
       "related": [],
       "native": false,
       "defaults": {
         "...": "",
         "aesthetics": "\"colour\""
-      }
+      },
+      "example_fixtures": [
+        "seqs"
+      ]
     },
     "scale_fill_ggchord": {
       "usage": "scale_fill_ggchord(..., aesthetics = \"fill\")",
@@ -5995,13 +6267,17 @@
         ]
       ],
       "roles": [],
-      "examples": "scale_fill_ggchord()$aesthetics",
+      "examples": "ggchord(seqs) +\n  geom_gene(aes(fill = type), data = genes) +\n  scale_fill_ggchord()",
       "related": [],
       "native": false,
       "defaults": {
         "...": "",
         "aesthetics": "\"fill\""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "scale_fill_plasmid": {
       "usage": "scale_fill_plasmid(...)",
@@ -6011,12 +6287,16 @@
         ]
       ],
       "roles": [],
-      "examples": "scale_fill_plasmid()$aesthetics",
+      "examples": "ggchord(seqs) +\n  geom_feature(aes(fill = type), data = genes) +\n  scale_fill_plasmid()",
       "related": [],
       "native": false,
       "defaults": {
         "...": ""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
     },
     "scale_colour_link_pident": {
       "usage": "scale_colour_link_pident(...)",
@@ -6026,12 +6306,16 @@
         ]
       ],
       "roles": [],
-      "examples": "scale_colour_link_pident()$aesthetics",
+      "examples": "hits <- transform(points[c(1, 1), ], qpos = c(200, 600), spos = c(220, 620),\n  pident = c(84, 98))\nggchord(seqs) +\n  geom_link_line(aes(colour = pident), data = hits) +\n  scale_colour_link_pident()",
       "related": [],
       "native": false,
       "defaults": {
         "...": ""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "points"
+      ]
     },
     "scale_fill_signal": {
       "usage": "scale_fill_signal(...)",
@@ -6041,12 +6325,16 @@
         ]
       ],
       "roles": [],
-      "examples": "scale_fill_signal()$aesthetics",
+      "examples": "ggchord(seqs) +\n  geom_track_point(aes(x = pos, y = value, fill = value), data = signal, shape = 21) +\n  scale_fill_signal()",
       "related": [],
       "native": false,
       "defaults": {
         "...": ""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "signal"
+      ]
     },
     "scale_colour_signal": {
       "usage": "scale_colour_signal(...)",
@@ -6056,12 +6344,16 @@
         ]
       ],
       "roles": [],
-      "examples": "scale_colour_signal()$aesthetics",
+      "examples": "ggchord(seqs) +\n  geom_track_point(aes(x = pos, y = value, colour = value), data = signal) +\n  scale_colour_signal()",
       "related": [],
       "native": false,
       "defaults": {
         "...": ""
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "signal"
+      ]
     },
     "shape_feature": {
       "usage": "shape_feature(\n  name,\n  head_length = NULL,\n  head_width = NULL,\n  short_feature = NULL,\n  body_width = NULL,\n  body_fill = NULL,\n  body_colour = NULL,\n  body_shape = NULL,\n  head_shape = NULL,\n  tail_shape = NULL,\n  tail_length = NULL,\n  tail_width = NULL,\n  cap_length = NULL,\n  cap_width = NULL,\n  head_fill = NULL,\n  head_colour = NULL,\n  tail_fill = NULL,\n  tail_colour = NULL\n)",
@@ -6112,7 +6404,7 @@
         ]
       ],
       "roles": [],
-      "examples": "shape_demo_ref <- data.frame(accver = \"A\", length = 1000, sequence_unit = \"bp\")\nshape_demo_intervals <- data.frame(\n  accver = \"A\", start = c(100, 580), end = c(430, 900),\n  strand = \"+\", kind = c(\"short\", \"standard\")\n)\nggchord(shape_demo_ref) +\n  geom_seq() +\n  geom_feature(aes(shape = kind), data = shape_demo_intervals,\n    position = position_offset(4), fill = \"#77B5AE\") +\n  scale_shape_manual(name = \"Arrow geometry\", values = c(\n    short = shape_feature(\"arrow\", head_length = 1),\n    standard = \"arrow\"\n  )) +\n  coord_collinear()\n\nblock_reference <- data.frame(\n  accver = \"A\", length = 1000L, topology = \"circular\", sequence_unit = \"bp\"\n)\nblock_intervals <- data.frame(accver = \"A\", start = 120L, end = 310L, kind = \"Interval\")\nblock_sites <- data.frame(accver = \"A\", pos = 490L, kind = \"Site\")\nblock_cuts <- data.frame(\n  accver = \"A\", pos = 700L, cut_top = 700L, cut_bottom = 810L, kind = \"Cut\"\n)\nprototype <- shape_feature(\"prototype\",\n  body_width = 4, body_fill = \"#7ABCB7\", body_colour = \"#235354\"\n)\n\nblock_plot <- ggchord(block_reference) +\n  geom_seq(geometry = \"line\", colour = \"#89979A\", show.legend = FALSE) +\n  geom_feature(aes(shape = kind), data = block_intervals) +\n  geom_feature(aes(shape = kind), data = block_sites) +\n  geom_feature(aes(shape = kind), data = block_cuts) +\n  scale_shape_manual(\n    name = \"Location type\",\n    values = c(Interval = prototype, Site = prototype, Cut = prototype),\n    breaks = c(\"Interval\", \"Site\", \"Cut\"),\n    guide = guide_legend(nrow = 1)\n  ) +\n  scale_seq_continuous(guide = \"none\") +\n  theme_ggchord_minimal() +\n  theme(\n    legend.position = \"bottom\",\n    legend.key.width = grid::unit(10, \"mm\"),\n    legend.key.height = grid::unit(8, \"mm\"),\n    plot.margin = margin(12, 14, 12, 14)\n  )\n\nblock_plot + coord_collinear() +\n  labs(title = \"One block specification in collinear coordinates\")\nblock_plot + coord_circular(fit = \"labels\") +\n  labs(title = \"One block specification in circular coordinates\")\n\ndouble_cap <- shape_feature(\"prototype\",\n  body_shape = \"line\", head_shape = \"cap\", tail_shape = \"cap\",\n  body_width = 0.4, cap_length = 1, cap_width = 2, tail_width = 3,\n  head_fill = \"#D98245\", tail_fill = \"#5885B2\"\n)\nggchord(shape_demo_ref) +\n  geom_seq() +\n  geom_feature(data = shape_demo_intervals, shape = double_cap,\n    position = position_offset(4)) +\n  coord_collinear()\n\nlollipop <- shape_feature(\"prototype\",\n  body_shape = \"line\", head_shape = \"circle\",\n  body_width = 0.4, body_colour = \"#274F80\",\n  head_width = 3, head_fill = \"#EF9F55\"\n)\nggchord(block_reference) +\n  geom_seq() +\n  geom_feature(data = block_sites, shape = lollipop) +\n  geom_feature(data = block_cuts, shape = lollipop) +\n  coord_circular()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_feature(data = genes, shape = shape_feature(\"arrow\", head_length = 3)) +\n  coord_collinear()",
       "related": [
         "geom_feature",
         "geom_gene",
@@ -6138,10 +6430,126 @@
         "head_colour": "NULL",
         "tail_fill": "NULL",
         "tail_colour": "NULL"
-      }
+      },
+      "example_fixtures": [
+        "seqs",
+        "genes"
+      ]
+    },
+    "fusion_magnify_auto": {
+      "usage": "fusion_magnify_auto(overview = NULL, region,\n  detail_coord = coord_collinear(), expand = 0, layout = NULL,\n  guides = \"collect\", ..., detail = NULL, from = NULL, to = NULL,\n  level = \"auto\")",
+      "arguments": [
+        [
+          "overview"
+        ],
+        [
+          "region"
+        ],
+        [
+          "detail_coord"
+        ],
+        [
+          "expand"
+        ],
+        [
+          "layout"
+        ],
+        [
+          "guides"
+        ],
+        [
+          "..."
+        ],
+        [
+          "detail"
+        ],
+        [
+          "from",
+          "to"
+        ],
+        [
+          "level"
+        ]
+      ],
+      "roles": [],
+      "examples": "fusion_magnify_auto(zoom_overview, zoom_region, level = \"feature\", expand = 80,\n  layout = layout_fusion_grid(ncol = 1))\n\ncells <- head(flagship_fusion_example$base_cells, 24)\np <- ggplot(cells, aes(alignment_column, accver, label = symbol)) +\n  geom_residue(aes(fill = symbol)) + scale_fill_residue(\"DNA\") +\n  coord_fixed() + theme_void()\np <- register_ggchord_alignment(p, cells)\nregion <- data.frame(accver = cells$source_accver[1],\n  start = cells$source_position[9], end = cells$source_position[16])\nfusion_magnify_auto(p, region, level = \"residue\", layout = layout_fusion_grid(ncol = 1))",
+      "related": [
+        "fusion_magnify_manual",
+        "ggchord_fusion",
+        "layout_fusion_grid",
+        "map_ggchord_position"
+      ],
+      "native": false,
+      "defaults": {
+        "overview": "NULL",
+        "region": "",
+        "detail_coord": "coord_collinear()",
+        "expand": "0",
+        "layout": "NULL",
+        "guides": "\"collect\"",
+        "...": "",
+        "detail": "NULL",
+        "from": "NULL",
+        "to": "NULL",
+        "level": "\"auto\""
+      },
+      "example_fixtures": [
+        "zoom_overview",
+        "zoom_region"
+      ]
+    },
+    "fusion_magnify_manual": {
+      "usage": "fusion_magnify_manual(overview = NULL, detail = NULL, region,\n  layout = NULL, guides = \"keep\", ..., from = NULL, to = NULL)",
+      "arguments": [
+        [
+          "overview"
+        ],
+        [
+          "detail"
+        ],
+        [
+          "region"
+        ],
+        [
+          "layout"
+        ],
+        [
+          "guides"
+        ],
+        [
+          "..."
+        ],
+        [
+          "from",
+          "to"
+        ]
+      ],
+      "roles": [],
+      "examples": "detail <- zoom_overview +\n  layout_sequences(windows = data.frame(instance_id = \"detail\", accver = \"A\",\n    start = 250, end = 720))\nfusion_magnify_manual(zoom_overview, detail, zoom_region,\n  layout = layout_fusion_grid(ncol = 1))",
+      "related": [
+        "fusion_magnify_auto",
+        "ggchord_fusion",
+        "layout_fusion_grid",
+        "map_ggchord_position"
+      ],
+      "native": false,
+      "defaults": {
+        "overview": "NULL",
+        "detail": "NULL",
+        "region": "",
+        "layout": "NULL",
+        "guides": "\"keep\"",
+        "...": "",
+        "from": "NULL",
+        "to": "NULL"
+      },
+      "example_fixtures": [
+        "zoom_overview",
+        "zoom_region"
+      ]
     }
   },
-  "setup": "library(ggplot2)\nlibrary(ggchord)\n\nseqs <- data.frame(\n  accver = c(\"A\", \"B\"), length = c(1000, 800),\n  sequence_unit = \"bp\", topology = \"linear\"\n)\none_seq <- seqs[1, , drop = FALSE]\ngenes <- data.frame(\n  accver = c(\"A\", \"A\", \"B\"), feature_id = c(\"g1\", \"g2\", \"g3\"),\n  start = c(100, 400, 150), end = c(240, 620, 380),\n  strand = c(\"+\", \"-\", \"+\"), label = c(\"g1\", \"g2\", \"g3\"),\n  type = c(\"CDS\", \"tRNA\", \"CDS\")\n)\nlinks <- data.frame(\n  qaccver = \"A\", saccver = \"B\", qstart = c(100, 400),\n  qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),\n  qstrand = \"+\", sstrand = c(\"+\", \"-\"),\n  pident = c(98, 90), link_id = c(\"l1\", \"l2\")\n)\npoints <- data.frame(qaccver = \"A\", qpos = 200, saccver = \"B\", spos = 220)\nsites <- data.frame(accver = \"A\", pos = 300, site_id = \"s1\", label = \"EcoRI\")\nsignal <- data.frame(accver = rep(c(\"A\", \"B\"), each = 3),\n  pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))\nunordered_signal <- signal[c(1, 3, 2, 4, 6, 5), ]\nintervals <- genes[c(\"accver\", \"start\", \"end\")]\nstates <- genes[c(\"accver\", \"start\", \"end\", \"type\")]\ngene_colours <- c(CDS = \"#187B77\", tRNA = \"#CC7D3A\")\nwindows <- data.frame(accver = \"A\", start = 1, end = 500, window_id = \"w1\")\np_basic <- ggchord(seqs) + geom_seq() +\n  geom_gene(data = genes) + coord_collinear()\n\nlabel_seq <- data.frame(accver = \"A\", length = 1000, sequence_unit = \"bp\")\ncrowded_genes <- data.frame(\n  accver = \"A\",\n  feature_id = c(\"g1\", \"g2\", \"g3\"),\n  start = c(425, 478, 531),\n  end = c(467, 520, 573),\n  strand = \"+\",\n  label = c(\"Gene alpha\", \"Gene beta\", \"Gene gamma\")\n)\nlabel_plot <- ggchord(label_seq) +\n  geom_seq() +\n  geom_gene(data = crowded_genes, fill = \"#187B77\") +\n  coord_collinear()",
+  "setup": "library(ggplot2)\nlibrary(ggchord)\n\nseqs <- data.frame(\n  accver = c(\"A\", \"B\"), length = c(1000, 800),\n  sequence_unit = \"bp\", topology = \"linear\"\n)\none_seq <- seqs[1, , drop = FALSE]\ngenes <- data.frame(\n  accver = c(\"A\", \"A\", \"B\"), feature_id = c(\"g1\", \"g2\", \"g3\"),\n  start = c(100, 400, 150), end = c(240, 620, 380),\n  strand = c(\"+\", \"-\", \"+\"), label = c(\"g1\", \"g2\", \"g3\"),\n  type = c(\"CDS\", \"tRNA\", \"CDS\")\n)\nlinks <- data.frame(\n  qaccver = \"A\", saccver = \"B\", qstart = c(100, 400),\n  qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),\n  qstrand = \"+\", sstrand = c(\"+\", \"-\"),\n  pident = c(98, 90), link_id = c(\"l1\", \"l2\")\n)\npoints <- data.frame(qaccver = \"A\", qpos = 200, saccver = \"B\", spos = 220)\nsites <- data.frame(accver = \"A\", pos = 300, site_id = \"s1\", label = \"EcoRI\")\nsignal <- data.frame(accver = rep(c(\"A\", \"B\"), each = 3),\n  pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))\nunordered_signal <- signal[c(1, 3, 2, 4, 6, 5), ]\nintervals <- genes[c(\"accver\", \"start\", \"end\")]\nstates <- genes[c(\"accver\", \"start\", \"end\", \"type\")]\ngene_colours <- c(CDS = \"#187B77\", tRNA = \"#CC7D3A\")\nwindows <- data.frame(accver = \"A\", start = 1, end = 500, window_id = \"w1\")\np_basic <- ggchord(seqs) + geom_seq() +\n  geom_gene(data = genes) + coord_collinear()\n\nlabel_seq <- data.frame(accver = \"A\", length = 1000, sequence_unit = \"bp\")\ncrowded_genes <- data.frame(\n  accver = \"A\",\n  feature_id = c(\"g1\", \"g2\", \"g3\"),\n  start = c(425, 478, 531),\n  end = c(467, 520, 573),\n  strand = \"+\",\n  label = c(\"Gene alpha\", \"Gene beta\", \"Gene gamma\")\n)\nlabel_plot <- ggchord(label_seq) +\n  geom_seq() +\n  geom_gene(data = crowded_genes, fill = \"#187B77\") +\n  coord_collinear()\n\nzoom_overview <- ggchord(data.frame(accver = \"A\", length = 1000)) +\n  geom_seq() +\n  geom_gene(data = data.frame(accver = \"A\", start = 380, end = 550, strand = \"+\")) +\n  coord_collinear()\nzoom_region <- data.frame(accver = \"A\", start = 380, end = 550)\n\nnearby_links <- transform(links[c(1, 1, 1), ],\n  qstart = c(100, 105, 400), qend = c(240, 245, 540),\n  sstart = c(150, 155, 450), send = c(290, 295, 590),\n  link_id = c(\"l1\", \"l2\", \"l3\"))\n",
   "articles": {
     "geom_seq": {
       "related": [
@@ -6153,6 +6561,10 @@
         "geom_seq_region",
         "scale_colour_sequence",
         "scale_for"
+      ],
+      "featured_examples": [
+        "geom_seq",
+        "geom_seq_arrow"
       ]
     },
     "geom_seq_label": {
@@ -6160,6 +6572,10 @@
         "geom_seq",
         "layout_label_fixed",
         "coord_circular"
+      ],
+      "featured_examples": [
+        "geom_seq_label",
+        "geom_seq_label_center"
       ]
     },
     "geom_feature": {
@@ -6170,6 +6586,11 @@
         "position_feature_stack",
         "scale_for",
         "shape_feature"
+      ],
+      "featured_examples": [
+        "geom_feature",
+        "geom_site",
+        "geom_restriction_site"
       ]
     },
     "geom_feature_label": {
@@ -6178,6 +6599,10 @@
         "auto_anchor",
         "layout_label_fixed",
         "layout_label_repel"
+      ],
+      "featured_examples": [
+        "geom_feature_label",
+        "geom_site_label"
       ]
     },
     "geom_link_ribbon": {
@@ -6185,6 +6610,11 @@
         "geom_link_line",
         "bundle_ggchord_links",
         "scale_fill_pident"
+      ],
+      "featured_examples": [
+        "geom_link_ribbon",
+        "stat_link_bundle",
+        "stat_link_density"
       ]
     },
     "geom_track": {
@@ -6194,21 +6624,392 @@
         "track_limits",
         "guide_track_axis",
         "scale_for"
+      ],
+      "featured_examples": [
+        "geom_track_line",
+        "geom_track_bar",
+        "geom_track_interval"
       ]
     },
     "layout_fusion": {
       "related": [
         "ggchord_fusion",
-        "fusion_zoom",
-        "fusion_ribbon"
+        "fusion_magnify_auto"
+      ],
+      "featured_examples": [
+        "layout_fusion",
+        "layout_fusion_grid"
       ]
     },
-    "ggchord_fusion": {
+    "fusion_magnify_auto": {
       "related": [
-        "layout_fusion",
-        "fusion_zoom",
-        "fusion_ribbon"
+        "ggchord_fusion",
+        "layout_fusion_grid",
+        "register_ggchord_alignment",
+        "export_ggchord_layout"
+      ],
+      "featured_examples": [
+        "fusion_magnify_auto",
+        "fusion_magnify_manual"
       ]
+    },
+    "layer_id": {
+      "related": [
+        "scale_for",
+        "export_ggchord_layout",
+        "add_track",
+        "layout_track",
+        "geom_feature_label",
+        "geom_gene_label",
+        "geom_primer_label",
+        "geom_site_label"
+      ],
+      "featured_examples": [
+        "layer_id",
+        "auto_anchor"
+      ],
+      "member_rules": true
+    },
+    "facet_null": {
+      "related": [
+        "coord_circular",
+        "track_limits",
+        "ggchord_fusion"
+      ],
+      "featured_examples": [
+        "facet_wrap",
+        "facet_grid"
+      ],
+      "member_rules": true
+    },
+    "layout_sequences": {
+      "related": [
+        "layout_dotplot",
+        "coord_chord",
+        "coord_collinear",
+        "coord_radial_synteny",
+        "coord_sankey",
+        "layout_track",
+        "data_report"
+      ],
+      "featured_examples": [
+        "layout_sequences"
+      ],
+      "member_rules": true
+    },
+    "geom_residue": {
+      "related": [
+        "as_ggchord_alignment",
+        "scale_fill_residue",
+        "register_ggchord_alignment",
+        "map_alignment_position"
+      ],
+      "featured_examples": [
+        "geom_residue"
+      ],
+      "member_rules": true
+    },
+    "layout_label_fixed": {
+      "related": [
+        "geom_feature_label",
+        "geom_seq_label",
+        "geom_gene_label"
+      ],
+      "featured_examples": [
+        "layout_label_fixed",
+        "layout_label_repel"
+      ],
+      "member_rules": true
+    },
+    "position_offset": {
+      "related": [
+        "geom_feature",
+        "geom_gene",
+        "geom_feature_label"
+      ],
+      "featured_examples": [
+        "position_offset",
+        "position_feature_stack"
+      ],
+      "member_rules": true
+    },
+    "scale_colour_sequence": {
+      "related": [
+        "scale_for",
+        "geom_seq",
+        "geom_gene",
+        "scales_ggchord",
+        "geom_feature",
+        "geom_link_ribbon"
+      ],
+      "featured_examples": [
+        "scale_colour_sequence",
+        "scale_fill_strand",
+        "scale_fill_pident"
+      ],
+      "member_rules": true
+    },
+    "guide_seq_axis": {
+      "related": [
+        "scale_seq_continuous",
+        "theme_ggchord",
+        "track_limits",
+        "layout_track",
+        "scale_for"
+      ],
+      "featured_examples": [
+        "guide_seq_axis",
+        "guide_track_axis"
+      ],
+      "member_rules": true
+    },
+    "theme_ggchord": {
+      "related": [
+        "guide_seq_axis",
+        "guide_track_axis",
+        "scales_ggchord"
+      ],
+      "featured_examples": [
+        "theme_ggchord_minimal",
+        "theme_ggchord_dark"
+      ],
+      "member_rules": true
+    },
+    "as_ggchord_seq": {
+      "related": [
+        "ggchord",
+        "geom_seq",
+        "read_fasta_lengths",
+        "validate_ggchord_data",
+        "geom_feature",
+        "geom_gene",
+        "read_gff3",
+        "read_genbank"
+      ],
+      "featured_examples": [
+        "as_ggchord_seq",
+        "as_ggchord_feature",
+        "as_ggchord_alignment"
+      ],
+      "member_rules": true
+    },
+    "validate_ggchord_data": {
+      "related": [
+        "diagnose_ggchord",
+        "layout_sequences",
+        "focus_ggchord_data",
+        "filter_ggchord_links",
+        "export_ggchord_layout"
+      ],
+      "featured_examples": [
+        "validate_ggchord_data",
+        "data_report"
+      ],
+      "member_rules": true
+    },
+    "filter_ggchord_links": {
+      "related": [
+        "stat_link_density",
+        "geom_link_ribbon",
+        "stat_link_bundle",
+        "data_report",
+        "read_feature_relations",
+        "find_common_features",
+        "as_ggchord_link"
+      ],
+      "featured_examples": [
+        "filter_ggchord_links",
+        "deduplicate_ggchord_links",
+        "bundle_ggchord_links"
+      ],
+      "member_rules": true
+    },
+    "find_ggchord_loci": {
+      "related": [
+        "layout_sequences",
+        "geom_track_line",
+        "geom_track_interval",
+        "coord_collinear"
+      ],
+      "featured_examples": [
+        "find_ggchord_loci",
+        "focus_ggchord_data"
+      ],
+      "member_rules": true
+    },
+    "primer_catalog": {
+      "related": [
+        "geom_primer",
+        "data_report",
+        "geom_primer_label"
+      ],
+      "featured_examples": [
+        "primer_catalog",
+        "find_primer_bindings"
+      ],
+      "member_rules": true
+    },
+    "find_restriction_sites": {
+      "related": [
+        "geom_restriction_site",
+        "geom_site_label",
+        "data_report"
+      ],
+      "featured_examples": [
+        "find_restriction_sites"
+      ],
+      "member_rules": true
+    },
+    "build_ggchord_cds": {
+      "related": [
+        "project_ggchord_features",
+        "project_ggchord_links",
+        "geom_residue",
+        "register_ggchord_alignment",
+        "data_report"
+      ],
+      "featured_examples": [
+        "build_ggchord_cds",
+        "translate_ggchord_cds"
+      ],
+      "member_rules": true
+    },
+    "project_ggchord_features": {
+      "related": [
+        "build_ggchord_cds",
+        "map_ggchord_position",
+        "as_ggchord_alignment"
+      ],
+      "featured_examples": [
+        "project_ggchord_features"
+      ],
+      "member_rules": true
+    },
+    "read_fasta_lengths": {
+      "related": [
+        "as_ggchord_seq",
+        "translate_ggchord_cds",
+        "as_ggchord_alignment",
+        "read_maf",
+        "geom_residue"
+      ],
+      "featured_examples": [
+        "read_fasta_lengths",
+        "read_aligned_fasta"
+      ],
+      "member_rules": true
+    },
+    "read_bed": {
+      "related": [
+        "as_ggchord_feature",
+        "read_gff3",
+        "geom_track_interval",
+        "as_ggchord_link",
+        "geom_link_ribbon",
+        "read_vcf",
+        "focus_ggchord_track",
+        "data_report"
+      ],
+      "featured_examples": [
+        "read_bed",
+        "read_bedgraph"
+      ],
+      "member_rules": true
+    },
+    "read_blast": {
+      "related": [
+        "as_ggchord_link",
+        "filter_ggchord_links",
+        "data_report",
+        "read_aligned_fasta",
+        "as_ggchord_alignment"
+      ],
+      "featured_examples": [
+        "read_blast",
+        "read_maf"
+      ],
+      "member_rules": true
+    },
+    "read_genbank": {
+      "related": [
+        "as_ggchord_feature",
+        "build_ggchord_cds",
+        "link_ggchord_clusters",
+        "as_ggchord_link",
+        "find_common_features",
+        "project_ggchord_features",
+        "read_fasta_lengths"
+      ],
+      "featured_examples": [
+        "read_genbank",
+        "read_gff3"
+      ],
+      "member_rules": true
+    },
+    "register_ggchord_alignment": {
+      "related": [
+        "as_ggchord_alignment",
+        "geom_residue",
+        "geom_link_ribbon",
+        "map_ggchord_position"
+      ],
+      "featured_examples": [
+        "register_ggchord_alignment",
+        "map_alignment_position"
+      ],
+      "member_rules": true
+    },
+    "view_ggchord": {
+      "related": [
+        "diagnose_ggchord",
+        "export_ggchord_layout"
+      ],
+      "featured_examples": [
+        "view_ggchord"
+      ],
+      "member_rules": true
+    },
+    "export_ggchord_layout": {
+      "related": [
+        "view_ggchord",
+        "map_alignment_position",
+        "validate_ggchord_data",
+        "render_policy"
+      ],
+      "featured_examples": [
+        "export_ggchord_layout",
+        "map_ggchord_position"
+      ],
+      "member_rules": true
+    },
+    "layout_track": {
+      "related": [
+        "geom_track",
+        "scale_for",
+        "auto_id",
+        "guide_track_axis"
+      ],
+      "featured_examples": [
+        "layout_track",
+        "add_track"
+      ],
+      "member_rules": true
+    },
+    "pal_ggchord": {
+      "related": [],
+      "featured_examples": [
+        "pal_sequence",
+        "pal_pident",
+        "pal_residue"
+      ]
+    },
+    "scale_colour_ggchord": {
+      "related": [],
+      "featured_examples": [
+        "scale_colour_ggchord",
+        "scale_fill_signal"
+      ],
+      "member_rules": true
     }
   },
   "previous_family_members": {
@@ -6252,10 +7053,6 @@
     "ggchord_fusion": [
       "layout_fusion",
       "layout_fusion_grid"
-    ],
-    "fusion_ribbon": [
-      "fusion_zoom",
-      "magnify_ggchord"
     ]
   },
   "retired_family_members": {
@@ -6287,6 +7084,16 @@
     ],
     "geom_site_label": [
       "geom_site_label_repel"
+    ],
+    "geom_link_ribbon": [
+      "fusion_ribbon"
+    ],
+    "fusion_magnify_auto": [
+      "fusion_zoom",
+      "magnify_ggchord"
+    ],
+    "ggchord_fusion": [
+      "magnify_ggchord"
     ]
   }
 }

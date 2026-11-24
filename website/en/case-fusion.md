@@ -12,7 +12,7 @@ The figure uses a 16 × 14 in canvas at 120 dpi. The script returns the plot so 
 
 ## Read the figure {#reading}
 
-Start with A (chord), B (collinear) and C (radial). Cross-panel ribbons connect corresponding intervals. In D, the outlined windows locate the region expanded in E. Dashed leaders from D to E and from E to F point to the frames of the detail panels. F shows the source bases as outlined squares, with source coordinates below the cells. The within-panel identity scale and the cross-panel correspondence legend describe different relationships.
+Start with A (chord), B (collinear) and C (radial). Cross-panel ribbons connect corresponding intervals. In D, the outlined windows locate the region expanded in E. The two `fusion_magnify_manual()` components connect D to E and E to F with dashed leaders to the detail frames. F shows the source bases as outlined squares, with source coordinates below the cells. The within-panel identity scale and the cross-panel correspondence legend describe different relationships.
 
 <a id="inputs"></a>
 

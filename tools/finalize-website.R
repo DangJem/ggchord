@@ -85,6 +85,9 @@ alias_topics<-unlist(lapply(topic_files,function(path) {
   function(x) paste(unlist(x),collapse=''),'')
  setNames(rep(sub('\\.Rd$','',basename(path)),length(aliases)),aliases)
 }))
+family_members <- jsonlite::fromJSON('website/reference-manual/families.json')
+family_owners <- setNames(rep(names(family_members), lengths(family_members)),
+                          unlist(family_members, use.names = FALSE))
 navigation <- jsonlite::fromJSON('website/navigation.json', simplifyVector=FALSE)
 navigation_ui <- jsonlite::fromJSON('website/navigation-ui.json', simplifyVector=FALSE)
 page_index <- jsonlite::fromJSON('website/pages.json', simplifyVector=FALSE)
@@ -290,7 +293,8 @@ for(lang in c('en','zh')) {
   # Build one outline from permanent article headings. Gallery cards already link
   # to their cases, so its outline only needs the figure families.
   xml2::xml_remove(xml2::xml_find_all(layout,'./aside'))
-  outline_headings <- xml2::xml_find_all(main, if(slug=='gallery' || length(xml2::xml_find_all(main,'.//section[@data-api]')) > 1L)
+  outline_headings <- xml2::xml_find_all(main, if(slug=='gallery' ||
+    length(xml2::xml_find_all(main,'.//div[@data-api-article] | .//section[@data-api][2]')))
     './/h2[@id][not(ancestor::details[@class="lesson-extension"])]' else
     './/*[self::h2 or self::h3][@id][not(ancestor::details[@class="lesson-extension"])]')
   if(relative != 'index.html' && length(outline_headings)) {
@@ -397,7 +401,8 @@ for(lang in c('en','zh')) {
   }
   for(pre in xml2::xml_find_all(main,'.//pre')) {
    parent<-xml2::xml_parent(pre)
-   if(xml2::xml_name(parent)=='details')next
+   if(xml2::xml_name(parent)=='details' ||
+      grepl('(^| )reference-usage( |$)', xml2::xml_attr(pre,'class') %||% ''))next
    is_r <- grepl('sourceCode|r-output|usage',paste(xml2::xml_attr(pre,'class'),xml2::xml_attr(parent,'class')))
    usage <- length(xml2::xml_find_all(pre, "ancestor::div[h2[@id='ref-usage']]")) > 0L
    code_kind <- if (usage) 'signature' else if (is_r) 'r' else 'output'
@@ -469,7 +474,18 @@ for(lang in c('en','zh')) {
      position <- match(key, names(routes), nomatch=match('',names(routes)))
      destination <- routes[[position]]
     } else {
-     destination <- paste0('reference/',topic,'.html',fragment)
+     # Downlit links to the Rd topic, which can cover several public names.
+     # The website places those names in API family articles.
+     label <- sub('\\(.*$', '', xml2::xml_text(a))
+     aliases <- names(alias_topics)[alias_topics == topic]
+     target <- if (label %in% aliases && label %in% names(family_owners)) label else name
+     if (target %in% names(family_owners) && !nzchar(fragment)) {
+      destination <- paste0('reference/',family_owners[[target]],'.html#api-',target)
+     } else {
+      owners <- unique(unname(family_owners[intersect(aliases, names(family_owners))]))
+      if (!nzchar(fragment) && length(owners) == 1L) topic <- owners[[1L]]
+      destination <- paste0('reference/',topic,'.html',fragment)
+     }
     }
     xml2::xml_set_attr(a,'href',paste0(prefix,destination))
    }

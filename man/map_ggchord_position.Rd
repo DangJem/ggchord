@@ -16,7 +16,8 @@ map_ggchord_position(
   height = NULL,
   units = "in",
   device = NULL,
-  dpi = 300
+  dpi = 300,
+  facet = NULL
 )
 }
 \arguments{
@@ -40,6 +41,9 @@ x/y in normalised panel coordinates, according to from.}
 \item{device}{A png, pdf or svg device, a device function, or NULL.}
 
 \item{dpi}{Raster device resolution.}
+
+\item{facet}{Named list of actual facet values. For display queries,
+matching panels are returned with their facet keys.}
 }
 \value{
 A correspondence table retaining all matching instances and recording

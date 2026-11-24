@@ -415,8 +415,18 @@ main pre span.co{color:#506466}
 .reference-filter label{display:block;font-weight:600;margin-bottom:.35rem}
 .reference-filter input{box-sizing:border-box;width:min(100%,30rem);padding:.45rem .65rem;color:inherit;background:var(--bs-body-bg);border:1px solid var(--bs-border-color);border-radius:.25rem}
 .reference-filter output{display:block;margin-top:.35rem}
-.reference-group{margin-block:2.25rem}
+.reference-group{margin-block:2.25rem;container-type:inline-size}
 .reference-group dl{margin-top:.85rem}
+.reference-index-row{display:grid;grid-template-columns:minmax(10em,2fr) minmax(0,3fr);gap:.3rem 1rem;padding-block:.35rem}
+.reference-index-row[hidden]{display:none}
+.reference-index-row dd{display:flex;flex-wrap:wrap;align-items:baseline;gap:.2rem .7rem;margin:0}
+.reference-index-row dd > a{white-space:nowrap}
+main .reference-index-row dd > a > code{overflow-wrap:normal}
+@container (max-width:32rem){.reference-index-row{grid-template-columns:minmax(0,1fr)}}
+.reference-signature{scroll-margin-top:calc(var(--header-height) + 1rem)}
+.reference-member-rules,.reference-more-examples{margin-block:1rem}
+.reference-member-names{font-weight:650}
+.reference-parameter-scope{display:inline-flex;flex-wrap:wrap;gap:.2em;margin-inline-start:.5em}
 .reference-related{margin-top:2.5rem}
 
 .gallery-families {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,24rem),1fr));gap:1.5rem}

@@ -287,6 +287,23 @@ GeomResidue <- ggproto("GeomResidue", ggplot2::Geom,
       overflow = overflow, representation = representation, cl = "ggchord_residue_grob")
   })
 
+ggchord_residue_glyph_metrics <- function(data) {
+  key <- with(data, paste(label, size, family, fontface, lineheight, sep = "\r"))
+  metrics <- lapply(which(!duplicated(key)), function(i) {
+    glyph <- textGrob(as.character(data$label[i]), gp = gpar(
+      fontsize = data$size[i] * 72.27 / 25.4, fontfamily = data$family[i],
+      fontface = data$fontface[i], lineheight = data$lineheight[i]))
+    c(width = convertWidth(grobWidth(glyph), "mm", valueOnly = TRUE),
+      height = convertHeight(grobHeight(glyph), "mm", valueOnly = TRUE))
+  })
+  do.call(rbind, metrics)[match(key, unique(key)), , drop = FALSE]
+}
+
+ggchord_residue_glyph_fit <- function(data, width, height) {
+  metrics <- ggchord_residue_glyph_metrics(data)
+  width >= metrics[, "width"] * 1.15 & height >= metrics[, "height"] * 1.15
+}
+
 #' @export
 #' @importFrom grid makeContent
 makeContent.ggchord_residue_grob <- function(x) {
@@ -302,22 +319,10 @@ makeContent.ggchord_residue_grob <- function(x) {
   widths <- abs(b$x - a$x); heights <- abs(b$y - a$y)
   panel_w <- convertWidth(unit(1, "npc"), "mm", valueOnly = TRUE)
   panel_h <- convertHeight(unit(1, "npc"), "mm", valueOnly = TRUE)
-  fit <- rep(FALSE, nrow(d))
-  if (x$representation != "tile") {
-    key <- paste(d$label, d$size, d$family, d$fontface, d$lineheight, sep = "\r")
-    metrics <- lapply(which(!duplicated(key)), function(i) {
-      glyph <- textGrob(as.character(d$label[i]), gp = gpar(
-        fontsize = d$size[i] * 72.27 / 25.4, fontfamily = d$family[i],
-        fontface = d$fontface[i], lineheight = d$lineheight[i]))
-      c(width = convertWidth(grobWidth(glyph), "mm", valueOnly = TRUE),
-        height = convertHeight(grobHeight(glyph), "mm", valueOnly = TRUE))
-    })
-    metrics <- do.call(rbind, metrics)[match(key, unique(key)), , drop = FALSE]
-    fit <- widths * panel_w >= metrics[, "width"] * 1.15 &
-      heights * panel_h >= metrics[, "height"] * 1.15
-    if (any(!fit) && x$overflow == "error")
-      ggchord_stop("geom_residue(): characters do not fit on this device; increase the canvas or reduce text size")
-  }
+  fit <- if (x$representation == "tile") rep(FALSE, nrow(d)) else
+    ggchord_residue_glyph_fit(d, widths * panel_w, heights * panel_h)
+  if (x$representation != "tile" && any(!fit) && x$overflow == "error")
+    ggchord_stop("geom_residue(): characters do not fit on this device; increase the canvas or reduce text size")
   tile_rows <- if (x$representation %in% c("tile", "tile_text")) rep(TRUE, nrow(d)) else
     if (x$overflow == "tile") !fit else rep(FALSE, nrow(d))
   tiles <- if (!any(tile_rows)) nullGrob() else rectGrob(

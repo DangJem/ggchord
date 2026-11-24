@@ -65,7 +65,7 @@ pETDuet-1 密集图在环内标出特征和引物，在环外标注酶名与切�
 
 <a href="man/figures/flagfusion.png"><img src="man/figures/flagfusion.png" alt="六个面板从基因组比对逐步放大至核苷酸对齐" width="460"></a>
 
-同一组比对关系用三种视图呈现，随后逐步放大至源区间、比对窗口和可逐碱基阅读的细节。
+同一组关系先从三种视图观察，再沿源区间进入比对窗口，最后看到逐个碱基。用 Auto Magnify 派生详图窗口，或用 Manual Magnify 连接已准备好的字符视图。
 
 [完整案例](examples/make_readme_plots.R)
 

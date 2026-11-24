@@ -35,3 +35,16 @@ navbar:
     reference:
       text: API reference
       href: reference/index.html
+
+reference:
+  - title: Fusion views and magnification
+    contents:
+      - ggchord_fusion
+      - layout_fusion
+      - layout_fusion_grid
+      - fusion_magnify
+      - geom_link_line
+      - geom_link_ribbon
+  - title: Other topics
+    contents:
+      - everything()

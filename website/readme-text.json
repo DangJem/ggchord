@@ -152,8 +152,8 @@
     "en": "The original 32 HSPs use colour for reported identity and line width for reported alignment length."
   },
   "fusion-caption": {
-    "zh": "同一组比对关系用三种视图呈现，随后逐步放大至源区间、比对窗口和可逐碱基阅读的细节。",
-    "en": "Three views of the same relationships lead into a source interval, an alignment window and a detail showing the individual bases."
+    "zh": "同一组关系先从三种视图观察，再沿源区间进入比对窗口，最后看到逐个碱基。用 Auto Magnify 派生详图窗口，或用 Manual Magnify 连接已准备好的字符视图。",
+    "en": "Three views of the same relationships lead into a source interval, an alignment window and a detail showing individual bases. Use Auto Magnify to derive a detail window, or use Manual Magnify to connect a prepared character view."
   },
   "dotplot-guide": {
     "zh": "双轴、方向与映射 →",

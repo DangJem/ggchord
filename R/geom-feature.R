@@ -556,6 +556,7 @@ ggchord_materialize_annotation <- function(layer, plot) {
   resolved$ggchord_layer_id <- layer$ggchord_layer_id
   resolved$ggchord_params$id <- layer$ggchord_params$id
   resolved$ggchord_params$annotation_source_key <- layer$ggchord_params$annotation_source_key
+  resolved$ggchord_params$stage_capture <- layer$ggchord_params$stage_capture
   resolved
 }
 

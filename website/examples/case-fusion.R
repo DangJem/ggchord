@@ -199,16 +199,17 @@ draw_fusion <- function(preview = FALSE) {
     layout$ymin[layout$panel == "zoom"] <- 0.16
     layout$ymax[layout$panel == "bases"] <- 0.145
   }
-  output <- ggchord_fusion(views, layout = layout_fusion(layout), guides = "collect") +
-    fusion_ribbon(aes(fill = relation), data = filter(connections, relation == "A - B"),
+  output <- ggchord_fusion(views, guides = "collect") +
+    layout_fusion(layout) +
+    geom_link_ribbon(aes(fill = relation), data = filter(connections, relation == "A - B"),
       curvature = 0.09, alpha = 0.30, colour = "#536571", linewidth = 0.22) +
-    fusion_ribbon(aes(fill = relation), data = filter(connections, relation != "A - B"),
+    geom_link_ribbon(aes(fill = relation), data = filter(connections, relation != "A - B"),
       curvature = 0.20, alpha = 0.46, colour = "#536571", linewidth = 0.22) +
     scale_fill_manual(name = if (preview) "Links" else "Correspondence",
       values = c("A - B" = "#527FB8", "A - C" = "#CE9741", "C - D" = "#9064AC")) +
-    fusion_zoom("center", "zoom", study$windows, colour = "#725094",
+    fusion_magnify_manual(from = "center", to = "zoom", region = study$windows, colour = "#725094",
       fill = NA, alpha = 0.62, linewidth = 0.30, connector = "border") +
-    fusion_zoom("zoom", "bases", filter(study$focus_regions, detail_panel == "bases"),
+    fusion_magnify_manual(from = "zoom", to = "bases", region = filter(study$focus_regions, detail_panel == "bases"),
       colour = "#725094", fill = NA, alpha = 0.62, linewidth = 0.30, connector = "border") +
     theme(legend.position = "bottom", legend.title = element_text(size = 11.5, face = "bold"),
       legend.text = element_text(size = 10),

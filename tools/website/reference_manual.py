@@ -24,6 +24,7 @@ LABELS = {
         roles='Data roles and aesthetics', examples='Examples', related='See also',
         source='Native ggplot2', download='Download example', filter='Filter by function name or purpose',
         console='Console output', figure='Plot from the example for',
+        more_examples='Examples for other functions', member_rules='Rules for specific functions',
         upstream='Native ggplot2 tools',
         archived='Historical API address', current='Open the current API reference'),
     'zh': dict(reference='API 参考',
@@ -32,6 +33,7 @@ LABELS = {
         roles='数据角色与视觉映射', examples='示例', related='相关接口',
         source='原生 ggplot2', download='下载示例', filter='按函数名或用途筛选',
         console='控制台输出', figure='示例绘图',
+        more_examples='其他函数的示例', member_rules='各函数的具体规则',
         upstream='原生 ggplot2 工具',
         archived='历史 API 地址', current='打开当前 API 参考'),
 }
@@ -99,9 +101,13 @@ def load():
            for head, members in previous.items()):
         raise ValueError('Former family members must have moved to another article')
     articles = structure['articles']
-    if any(head not in families or len(families[head]) < 2 or not set(spec['related']) <= set(topics)
-           for head, spec in articles.items()):
-        raise ValueError('Shared articles must cover a family and link to known topics')
+    if set(articles) != {head for head, names in families.items() if len(names) > 1}:
+        raise ValueError('Each multi-function family needs one shared article')
+    for head, spec in articles.items():
+        featured = spec['featured_examples']
+        if (not featured or len(set(featured)) != len(featured) or
+                not set(featured) <= set(families[head]) or not set(spec['related']) <= set(topics)):
+            raise ValueError(f'{head}: invalid family examples or related links')
     for lang, locale in locales.items():
         if set(locale['families']) != set(families) or not all(locale['families'].values()):
             raise ValueError(f'{lang}: missing API family titles')
@@ -109,27 +115,24 @@ def load():
             raise ValueError(f'{lang}: missing reference introduction')
         if set(locale['groups']) != set(structure['groups']) or set(locale['topics']) != set(topics):
             raise ValueError(f'{lang}: categories or topics missing')
+        if any(not locale['groups'][group].get('shortcut_title')
+               for group, spec in structure['groups'].items() if spec.get('shortcuts')):
+            raise ValueError(f'{lang}: missing title for an index shortcut row')
         if set(locale['articles']) != set(articles):
             raise ValueError(f'{lang}: shared articles missing')
         for head, article in locale['articles'].items():
             members = families[head]
             arguments = {key for name in members for key in topics[name]['defaults']}
-            if (set(article['examples']) != set(members) or
-                    set(article['arguments']) != set(locales['en']['articles'][head]['arguments']) or
-                    not set(article['arguments']) <= arguments or
-                    not all(article[field].strip() for field in ('intro', 'roles', 'details', 'example_intro')) or
-                    not all(note[field].strip() for note in article['examples'].values()
-                            for field in ('title', 'description')) or
-                    not all(entry.strip() for entry in article['arguments'].values())):
+            notes = article.get('examples', {})
+            arguments_here = article.get('arguments', {})
+            if (set(notes) != set(locales['en']['articles'][head].get('examples', {})) or
+                    not set(notes) <= set(members) or
+                    set(arguments_here) != set(locales['en']['articles'][head].get('arguments', {})) or
+                    not set(arguments_here) <= arguments or
+                    not all(article[field].strip() for field in ('intro', 'details')) or
+                    not all(note['title'].strip() for note in notes.values()) or
+                    not all(entry.strip() for entry in arguments_here.values())):
                 raise ValueError(f'{lang}/{head}: incomplete or mismatched shared article')
-            for key in arguments:
-                entries = []
-                for name in members:
-                    part, body = topics[name], locale['topics'][name]
-                    entries.extend((part['defaults'][key], param['format'], param['description'])
-                                   for keys, param in zip(part['arguments'], body['arguments']) if key in keys)
-                if len(set(entries)) > 1 and key not in article['arguments']:
-                    raise ValueError(f'{lang}/{head}: reconcile shared argument {key} in the article')
         for key, part in topics.items():
             body = locale['topics'][key]
             if not re.fullmatch(r'[a-z][a-z0-9_]+', key) or not set(part['related']) <= set(topics):
@@ -196,26 +199,17 @@ def anchors(ids):
 
 
 def prepare_examples(structure):
-    setup = structure['setup'].strip().split('\n\n')
-    # The fixture uses top-level assignments. Find the named objects an example
-    # needs and include dependencies in the original order.
-    names = re.findall(r'^([A-Za-z0-9_]+) <- ', structure['setup'], re.M)
-    blocks = {}
-    for match in re.finditer(r'^([A-Za-z0-9_]+) <- (.*?)(?=^[A-Za-z0-9_]+ <- |\Z)',
-                             structure['setup'], re.M | re.S):
-        blocks[match[1]] = match[0].strip()
-    def words(s):
-        return set(re.findall(r'\b[A-Za-z_][A-Za-z0-9_]*\b', s))
+    imports = structure['setup'].strip().split('\n\n', 1)[0]
+    blocks = {match[1]: match[0].strip()
+              for match in re.finditer(r'^([A-Za-z0-9_]+) <- (.*?)(?=^[A-Za-z0-9_]+ <- |\Z)',
+                                       structure['setup'], re.M | re.S)}
     scripts = {}
     for topic, page in structure['topics'].items():
-        setup_source = setup[0]
-        example = page['examples']
-        requested = words(example)
-        for name in reversed(names):
-            if name in requested:
-                requested |= words(blocks[name])
-        selected = [blocks[name] for name in names if name in requested]
-        scripts[topic] = '\n\n'.join([setup_source, *selected, example]) + '\n'
+        names = page.get('example_fixtures', [])
+        if names != [name for name in blocks if name in names]:
+            raise ValueError(f'{topic}: fixtures must be unique and in setup order')
+        scripts[topic] = '\n\n'.join([imports, *(blocks[name] for name in names),
+                                      page['examples']]) + '\n'
     return scripts
 
 
@@ -321,81 +315,144 @@ def render_bookmark_moves(moves):
             'redirect();addEventListener("hashchange",redirect);})();</script>')
 
 
+def member_notes(uses, members, pandoc):
+    by_description = {}
+    for name, description in uses.items():
+        if description.strip():
+            by_description.setdefault(description, []).append(name)
+    parts = []
+    for description, names in by_description.items():
+        if names != members:
+            labels = ' '.join(code(name + '()') for name in names)
+            parts.append(f'<p class="reference-member-names">{labels}</p>')
+        parts.append(markdown(description, pandoc))
+    return ''.join(parts)
+
+
 def render_shared_article(primary, structure, locale, lang, owners, output, flexible, pandoc):
     members = structure['families'][primary]
+    plan = structure['articles'][primary]
     article = locale['articles'][primary]
     topics = structure['topics']
     titles = LABELS[lang]
     url = f'reference/{primary}.html'
-    prefixes = [member_prefix(name, primary) for name in members]
+    prefixes = {name: member_prefix(name, primary) for name in members}
     search = []
-    signatures, examples = [], []
-    arguments = {}
+    signatures, examples = [], {}
+    arguments, roles = {}, {}
 
-    for name, prefix in zip(members, prefixes):
+    for name, prefix in prefixes.items():
         shared = topics[name]
         text = locale['topics'][name]
-        signatures.append(f'<div data-api-signature="{name}" id="api-{name}">' +
+        signatures.append(f'<span class="reference-signature" data-api-signature="{name}" id="api-{name}">' +
                           (anchors([prefix + 'ref-usage']) if prefix else '') +
-                          snippet(output['topics'][name]['signature'], 'signature', name + '()') + '</div>')
-        note = article['examples'][name]
+                          output['topics'][name]['signature'] + '</span>')
+        note = article.get('examples', {}).get(name, {
+            'title': text['title'], 'description': text['example_setup']})
         example_id = prefix + 'ref-examples' if prefix else 'example-' + name
-        examples.append(section(example_id, note['title'], markdown(note['description'], pandoc) +
-                                example_content(output, name, titles), level=3))
-        search.append(example_search(url, name, note['title'], example_id, lang, note['description']))
+        example_note = note['description']
+        lead = markdown(example_note, pandoc) if example_note else ''
+        alias = anchors(['example-' + name]) if prefix else ''
+        examples[name] = section(example_id, note['title'],
+                                 alias + lead + example_content(output, name, titles), level=3)
+        search.append(example_search(url, name, note['title'], example_id, lang,
+                                     example_note or text['intro']))
         search.append(dict(url=f'{url}#api-{name}', title=f'{name}() — {text["title"]}',
                            kind='function', summary=text['intro'], text=article['intro'],
                            keywords=' '.join([name, locale['families'][primary], *shared['defaults']]),
                            queries=[name, name + '()']))
-        for keys, param in zip(shared['arguments'], text['arguments']):
-            for key in keys:
-                arguments.setdefault(key, {})[name] = param
+        descriptions = {key: param['description']
+                        for keys, param in zip(shared['arguments'], text['arguments']) for key in keys}
+        for key in shared['defaults']:
+            arguments.setdefault(key, {})[name] = descriptions[key]
+        for role, description in zip(shared['roles'], text['roles']):
+            roles.setdefault(role, {})[name] = description
 
     rows = []
     for key, uses in arguments.items():
-        param = next(iter(uses.values()))
-        description = markdown(article['arguments'].get(key, param['description']), pandoc)
-        summary = ' '.join(html.unescape(re.sub(r'<[^>]*>', ' ', description)).split())
+        override = article.get('arguments', {}).get(key)
+        description = markdown(override, pandoc) if override else member_notes(uses, members, pandoc)
         term_ids = []
-        kinds = set()
+        kinds = {}
         for name in uses:
-            prefix = member_prefix(name, primary)
+            member_description = override or uses[name]
+            summary = ' '.join(html.unescape(re.sub(r'<[^>]*>', ' ',
+                                                   markdown(member_description, pandoc))).split())
+            prefix = prefixes[name]
             anchor = prefix + parameter_anchor(key)
             term_ids.append(anchor)
             if key != '...':
                 term_ids.append(prefix + 'arg-' + key)
             if kind := flexible.get(name, {}).get(key):
-                kinds.add(kind)
+                kinds.setdefault(kind, []).append(name)
             search.append(dict(url=f'{url}#{anchor}', kind='parameter', title=f'{name}() · {key}',
                                keywords=f'{name} {key}', text=summary, summary=summary,
                                queries=[f'{name} {key}']))
-        if len(kinds) > 1:
-            raise ValueError(f'{primary}: incompatible flexible parameter formats for {key}')
-        badge = ''
-        if kinds:
-            fragment = FLEXIBLE_SECTIONS[next(iter(kinds))]
-            badge = (f'<a class="flexible-parameter" href="../parameters.html#{fragment}">'
-                     f'{titles["flexible"]}</a>')
+        badges = []
+        for kind, names in kinds.items():
+            fragment = FLEXIBLE_SECTIONS[kind]
+            scope = ' '.join(code(name + '()') for name in names) if names != list(uses) else ''
+            badge = (f'<a class="flexible-parameter" data-flexible-kind="{kind}"'
+                     f' href="../parameters.html#{fragment}">{titles["flexible"]}</a>')
+            badges.append(f'<span class="reference-parameter-scope">{scope}{badge}</span>' if scope else badge)
         canonical, *aliases = term_ids
         rows.append(f'<dt><span class="argument-term">{anchors(aliases)}'
                     f'<code id="{canonical}" class="argument-anchor">{html.escape(key)}</code>'
-                    f'{badge}</span></dt><dd>{description}</dd>')
+                    f'{"".join(badges)}</span></dt><dd>{description}</dd>')
 
     def common(key, content):
-        aliases = anchors(prefix + 'ref-' + key for prefix in prefixes[1:])
-        return section('ref-' + key, titles[key], aliases + content)
+        id_ = 'ref-' + key
+        aliases = [prefix + id_ for prefix in list(prefixes.values())[1:]]
+        if not content:
+            return anchors([id_, *aliases])
+        return section(id_, titles[key], anchors(aliases) + content)
 
-    intro_aliases = anchors(prefix + 'ref-' + key for prefix in prefixes for key in ('purpose', 'description'))
-    details_aliases = anchors(prefix + 'ref-' + key for prefix in prefixes for key in ('value', 'errors'))
-    related = structure['articles'][primary]['related']
+    roles_body = ''
+    if overview := article.get('roles'):
+        roles_body = markdown(overview, pandoc)
+    elif roles:
+        roles_body = '<dl>' + ''.join(
+            f'<dt>{html.escape(role.replace(chr(96), ""))}</dt><dd>'
+            f'{member_notes(uses, members, pandoc)}</dd>'
+            for role, uses in roles.items()) + '</dl>'
+
+    details = markdown(article['details'], pandoc)
+    if plan.get('member_rules'):
+        rules = {}
+        for name in members:
+            text = locale['topics'][name]
+            rules[name] = '\n\n'.join(dict.fromkeys(filter(None, (text['details'], text['errors']))))
+        if rules_body := member_notes(rules, members, pandoc):
+            details += (f'<details class="reference-member-rules"><summary>{titles["member_rules"]}</summary>'
+                        + rules_body + '</details>')
+    value = article.get('value')
+    value_body = markdown(value, pandoc) if value else member_notes(
+        {name: locale['topics'][name]['value'] for name in members}, members, pandoc)
+
+    featured = plan['featured_examples']
+    sample = article.get('example_intro', '')
+    example_body = (markdown(sample, pandoc) if sample else '') + ''.join(examples[name] for name in featured)
+    other = ''.join(examples[name] for name in members if name not in featured)
+    if other:
+        example_body += (f'<details class="reference-more-examples"><summary>{titles["more_examples"]}</summary>'
+                         + other + '</details>')
+
+    related = [topic_link(name, owners) for name in plan['related']]
+    related.extend(link('https://ggplot2.tidyverse.org/reference/' + name + '.html', name + '() · ggplot2')
+                   for name in members if topics[name]['native'])
+    intro_aliases = anchors(prefix + 'ref-' + key for prefix in prefixes.values()
+                            for key in ('purpose', 'description'))
+    error_aliases = anchors(prefix + 'ref-errors' for prefix in prefixes.values())
     body = (
         intro_aliases + markdown(article['intro'], pandoc) +
-        section('ref-usage', titles['usage'], ''.join(signatures)) +
-        common('arguments', f'<dl class="reference-arguments">{"".join(rows)}</dl>') +
-        common('roles', markdown(article['roles'], pandoc)) +
-        common('details', details_aliases + markdown(article['details'], pandoc)) +
-        section('ref-examples', titles['examples'], markdown(article['example_intro'], pandoc) + ''.join(examples)) +
-        common('related', '<ul>' + ''.join(f'<li>{topic_link(name, owners)}</li>' for name in related) + '</ul>')
+        section('ref-usage', titles['usage'],
+                '<pre class="downlit reference-usage"><code>' + '\n\n'.join(signatures) + '</code></pre>') +
+        common('arguments', f'<dl class="reference-arguments">{"".join(rows)}</dl>' if rows else '') +
+        common('roles', roles_body) +
+        common('value', value_body) +
+        common('details', error_aliases + details) +
+        section('ref-examples', titles['examples'], example_body) +
+        common('related', '<ul>' + ''.join(f'<li>{item}</li>' for item in related) + '</ul>' if related else '')
     )
     return f'<div data-api-article="{primary}">{body}</div>', search
 
@@ -441,20 +498,22 @@ def reference_index(structure, locale, lang, owners):
     titles = LABELS[lang]
     families = structure['families']
 
+    def index_row(title, members, shortcut=False):
+        links = ' '.join(topic_link(name, owners) for name in members)
+        kind = ' reference-shortcuts' if shortcut else ''
+        return f'<div class="reference-index-row{kind}"><dt>{title}</dt><dd>{links}</dd></div>'
+
     def family_index(primary):
-        terms = ' · '.join(topic_link(name, owners) for name in families[primary])
-        return (f'<dt class="col-sm-5 mb-sm-2">{link(primary + ".html", locale["families"][primary])}</dt>'
-                f'<dd class="col-sm-7 mb-2">{terms}</dd>')
+        return index_row(link(primary + '.html', locale['families'][primary]), families[primary])
 
     contents = ''.join(
         '<section class="reference-group">' +
         ''.join(f'<span id="{alias}"></span>' for alias in group['previous_anchors']) +
         f'<h2 id="family-{key}">{html.escape(groups[key]["title"])}</h2>'
-        f'<p>{html.escape(groups[key]["intro"])}</p><dl class="row">' +
+        f'<p>{html.escape(groups[key]["intro"])}</p><dl>' +
         ''.join(family_index(primary) for primary in dict.fromkeys(owners[name] for name in group['topics'])) +
-        '</dl>' +
-        ('<p class="reference-shortcuts">' + ' · '.join(topic_link(name, owners) for name in group['shortcuts']) +
-         '</p>' if group.get('shortcuts') else '') + '</section>'
+        (index_row(html.escape(groups[key]['shortcut_title']), group['shortcuts'], shortcut=True)
+         if group.get('shortcuts') else '') + '</dl></section>'
         for key, group in structure['groups'].items())
     field = ('<div class="reference-filter" hidden><label for="reference-filter">'
              f'{titles["filter"]}</label><input id="reference-filter" type="search" autocomplete="off">'
@@ -474,9 +533,6 @@ def prepare(root, pandoc):
     output = render_examples(assets, structure)
     search_by_language = {}
     flexible = read(ROOT / 'website/flexible-parameters.json')
-    former = structure['previous_family_members']
-    revised = set(former) | {name for names in former.values() for name in names}
-    revised.update(name for head in structure['articles'] for name in structure['families'][head])
     pages = {lang: [] for lang in LOCALES}
     for lang, locale in locales.items():
         topics, groups = locale['topics'], locale['groups']
@@ -534,12 +590,10 @@ def prepare(root, pandoc):
                         names.append(f'<span class="argument-term">{alias}'
                                      f'<code id="{anchor}" class="argument-anchor">{html.escape(key)}</code>'
                                      f'{badge}</span>')
-                        hit = dict(url=f'{url}#{anchor}', kind='parameter',
-                                   title=f'{name}() · {key}', keywords=f'{name} {key}',
-                                   text=f'{param["format"]} {summary}', summary=summary)
-                        if name in revised:
-                            hit['queries'] = [f'{name} {key}']
-                        search.append(hit)
+                        search.append(dict(url=f'{url}#{anchor}', kind='parameter',
+                                           title=f'{name}() · {key}', keywords=f'{name} {key}',
+                                           text=f'{param["format"]} {summary}', summary=summary,
+                                           queries=[f'{name} {key}']))
                     rows.append(f'<dt>{", ".join(names)}</dt><dd>'
                                 f'<p class="argument-format">{html.escape(param["format"])}</p>'
                                 f'{description}</dd>')
@@ -555,17 +609,15 @@ def prepare(root, pandoc):
                     add('errors', markdown(text['errors'], pandoc))
                 example_note = markdown(text['example_setup'],pandoc) if text['example_setup'] else ''
                 add('examples', example_note + example_content(output, name, titles))
-                if name in revised:
-                    search.append(example_search(url, name, titles['examples'], prefix + 'ref-examples',
-                                                 lang, text['example_setup'] or text['intro']))
+                search.append(example_search(url, name, titles['examples'], prefix + 'ref-examples',
+                                             lang, text['example_setup'] or text['intro']))
                 add('related', '<ul>' + ''.join(f'<li>{topic_link(target, owners)}</li>' for target in shared['related']) + '</ul>')
                 sections.append(f'<section data-api="{name}"><h2 id="api-{name}">{code(name + "()")}</h2>'
                                 + ''.join(bodies) + '</section>')
                 row = dict(url=f'{url}#api-{name}', title=f'{name}() — {text["title"]}',
                            kind='function', summary=text['intro'], text=text['details'],
                            keywords=' '.join([name, locale['families'][primary], *sorted(seen)]))
-                if name in revised:
-                    row['queries'] = [name, name + '()']
+                row['queries'] = [name, name + '()']
                 search.append(row)
             pages[lang].append(dict(slug=f'reference/{primary}', title=locale['families'][primary],
                                     body=''.join(sections) + moves))
@@ -678,7 +730,7 @@ def build(root, write_package_download):
         if not (root/'index.html').exists():
             write(stage/'index.html', redirect('en/reference/index.html'))
         for name in ('site.css', 'site.js', 'favicon.png', 'logo.webp'):
-            if not (root/'assets'/name).exists():
+            if name in ('site.css', 'site.js') or not (root/'assets'/name).exists():
                 shutil.copy2(ASSETS/name, stage/'assets'/name)
         for source in stage.rglob('*'):
             if source.is_file():

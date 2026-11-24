@@ -44,6 +44,8 @@ Article links point to actual repository files, such as a sibling `.md` page, a 
 
 The API reference documents the public inventory and categories for the package source in this checkout. Edit English page prose in `website/reference-manual/en.json`, then review the corresponding Han text in `website/reference-manual/zh.json`. Record the SHA-256 of the reviewed English source in the Han file. The shared `structure.json` holds the invocation, parameter and role keys, examples and cross-links. Both language editions expose the same code and anchors. Native facet pages link to the upstream ggplot2 documentation.
 
+Give each multi-function family one article with shared usage and argument sections. Use its prose to explain when to choose each function. In `structure.json`, `featured_examples` selects the examples shown first. Other member scripts remain directly linkable in the same example section. Include only the inputs and calls needed to demonstrate the result. Declare any shared input blocks in the example’s `example_fixtures` in setup order. The displayed code, downloads and rendered results use that same script.
+
 Run these commands to check and build the API reference independently.
 
 ```sh

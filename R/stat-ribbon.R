@@ -84,7 +84,8 @@ ggchord_prepare_link_statistics <- function(plot, references) {
       data$source_members <- I(ggchord_link_source_members(data))
       data
     }
-    if (is.null(members)) result <- compute(observations) else {
+    cache <- p$link_stat_cache
+    if (!is.null(cache$result)) result <- cache$result else if (is.null(members)) result <- compute(observations) else {
       panels <- plot$ggchord$source_facet_setup$panels
       keys <- ggchord_facet_vars(plot)
       result <- ggchord_rbind_fill(lapply(seq_len(nrow(panels)), function(panel) {
@@ -97,6 +98,7 @@ ggchord_prepare_link_statistics <- function(plot, references) {
       }))
     }
     if (density) attr(result, "ggchord_density_normalization") <- normalization
+    if (!is.null(cache)) cache$result <- result
     capture <- p$stage_capture
     if (!is.null(capture)) {
       if ("mapped" %in% capture$requested) capture$mapped <- input

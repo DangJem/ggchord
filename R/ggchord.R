@@ -176,6 +176,8 @@ layer_id <- function(layer, id) {
   }
 
   if (inherits(e2, "ggchord_scoped_scale")) {
+    if (is.data.frame(e2$layers))
+      ggchord_stop("scale_for(): structured panel_path selectors apply to Fusion")
     if (is.null(e2$layers) && is.null(e2$tracks)) {
       if (is.null(scope)) ggchord_stop("scale_for(): add a target first or supply layers or tracks")
       e2[[scope$selector]] <- scope$id
@@ -195,6 +197,10 @@ layer_id <- function(layer, id) {
   }
 
   if (inherits(e2, "Layer")) {
+    if (isTRUE(e2$ggchord_type %in% c("ribbon", "link")) &&
+        length(intersect(c("qpanel_path", "spanel_path", "qfacet", "sfacet"),
+          union(names(e2$ggchord_input_mapping), union(names(e2$ggchord_input_data), names(e1$mapping))))))
+      ggchord_stop("View selectors in Link aes() require a Fusion root")
     occupied <- vapply(e1$layers, function(layer) layer$ggchord_layer_id %||% "", character(1))
     e2 <- ggchord_assign_layer_id(e2, occupied, length(e1$layers) + 1L)
     scope <- list(selector = "layers", id = e2$ggchord_layer_id)

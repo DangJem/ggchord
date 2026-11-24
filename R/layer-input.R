@@ -120,14 +120,21 @@ ggchord_render_inputs <- function(plot) {
       next
     }
     reader <- layer$ggchord_input_data
-    cache_reader <- is.function(reader) && !isTRUE(attr(reader, "ggchord_render_source"))
+    cache_reader <- is.function(reader) && is.null(layer$ggchord_params$render_source_reader)
     # This source plot survives device refinement, unlike the geometry copies.
-    cache_stat <- layer$ggchord_type %in% c("gene_poly", "restriction_site") &&
-      !is.null(layer$ggchord_params$source_stat) && is.null(layer$ggchord_params$source_stat_cache)
-    if (!cache_reader && !cache_stat) next
+    cache_stat <- !is.null(layer$ggchord_params$source_stat) &&
+      is.null(layer$ggchord_params$source_stat_cache)
+    cache_link <- !is.null(layer$ggchord_params$link_stat) &&
+      is.null(layer$ggchord_params$link_stat_cache)
+    if (!cache_reader && !cache_stat && !cache_link) next
     copy <- reconstruct_layer(layer, layer$data, mapping = layer$mapping)
-    if (cache_reader) copy$ggchord_input_data <- ggchord_render_data_once(reader)
+    if (cache_reader) {
+      once <- ggchord_render_data_once(reader)
+      copy$ggchord_params$render_source_reader <- once
+      copy$ggchord_input_data <- once
+    }
     if (cache_stat) copy$ggchord_params$source_stat_cache <- new.env(parent = emptyenv())
+    if (cache_link) copy$ggchord_params$link_stat_cache <- new.env(parent = emptyenv())
     plot$layers[[i]] <- copy
   }
   plot

@@ -222,14 +222,18 @@ ggchord_diagnose_sources <- function(plot) {
       for (layer in plot$ribbons) check({
         input <- ggchord_fusion_input(layer)
         ggchord_fusion_check_style_mapping(layer)
-        rows <- which(!ggchord_fusion_incomplete(input, layer$required))
+        rows <- seq_len(nrow(input))
         for (row in rows) {
-          q <- ggchord_fusion_check_path(input$qpanel_path[[row]], "fusion_ribbon()")
-          s <- ggchord_fusion_check_path(input$spanel_path[[row]], "fusion_ribbon()")
+          paths <- lapply(c("qpanel_path", "spanel_path"), function(name) {
+            value <- ggchord_fusion_selector(input[row, , drop = FALSE], name)
+            if (!is.null(value)) ggchord_fusion_check_path(value, "Fusion link")
+          })
+          q <- paths[[1L]]
+          s <- paths[[2L]]
           unknown <- setdiff(c(q, s), leaves)
           if (length(unknown))
             ggchord_stop("Fusion ", layer$id, " row ", row, ": unknown leaf panel '", unknown[1L], "'")
-          if (identical(q, s)) ggchord_stop("Fusion: links require distinct panels")
+          if (!is.null(q) && identical(q, s)) ggchord_stop("Fusion: links require distinct panels")
         }
       }, path, layer$id)
       for (id in names(plot$panels))

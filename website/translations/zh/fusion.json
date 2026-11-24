@@ -1,35 +1,35 @@
 {
-  "source_sha256": "c2cf12969064f6bc30d791ce71ed9b527c2729d94ef033d43c65cad0dcaaca8b",
+  "source_sha256": "9ffb91fe14c53afe893f8d65da8595e2e745027e68f0648cd7d1c027a3cb381b",
   "blocks": {
     "0": {
       "source_sha256": "1e9af62751d6a71b6cdf4a363625fbdd0da2e17c2a318dab739b91de4d84ad0a",
       "status": "reviewed",
-      "translation": "Fusion 可组合各自拥有独立坐标系的图。这里用圆图显示 MT108731.1 全长，在右侧用两条竖直骨架并列显示它和 MT118296.1。随后用一条实测 HSP 把圆上的区间连到第二条骨架。\n"
+      "translation": "Fusion 组合使用各自坐标系的独立图。这里的圆图展示完整的 MT108731.1 基因组，两条竖直骨架并列展示该基因组和 MT118296.1。一条实测 HSP 将圆图中的源区间连到第二条骨架。\n"
     },
     "2": {
       "source_sha256": "ec51f35fb2dc55cfe81d4c17e659eed5a4b5b54805bff61d50b1236b941a1734",
       "status": "reviewed",
-      "translation": "## 组合两幅独立构建的图 {#draw}\n"
+      "translation": "## 排列两幅独立图 {#draw}\n"
     },
     "3": {
-      "source_sha256": "5b6adeabd428d3cf8c9bf4e8979f99f5dc0cde7332bfd039ddf51a3d2f585675",
+      "source_sha256": "6a593cf2c1ba57856246a2f34a5429fbc3b0b426e81331d20cc7b2429ae5a797",
       "status": "reviewed",
-      "translation": "先分别构建圆形总览图和线性对照图，再把具名列表 `list(overview = overview, detail = detail)` 传给 `ggchord_fusion()`。默认网格按列表顺序排列两幅图。连接图层用这些名称指定面板路径。\n"
+      "translation": "先构建环形总览和直线详图。将具名列表 `list(overview = overview, detail = detail)` 传给 `ggchord_fusion()`。添加 `layout_fusion_grid(ncol = 2, gap = 3)`，将两个视图排在一行，中间留出 3 mm。列表名称用于标识连接图层中的视图路径。\n"
     },
     "6": {
       "source_sha256": "5a92ceff69f45dd886c429a7e37081b338bf6d7dc67c1c5e292347aedd573a92",
       "status": "reviewed",
-      "translation": "## 按面板标识连接一对区间 {#adapt}\n"
+      "translation": "## 连接指定视图中的 HSP {#adapt}\n"
     },
     "7": {
-      "source_sha256": "b92766ef5b53bbb86950b549bf9591bd5e4314b8985c2d969b452b82c4a6843e",
+      "source_sha256": "83c7bc0f82c2b06ad4bb6a90ca8d128811445f07a9a02e8aa336c199b977501d",
       "status": "reviewed",
-      "translation": "继续使用这个查询方向的第一条 HSP。在传给 `fusion_ribbon()` 的关系表中加入 `qpanel_path` 和 `spanel_path` 两列。查询端连到 `overview` 中 MT108731.1 的 26,298–51,139 bp，目标端连到 `detail` 中 MT118296.1 的 7,121–31,959 bp。序列标识确定来源，面板路径确定显示位置。\n"
+      "translation": "继续使用这个查询方向的第一条 HSP。在 `geom_link_ribbon()` 中将 `qpanel_path` 和 `spanel_path` 映射到两个视图的名称。实测点对点关系可用 `geom_link_line()`。查询端连到 `overview` 中 MT108731.1 的 26,298–51,139 bp，目标端连到 `detail` 中 MT118296.1 的 7,121–31,959 bp。参考序列标识指定来源，面板路径指定视图。\n"
     },
     "10": {
-      "source_sha256": "2a30679ec806c444ac54065e6e0d39338186f36e13d817900982429e1f1a5bad",
+      "source_sha256": "14b5c472b6fcf3a37b32757c0139c3a8bc7c5741b37c260729dc095a17ec4ce5",
       "status": "reviewed",
-      "translation": "接收端点的面板必须包含相应的参考序列及区间。要汇集各面板中相同的外置图例，可在 `ggchord_fusion()` 中设置 `guides = \"collect\"`，并为需要比较的测量值指定相同的标度范围和刻度。下一步可沿[六面板案例](case-fusion.md)从基因组总览读到局部比对，或[按最终宽度导出图形](output.md)。\n"
+      "translation": "每个视图须包含指定的源位置。用 `fusion_magnify_auto()` 从序列总览派生窗口，或用 `fusion_magnify_manual()` 在两幅已准备好的视图中标记同一源区间。有真实字符时，Auto 会在面板容得下实测字形时显示残基详图。设 `level = \"feature\"` 保持注释窗口，或设 `level = \"residue\"` 指定字符详图。字符详图可用 `read_fasta_lengths(keep_sequence = TRUE)` 保留参考字符，也可从已登记的字符图开始。在 `ggchord_fusion()` 中设置 `guides = \"collect\"` 可共同排布外置图例。给 `scale_for()` 传入含 `panel_path` 和 `layer_id` 的表，可以对所选视图共同训练视觉标度。下一步可沿[六面板案例](case-fusion.md)从基因组总览读到局部比对，或[按最终宽度导出图形](output.md)。\n"
     }
   }
 }

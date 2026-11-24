@@ -114,7 +114,7 @@
     "en": "The original 32 HSPs use colour for reported identity and line width for reported alignment length."
   },
   "fusion-caption": {
-    "en": "Three views of the same relationships lead into a source interval, an alignment window and a detail showing the individual bases."
+    "en": "Three views of the same relationships lead into a source interval, an alignment window and a detail showing individual bases. Use Auto Magnify to derive a detail window, or use Manual Magnify to connect a prepared character view."
   },
   "dotplot-guide": {
     "en": "Axes, direction and mappings →"

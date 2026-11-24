@@ -6,6 +6,8 @@
 #' @param axis A required x or y selector in a Dotplot.
 #' @param panel The target panel ID path in a Fusion.
 #' @param instance Optional exact display instance ID.
+#' @param facet Named list of actual facet values. For display queries,
+#'   matching panels are returned with their facet keys.
 #' @inheritParams export_ggchord_layout
 #' @return A correspondence table retaining all matching instances and recording
 #'   reasons for unavailable positions.
@@ -31,7 +33,7 @@
 #'   width = 8, height = 5, device = "pdf")
 map_ggchord_position <- function(plot, data, from = "source", to = "display",
     axis = NULL, panel = NULL, instance = NULL, width = NULL, height = NULL,
-    units = "in", device = NULL, dpi = 300) {
+    units = "in", device = NULL, dpi = 300, facet = NULL) {
   ggchord_local_console_errors()
   caller <- "map_ggchord_position()"
   ggchord_output_plot(plot, caller)
@@ -44,21 +46,17 @@ map_ggchord_position <- function(plot, data, from = "source", to = "display",
   request <- ggchord_output_request(width, height, units, device, dpi, caller)
   needs_display <- "display" %in% c(from, to)
   path <- character()
-  facet <- NULL
+  facet_selector <- ggchord_fusion_facet(facet, caller)
+  facet_number <- NULL
   leaf <- plot
   if (inherits(plot, "ggchord_fusion")) {
     ggchord_fusion_check_path(panel, caller)
     path <- unname(panel)
-    for (id in path) {
-      key <- ggchord_fusion_path_key(id)
-      if (!inherits(leaf, "ggchord_fusion") || !key %in% names(leaf$panels))
-        ggchord_stop(caller, ": unknown panel path")
-      leaf <- leaf$panels[[key]]$plot
-    }
+    leaf <- ggchord_fusion_leaf(plot, path, caller)
   } else if (!is.null(panel)) {
     if (!is.numeric(panel) || length(panel) != 1L || !is.finite(panel) ||
         panel < 1 || panel != trunc(panel)) ggchord_stop(caller, ": invalid panel number")
-    facet <- panel
+    facet_number <- panel
   }
   ggchord_output_plot(leaf, caller)
   if (inherits(leaf, "ggchord_fusion")) ggchord_stop(caller, ": select a leaf panel")
@@ -92,13 +90,17 @@ map_ggchord_position <- function(plot, data, from = "source", to = "display",
     })
     if (!is.null(context) && !identical(context$context$status, "measured")) context <- NULL
   }
+  if (isTRUE(context$layout$character)) {
+    reference <- ggchord_query_character_reference(context$layout$character_data)
+    if (!no_instance) reference <- reference[reference$instance_id == instance, , drop = FALSE]
+  }
   measurement <- ggchord_output_measurement(request, !is.null(context), failure,
     actual = attr(context, "measurement_device"))
   empty <- data.frame(input_row = integer(), source_accver = character(),
     source_position = numeric(), accver = character(), pos = numeric(),
     x = numeric(), y = numeric(), instance_id = character(), PANEL = integer(),
     sequence_unit = character(), status = character(), reason = character(),
-    panel_path = I(list()))
+    panel_path = I(list()), facet_key = I(list()))
   if (dotplot) empty$axis <- character()
   result <- lapply(seq_len(nrow(data)), function(i) {
     input <- data[i, , drop = FALSE]
@@ -116,10 +118,10 @@ map_ggchord_position <- function(plot, data, from = "source", to = "display",
         if (is.null(failure)) "panel_measurement_unavailable" else failure,
         if (is.null(failure)) "unavailable" else "failed")
     } else {
-      panel_number <- input[["PANEL"]] %||% facet
+      panel_number <- input[["PANEL"]] %||% facet_number
       candidates <- ggchord_query_match(reference, from, input)
       value <- if (any_display) {
-        ggchord_query_project(candidates, context, from, input, axis, panel_number)
+        ggchord_query_project(candidates, context, from, input, axis, panel_number, facet_selector)
       } else candidates
       if (!nrow(value)) value <- miss("not_present") else {
         gap <- if ("is_gap" %in% names(value)) to == "source" & value$is_gap else rep(FALSE, nrow(value))
@@ -150,11 +152,14 @@ ggchord_query_clone <- function(plot) {
   plot
 }
 
+ggchord_query_character_reference <- function(data) data.frame(
+  accver = as.character(data$accver), instance_id = data$display_row %||% as.character(data$accver),
+  source_accver = data$source_accver, source_position = data$source_position,
+  pos = data$alignment_column, sequence_unit = data$sequence_unit, is_gap = data$is_gap)
+
 ggchord_query_reference <- function(plot, axis) {
   data <- plot$ggchord_alignment
-  if (!is.null(data)) return(data.frame(accver = data$accver,
-    instance_id = data$accver, source_accver = data$source_accver, source_position = data$source_position,
-    pos = data$alignment_column, sequence_unit = data$sequence_unit, is_gap = data$is_gap))
+  if (!is.null(data)) return(ggchord_query_character_reference(data))
   plot <- ggchord_configure_layout(ggchord_resolve_reference(plot))
   seqs <- plot$ggchord$data$seq_data
   layout <- plot$ggchord$sequence_layout
@@ -219,7 +224,7 @@ ggchord_query_transform <- function(leaf, xy, panel, axis = NULL) {
   value
 }
 
-ggchord_query_project <- function(candidates, leaf, from, input, axis, facet) {
+ggchord_query_project <- function(candidates, leaf, from, input, axis, facet, selector = NULL) {
   built <- leaf$built
   layout <- leaf$layout
   panel_numbers <- as.integer(built$layout$layout$PANEL)
@@ -227,6 +232,17 @@ ggchord_query_project <- function(candidates, leaf, from, input, axis, facet) {
     if (!is.numeric(facet) || length(facet) != 1L || is.na(facet) || !facet %in% panel_numbers)
       ggchord_stop("map_ggchord_position(): facet panel does not exist")
     panel_numbers <- facet
+  }
+  grid <- built$layout$layout
+  keys <- setdiff(names(grid), c("PANEL", "ROW", "COL", "SCALE_X", "SCALE_Y", "COORD"))
+  facet_key <- function(panel) as.list(grid[match(panel, as.integer(grid$PANEL)), keys, drop = FALSE])
+  if (!is.null(selector)) {
+    panel_numbers <- panel_numbers[vapply(panel_numbers, function(panel)
+      ggchord_fusion_facet_match(facet_key(panel), selector), logical(1))]
+    if (!length(panel_numbers))
+      ggchord_stop("map_ggchord_position(): no facet matches; available facets: ",
+        paste(vapply(as.list(grid[keys]), function(x) paste(unique(x), collapse = "/"),
+          character(1)), collapse = ", "))
   }
   inverse <- from == "display"
   parts <- lapply(panel_numbers, function(panel) {
@@ -280,6 +296,7 @@ ggchord_query_project <- function(candidates, leaf, from, input, axis, facet) {
       candidate$x <- if (identical(axis, "y")) NA_real_ else xy[1L]
       candidate$y <- if (identical(axis, "x")) NA_real_ else xy[length(xy)]
       candidate$PANEL <- panel
+      candidate$facet_key <- list(facet_key(panel))
       candidate
     })
     ggchord_rbind_fill(rows)

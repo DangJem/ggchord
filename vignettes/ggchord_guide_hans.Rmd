@@ -10,7 +10,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-<!-- Reviewed English source SHA-256: 21f5997e997b2999a02ebe8e94702970d15bcdb21f7b835e676d6f807a66eff9 -->
+<!-- Reviewed English source SHA-256: 127725b1ec24f2175bf56dd412eec0130b816248afadba2aa7193c0ab6cd0608 -->
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(eval = FALSE, collapse = TRUE)
@@ -116,19 +116,14 @@ ggchord(ref) +
 
 ## 组合源区间的两个视图 {#fusion-start}
 
-Fusion 按名称布置独立图形。放大标记说明两个面板展示同一源区间。要表达有明确双端来源的观察关系，请使用 fusion_ribbon()。
+Fusion 按视图 ID 排列独立图形。使用 `geom_link_ribbon()` 或 `geom_link_line()` 绘制实测关系。自动放大从原图观测派生显示窗口。详图已准备好时可用 Manual。 用 `level = "feature"` 指定注释窗口，或用 `level = "residue"` 指定真实字符。默认先测量可用面板空间。显式字符详图需要带字符的参考或已登记的字符图。
 
 ```{r workflow-7}
 ref <- data.frame(accver = "A", length = 1000)
 region <- data.frame(accver = "A", start = 200, end = 500)
 
 overview <- ggchord(ref) + geom_seq() + coord_circular()
-detail <- ggchord(ref) + geom_seq() +
-  layout_sequences(windows = transform(region, instance_id = "detail")) +
-  coord_collinear()
-
-combined <- ggchord_fusion(list(overview = overview, detail = detail)) +
-  fusion_zoom("overview", "detail", region)
+combined <- fusion_magnify_auto(overview, region, expand = 50)
 combined
 ```
 

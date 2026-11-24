@@ -157,7 +157,7 @@ ggchord_base_gtable <- function(built) {
     built$data <- c(leaders, built$data)
     built$plot$layers <- c(leader_layers, built$plot$layers)
   }
-  ggplot_gtable(built)
+  ggplot_gtable(ggchord_fusion_hide_guides(built))
 }
 
 ggchord_render_table <- function(built, force = FALSE) {

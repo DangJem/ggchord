@@ -4,15 +4,18 @@
 \alias{ggchord_fusion}
 \title{Compose independent plots}
 \usage{
-ggchord_fusion(panels, layout = layout_fusion_grid(), guides = "keep")
+ggchord_fusion(panels, layout = NULL, guides = "auto")
 }
 \arguments{
-\item{panels}{Uniquely named list of ggchord plots, Cartesian ggplots or
-nested compositions. Source endpoints require a registered source map.}
+\item{panels}{List of ggchord plots, Cartesian ggplots or
+nested compositions. Unnamed entries receive stable view IDs. Source
+endpoints require a registered source map.}
 
-\item{layout}{Panel allocation from \code{\link[=layout_fusion]{layout_fusion()}} or \code{\link[=layout_fusion_grid]{layout_fusion_grid()}}.}
+\item{layout}{Panel allocation from \code{\link[=layout_fusion]{layout_fusion()}} or \code{\link[=layout_fusion_grid]{layout_fusion_grid()}}.
+NULL selects an automatic grid. A layout added with \code{+} replaces it.}
 
-\item{guides}{Keep child guides local, or collect semantically equivalent guides.}
+\item{guides}{Guide policy: \code{"auto"} allows collection by a parent,
+\code{"keep"} preserves a local boundary, and \code{"collect"} collects outside guides.}
 }
 \value{
 A composition accepted by print and \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}.

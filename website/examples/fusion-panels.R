@@ -26,4 +26,5 @@ detail <- ggchord(reference) +
   coord_collinear(axis = "y", fit = "labels") +
   theme_ggchord_minimal()
 
-ggchord_fusion(list(overview = overview, detail = detail))
+ggchord_fusion(list(overview = overview, detail = detail)) +
+  layout_fusion_grid(ncol = 2, gap = 3)

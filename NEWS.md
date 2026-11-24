@@ -1,5 +1,22 @@
 # ggchord 0.50.0 (development)
 
+- Fusion resolves grid or rectangular layouts after all views have been
+  registered. Add a layout with `+` and use `geom_link_line()` or
+  `geom_link_ribbon()` for relationships across views. Endpoint selectors
+  identify view paths, facets by value, and display instances.
+- `fusion_magnify_auto()` derives an editable detail from original source
+  observations and inherits trained visual scales and track domains. Use
+  `level = "residue"` for source-backed DNA, RNA and amino acid cells.
+  The default `"auto"` selects readable characters using measured glyph and
+  panel sizes when real characters are available.
+  `fusion_magnify_manual()` marks a source region shared by prepared views,
+  including registered character plots. Both record the source region and
+  view identities in layout exports.
+- Structured `scale_for()` layer selectors train a common visual domain
+  across the specified views. Guide collection controls placement and observes
+  nested `"keep"` boundaries. Fusion root theme settings apply to composition
+  furniture and collected legends.
+
 - `coord_circular(start_angle = 0)` now starts at twelve o'clock. Positive
   angles advance counterclockwise. Subtract 90 degrees from an earlier
   v0.50.0 development angle to preserve the same orientation.

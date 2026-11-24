@@ -360,12 +360,9 @@
     for (const group of groups) {
       const heading = group.querySelector('h2').textContent.toLocaleLowerCase();
       let matches = 0;
-      for (const term of group.querySelectorAll('dt')) {
-        const definition = term.nextElementSibling;
-        const text = (term.textContent + ' ' + definition.textContent).toLocaleLowerCase();
-        const visible = heading.includes(query) || text.includes(query);
-        term.hidden = definition.hidden = !visible;
-        if (visible) matches++;
+      for (const row of group.querySelectorAll('.reference-index-row')) {
+        row.hidden = !heading.includes(query) && !row.textContent.toLocaleLowerCase().includes(query);
+        if (!row.hidden) matches++;
       }
       group.hidden = !matches;
       total += matches;

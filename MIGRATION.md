@@ -6,6 +6,9 @@ Use v0.29.0 for code that relies on the previous API, because v0.50.0 and later 
 
 | Former call or setting | Replacement in v0.50.0 |
 | --- | --- |
+| `fusion_ribbon(mapping, data, ...)` | Use `geom_link_ribbon(mapping, data, ...)` at the Fusion root. Map `qpanel_path` and `spanel_path` or supply them in the relationship table. |
+| `fusion_zoom(from, to, region, ...)` | Use `fusion_magnify_manual(from = from, to = to, region = region, ...)` with two registered leaf views. |
+| `magnify_ggchord(overview, detail, region)` | Use `fusion_magnify_manual(overview, detail, region)` for prepared plots or `fusion_magnify_auto(overview, region)` to derive the detail. |
 | `shape = "primer_arc"` or a shape scale value of `"primer_arc"` | Use `"arrow_arc"` in the layer, `shape_feature()` or the scale. `geom_primer()` uses the renamed shape by default. Removed in v0.50.0. |
 | `shape = "compact_arrow"`, `"promoter_arrow"` or `"primer_arrow"` | Use `shape = shape_feature("arrow", head_length = 1)` for a short head. Pass the same specification as a value in `scale_shape_manual()` for a mapped shape. Removed in v0.50.0. |
 | `head_style = "shouldered"`, `"flush"` or `"triangle"` | Use `shape = "arrow"`, `"arrow_flush"` or `"arrow_triangle"`, respectively. An explicit `geom_gene(shape = "arrow")` now draws a shouldered arrow. Use `"arrow_flush"` to retain its former silhouette. |

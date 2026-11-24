@@ -4,12 +4,23 @@
 \alias{layout_fusion_grid}
 \title{Allocate plots on a rectangular grid}
 \usage{
-layout_fusion_grid(design = NULL, widths = 1, heights = 1)
+layout_fusion_grid(
+  design = NULL,
+  widths = 1,
+  heights = 1,
+  nrow = NULL,
+  ncol = NULL,
+  gap = 0
+)
 }
 \arguments{
 \item{design}{Character matrix of panel IDs with NA for empty cells.}
 
 \item{widths, heights}{Positive column and row weights.}
+
+\item{nrow, ncol}{Optional positive integer grid dimensions.}
+
+\item{gap}{Absolute space between cells, in millimetres or as an absolute grid unit.}
 }
 \value{
 A Fusion layout declaration.

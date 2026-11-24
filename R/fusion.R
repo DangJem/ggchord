@@ -1,10 +1,13 @@
 # Composition owns device-local panels; source plots remain independent.
 
 #' Compose independent plots
-#' @param panels Uniquely named list of ggchord plots, Cartesian ggplots or
-#'   nested compositions. Source endpoints require a registered source map.
+#' @param panels List of ggchord plots, Cartesian ggplots or
+#'   nested compositions. Unnamed entries receive stable view IDs. Source
+#'   endpoints require a registered source map.
 #' @param layout Panel allocation from [layout_fusion()] or [layout_fusion_grid()].
-#' @param guides Keep child guides local, or collect semantically equivalent guides.
+#'   NULL selects an automatic grid. A layout added with `+` replaces it.
+#' @param guides Guide policy: `"auto"` allows collection by a parent,
+#'   `"keep"` preserves a local boundary, and `"collect"` collects outside guides.
 #' @return A composition accepted by print and [ggplot2::ggsave()].
 #' @export
 #' @examples
@@ -32,21 +35,28 @@
 #' p_detail <- ggchord(seqs) + geom_seq() +
 #'   geom_gene(data = genes) + coord_collinear()
 #' ggchord_fusion(list(overview = p_over, detail = p_detail))
-ggchord_fusion <- function(panels, layout = layout_fusion_grid(), guides = "keep") {
+ggchord_fusion <- function(panels, layout = NULL, guides = "auto") {
   ggchord_local_console_errors()
-  ids <- names(panels)
-  if (!is.list(panels) || !length(panels) || length(ids) != length(panels) ||
-      anyNA(ids) || any(!nzchar(ids)) || anyDuplicated(ids))
-    ggchord_stop("ggchord_fusion(): panels must be a uniquely named list")
+  if (!is.list(panels) || !length(panels))
+    ggchord_stop("ggchord_fusion(): panels must be a nonempty list")
   if (!all(vapply(panels, inherits, logical(1), "ggplot")))
     ggchord_stop("ggchord_fusion(): each panel must be an independent plot or Fusion")
-  if (inherits(layout, "ggchord_fusion_grid"))
-    layout <- ggchord_fusion_grid_areas(layout, ids)
-  if (!inherits(layout, "ggchord_fusion_layout"))
+  ids <- names(panels) %||% rep("", length(panels))
+  if (anyNA(ids) || anyDuplicated(ids[nzchar(ids)]) ||
+      any(nzchar(ids) & !nzchar(trimws(ids))) || any(grepl("[[:cntrl:]]", ids)))
+    ggchord_stop("ggchord_fusion(): explicit panel IDs must be unique, nonmissing strings")
+  number <- 0L
+  for (i in which(!nzchar(ids))) {
+    repeat {
+      number <- number + 1L
+      candidate <- paste0("view-", number)
+      if (!candidate %in% ids) break
+    }
+    ids[i] <- candidate
+  }
+  layout <- layout %||% layout_fusion_grid()
+  if (!inherits(layout, c("ggchord_fusion_layout", "ggchord_fusion_grid")))
     ggchord_stop("ggchord_fusion(): layout must come from layout_fusion() or layout_fusion_grid()")
-  if (!setequal(ids, layout$areas$panel))
-    ggchord_stop("ggchord_fusion(): allocate exactly one area to each named panel")
-  layout$areas <- layout$areas[match(ids, layout$areas$panel), , drop = FALSE]
   keys <- vapply(ids, ggchord_fusion_path_key, character(1))
   plot <- ggplot()
   plot$panels <- setNames(lapply(panels, function(child) list(plot = child)), keys)
@@ -56,7 +66,7 @@ ggchord_fusion <- function(panels, layout = layout_fusion_grid(), guides = "keep
   plot$styles <- list()
   plot$scope_scales <- list()
   plot$allow_overlap <- layout$allow_overlap
-  plot$fusion_guides <- ggchord_match_arg(guides, c("keep", "collect"))
+  plot$fusion_guides <- ggchord_match_arg(guides, c("auto", "keep", "collect"))
   class(plot) <- c("ggchord_fusion", class(plot))
   set_last_plot(plot)
   plot
@@ -119,6 +129,8 @@ layout_fusion <- function(areas, units = "relative", allow_overlap = FALSE) {
 #' Allocate plots on a rectangular grid
 #' @param design Character matrix of panel IDs with NA for empty cells.
 #' @param widths,heights Positive column and row weights.
+#' @param nrow,ncol Optional positive integer grid dimensions.
+#' @param gap Absolute space between cells, in millimetres or as an absolute grid unit.
 #' @return A Fusion layout declaration.
 #' @export
 #' @examples
@@ -140,7 +152,8 @@ layout_fusion <- function(areas, units = "relative", allow_overlap = FALSE) {
 #' ggchord_fusion(list(a = p_basic, b = p_basic),
 #'   layout = layout_fusion_grid(matrix(c("a", "b"), nrow = 1),
 #'                              widths = c(2, 1)))
-layout_fusion_grid <- function(design = NULL, widths = 1, heights = 1) {
+layout_fusion_grid <- function(design = NULL, widths = 1, heights = 1,
+    nrow = NULL, ncol = NULL, gap = 0) {
   ggchord_local_console_errors()
   if (!is.null(design) && (!is.matrix(design) || !is.character(design) ||
       !length(design) || all(is.na(design)) || any(!is.na(design) & !nzchar(design))))
@@ -149,29 +162,52 @@ layout_fusion_grid <- function(design = NULL, widths = 1, heights = 1) {
     if (!is.numeric(weights) || !length(weights) || any(!is.finite(weights) | weights <= 0))
       ggchord_stop("layout_fusion_grid(): widths and heights must be positive finite weights")
   }
-  spec <- list(design = design, widths = widths, heights = heights)
-  if (!is.null(design)) return(ggchord_fusion_grid_areas(spec, unique(c(t(design))[!is.na(c(t(design)))])))
-  structure(spec, class = "ggchord_fusion_grid")
+  for (size in list(nrow, ncol)) {
+    if (!is.null(size) && (!is.numeric(size) || length(size) != 1L ||
+        !is.finite(size) || size < 1 || size != floor(size)))
+      ggchord_stop("layout_fusion_grid(): nrow and ncol must be positive integers")
+  }
+  gap <- ggchord_physical_mm(gap, "layout_fusion_grid(): gap", TRUE)
+  if (!is.numeric(gap) || length(gap) != 1L)
+    ggchord_stop("layout_fusion_grid(): gap must be a single absolute distance")
+  if (!is.null(design) && (!is.null(nrow) && nrow != base::nrow(design) ||
+      !is.null(ncol) && ncol != base::ncol(design)))
+    ggchord_stop("layout_fusion_grid(): dimensions must agree with design")
+  spec <- structure(list(design = design, widths = widths, heights = heights,
+    nrow = nrow, ncol = ncol, gap = gap), class = "ggchord_fusion_grid")
+  if (!is.null(design))
+    ggchord_fusion_grid_areas(spec, unique(design[!is.na(design)]), c(1, 1), gap = 0)
+  spec
 }
 
-ggchord_fusion_grid_areas <- function(spec, ids) {
+ggchord_fusion_grid_areas <- function(spec, ids, canvas, gap = spec$gap) {
   design <- spec$design
   if (is.null(design)) {
-    columns <- ceiling(sqrt(length(ids)))
-    rows <- ceiling(length(ids) / columns)
-    design <- matrix(c(ids, rep(NA_character_, rows * columns - length(ids))),
+    n <- length(ids)
+    columns <- spec$ncol %||% if (is.null(spec$nrow)) ceiling(sqrt(n)) else ceiling(n / spec$nrow)
+    rows <- spec$nrow %||% ceiling(n / columns)
+    if (rows * columns < n)
+      ggchord_stop("layout_fusion_grid(): the grid has fewer cells than views")
+    design <- matrix(c(ids, rep(NA_character_, rows * columns - n)),
       nrow = rows, ncol = columns, byrow = TRUE)
   }
-  edges <- function(weights, n) {
+  if (!setequal(ids, design[!is.na(design)]))
+    ggchord_stop("layout_fusion_grid(): design must allocate exactly the registered views",
+      "; missing: ", paste(setdiff(ids, design), collapse = ", "),
+      "; unknown: ", paste(setdiff(design[!is.na(design)], ids), collapse = ", "))
+  edges <- function(weights, n, space) {
     if (!length(weights) %in% c(1L, n))
       ggchord_stop("layout_fusion_grid(): weights must match the grid dimensions")
+    available <- space - (n - 1) * gap
+    if (available <= 0)
+      ggchord_stop("layout_fusion_grid(): gaps exceed the available canvas")
     weights <- rep_len(weights, n) / max(weights)
-    edges <- c(0, cumsum(weights) / sum(weights))
-    edges[n + 1L] <- 1
-    edges
+    sizes <- available * weights / sum(weights)
+    start <- c(0, head(cumsum(sizes + gap), -1L))
+    list(start = start / space, end = pmin(1, (start + sizes) / space))
   }
-  x <- edges(spec$widths, ncol(design))
-  y <- 1 - edges(spec$heights, nrow(design))
+  x <- edges(spec$widths, ncol(design), canvas[1L])
+  y <- edges(spec$heights, nrow(design), canvas[2L])
   rows <- lapply(ids, function(id) {
     cells <- which(design == id, arr.ind = TRUE)
     if (!nrow(cells)) ggchord_stop("layout_fusion_grid(): missing panel '", id, "'")
@@ -179,8 +215,8 @@ ggchord_fusion_grid_areas <- function(spec, ids) {
     top <- min(cells[, 1]); bottom <- max(cells[, 1])
     if (nrow(cells) != (right - left + 1L) * (bottom - top + 1L))
       ggchord_stop("layout_fusion_grid(): panel '", id, "' must occupy a rectangle")
-    data.frame(panel = id, xmin = x[left], xmax = x[right + 1L],
-      ymin = y[bottom + 1L], ymax = y[top])
+    data.frame(panel = id, xmin = x$start[left], xmax = x$end[right],
+      ymin = 1 - y$end[bottom], ymax = 1 - y$start[top])
   })
   layout_fusion(do.call(rbind, rows))
 }
@@ -195,101 +231,56 @@ ggchord_fusion_path_ids <- function(key) {
 }
 
 ggchord_fusion_check_path <- function(path, label) {
-  if (!is.character(path) || !length(path) || anyNA(path) || any(!nzchar(path)))
+  if (!is.character(path) || !length(path) || anyNA(path) ||
+      any(!nzchar(trimws(path))) || any(grepl("[[:cntrl:]]", path)))
     ggchord_stop(label, ": panel paths must contain nonempty string IDs")
   ggchord_fusion_path_key(path)
 }
 
-#' Connect real source intervals across panels
-#' @param mapping Optional aesthetic mappings, including interval and path roles.
-#' @param data Relationship table with q/s endpoints and qpanel_path/spanel_path.
-#' @param route Curve or straight ribbon routing.
-#' @param curvature Curve strength in the interval `[0, 1]`.
-#' @param ... Fixed visual attributes, lineend or key_glyph.
-#' @param na.rm Remove incomplete relationships without a warning.
-#' @param show.legend Whether the layer contributes to composition guides.
-#' @param id Root ribbon identifier and scale scope. See [auto_id()].
-#' @return A component for [ggchord_fusion()].
-#' @details A path identifies a Fusion child, and the optional `qinstance`
-#'   and `sinstance` roles identify display instances. Each endpoint must
-#'   match one fully visible interval across that child's facets. Facets
-#'   cannot be selected explicitly. If the same instance and interval occur
-#'   in several facets, use a separate Fusion child for the desired facet.
-#' @export
-#' @examples
-#' library(ggplot2)
-#'
-#' seqs <- data.frame(
-#'   accver = c("A", "B"), length = c(1000, 800),
-#'   sequence_unit = "bp", topology = "linear"
-#' )
-#'
-#' genes <- data.frame(
-#'   accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
-#'   start = c(100, 400, 150), end = c(240, 620, 380),
-#'   strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
-#'   type = c("CDS", "tRNA", "CDS")
-#' )
-#'
-#' links <- data.frame(
-#'   qaccver = "A", saccver = "B", qstart = c(100, 400),
-#'   qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),
-#'   qstrand = "+", sstrand = c("+", "-"),
-#'   pident = c(98, 90), link_id = c("l1", "l2")
-#' )
-#'
-#' p_basic <- ggchord(seqs) + geom_seq() +
-#'   geom_gene(data = genes) + coord_collinear()
-#'
-#' cross <- links[1, ]
-#' cross$qpanel_path <- "overview"
-#' cross$spanel_path <- "detail"
-#' f <- ggchord_fusion(list(overview = p_basic, detail = p_basic))
-#' f + fusion_ribbon(aes(fill = pident), data = cross, id = "cross") +
-#'   scale_fill_gradient(limits = c(0, 100))
-fusion_ribbon <- function(mapping = NULL, data = NULL, route = "curve",
-    curvature = 0.5, ..., na.rm = FALSE, show.legend = NA, id = auto_id()) {
-  ggchord_local_console_errors()
-  caller <- "fusion_ribbon()"
-  roles <- c("qpanel_path", "spanel_path", "qaccver", "saccver",
-    "qstart", "qend", "sstart", "send", "qinstance", "sinstance", "qstrand", "sstrand")
-  if (!is.data.frame(data)) ggchord_stop(caller, ": provide a relationship data frame")
-  if (!is.null(mapping) && !inherits(mapping, c("ggplot2::mapping", "uneval")))
-    ggchord_stop(caller, ": mapping must be aes()")
-  styles <- c("fill", "colour", "alpha", "linewidth", "linetype")
-  if (length(setdiff(names(mapping), c(roles, styles, "group"))))
-    ggchord_stop(caller, ": unknown mapped role or aesthetic")
-  fixed <- list(...)
-  if (length(fixed) && (length(names(fixed)) != length(fixed) || anyDuplicated(names(fixed)) ||
-      any(!names(fixed) %in% c(styles, "lineend", "key_glyph"))))
-    ggchord_stop(caller, ": supply only named visual attributes, lineend or key_glyph")
-  if (any(lengths(fixed[intersect(names(fixed), styles)]) != 1L))
-    ggchord_stop(caller, ": fixed visual attributes must be scalar")
-  for (name in intersect(names(fixed), styles)) mapping[[name]] <- NULL
-  route <- ggchord_match_arg(route, c("curve", "straight"))
-  if (!is.numeric(curvature) || length(curvature) != 1L || !is.finite(curvature) ||
-      curvature < 0 || curvature > 1 || (route == "straight" && curvature != 0.5))
-    ggchord_stop(caller, ": curvature must be in `[0,1]` and only applies to curve routing")
-  if (!is.logical(na.rm) || length(na.rm) != 1L || is.na(na.rm))
-    ggchord_stop(caller, ": na.rm must be TRUE or FALSE")
-  if (!is.logical(show.legend) || !length(show.legend) ||
-      (length(show.legend) > 1L && (is.null(names(show.legend)) || anyNA(names(show.legend)) ||
-        anyDuplicated(names(show.legend)) || any(!names(show.legend) %in% styles))))
-    ggchord_stop(caller, ": show.legend must be a logical scalar or named vector")
-  if (!is.null(fixed$lineend) && (length(fixed$lineend) != 1L ||
-      !fixed$lineend %in% c("butt", "round", "square")))
-    ggchord_stop(caller, ": lineend must be butt, round or square")
-  required <- roles[seq_len(8L)]
+ggchord_fusion_link_roles <- c("qpanel_path", "spanel_path", "qinstance",
+  "sinstance", "qfacet", "sfacet")
+
+ggchord_fusion_link_spec <- function(layer) {
+  p <- layer$ggchord_params
+  kind <- layer$ggchord_type
+  caller <- if (kind == "ribbon") "geom_link_ribbon()" else "geom_link_line()"
+  data <- layer$ggchord_input_data
+  mapping <- layer$ggchord_input_mapping
+  if (!is.data.frame(data)) ggchord_stop(caller, " on Fusion: provide a relationship data frame")
+  if (!is.null(p$source_stat) || !is.null(p$link_stat) ||
+      ggchord_local_position(p$feature_position))
+    ggchord_stop(caller, " on Fusion: use identity Stat and Position")
+  unsupported <- c(p$fusion_controls, if (p$route$explicit_bulge) "bulge",
+    if (p$route$route == "shared") "shared route")
+  styles <- c(if (kind == "ribbon") "fill", "colour", "alpha", "linewidth", "linetype")
+  required <- c("qaccver", "saccver", if (kind == "ribbon")
+    c("qstart", "qend", "sstart", "send") else c("qpos", "spos"))
+  roles <- union(c(required, "qstrand", "sstrand", "direction", "relative_strand"),
+    ggchord_fusion_link_roles)
+  fixed <- layer$aes_params
+  for (name in names(fixed)) mapping[[name]] <- NULL
+  params <- layer$geom_params
+  options <- intersect(names(params), c("arrow", "lineend", "linejoin", "linemitre", "rule"))
+  unsupported <- union(unsupported, c(setdiff(names(mapping), c(roles, styles)),
+    setdiff(names(fixed), styles)))
+  if (length(unsupported))
+    ggchord_stop(caller, " on Fusion: unsupported parameters or aesthetics: ",
+      paste(unsupported, collapse = ", "))
+  if (any(lengths(fixed) != 1L)) ggchord_stop(caller, " on Fusion: fixed styles must be scalar")
   ggchord_require_columns(data, setdiff(required, names(mapping)), caller)
   structure(list(data = data, mapping = mapping, roles = roles, required = required,
-    route = route, curvature = curvature, fixed = fixed, na.rm = na.rm,
-    show.legend = show.legend, id = id), class = "ggchord_fusion_ribbon")
+    kind = kind, route = p$route$route, curvature = p$route$curvature,
+    geom = layer$geom, params = params, fixed = c(fixed, params[options]),
+    na.rm = params$na.rm, show.legend = layer$show.legend, id = p$id),
+    class = "ggchord_fusion_link")
 }
 
 ggchord_fusion_input <- function(layer) {
   data <- as.data.frame(layer$data)
   for (role in intersect(names(layer$mapping), layer$roles)) {
     value <- eval_tidy(layer$mapping[[role]], data = layer$data)
+    if (role %in% c("qfacet", "sfacet") && is.list(value) && length(names(value)))
+      value <- list(value)
     if (length(value) == 1L) value <- rep(value, nrow(data))
     if (length(value) != nrow(data))
       ggchord_stop("Fusion layer '", layer$id, "': ", role, " must have one value per row")
@@ -326,9 +317,18 @@ ggchord_fusion_subset_ribbons <- function(plot, ids) {
 #' @export
 `+.ggchord_fusion` <- function(e1, e2) {
   ggchord_local_console_errors()
-  if (inherits(e2, c("ggchord_fusion_ribbon", "ggchord_fusion_zoom"))) {
-    family <- if (inherits(e2, "ggchord_fusion_ribbon")) "ribbons" else "zooms"
-    prefix <- if (family == "ribbons") "ribbon" else "zoom"
+  if (is.list(e2) && !is.object(e2)) {
+    for (component in e2) e1 <- e1 + component
+    return(e1)
+  }
+  if (inherits(e2, "Layer") && isTRUE(e2$ggchord_type %in% c("link", "ribbon")))
+    e2 <- ggchord_fusion_link_spec(e2)
+  if (inherits(e2, c("ggchord_fusion_layout", "ggchord_fusion_grid"))) {
+    e1$fusion_areas <- e2
+    e1$allow_overlap <- e2$allow_overlap
+  } else if (inherits(e2, c("ggchord_fusion_link", "ggchord_fusion_zoom"))) {
+    family <- if (inherits(e2, "ggchord_fusion_link")) "ribbons" else "zooms"
+    prefix <- if (family == "ribbons") e2$kind else "magnify"
     ids <- c(names(e1$ribbons), names(e1$zooms))
     if (family == "ribbons") {
       e2$scale_id <- e2$id
@@ -345,16 +345,28 @@ ggchord_fusion_subset_ribbons <- function(plot, ids) {
     if (!is.character(e2$id) || length(e2$id) != 1L || is.na(e2$id) ||
         !nzchar(e2$id) || e2$id %in% ids)
       ggchord_stop("Fusion: each root layer must have a unique nonempty ID")
+    if (family == "zooms") {
+      registered <- ggchord_magnify_register(e1, e2)
+      e1 <- registered$plot
+      e2 <- registered$spec
+    }
     e1[[family]][[e2$id]] <- unclass(e2)
     e1$active_layer <- e2$id
   } else if (inherits(e2, "ggchord_palette_preset")) {
     e1$palette_preset <- e2
   } else if (inherits(e2, "ggchord_scoped_scale")) {
     if (isTRUE(e2$y) || !is.null(e2$tracks))
-      ggchord_stop("Fusion: scope root visual scales to ribbon layers")
-    e2$layers <- e2$layers %||% e1$active_layer
-    if (is.null(e2$layers)) ggchord_stop("Fusion: add a ribbon first or specify layers")
-    e1$scope_scales <- c(e1$scope_scales, list(e2))
+      ggchord_stop("Fusion: scale_for() accepts visual scopes on Link or child layers")
+    if (is.data.frame(e2$layers)) {
+      e2$targets <- ggchord_output_selection(e2$layers, "Fusion scale_for()")
+      if (!length(e2$targets)) ggchord_stop("Fusion scale_for(): select at least one layer")
+      e1$fusion_shared_scales <- c(e1$fusion_shared_scales, list(e2))
+    } else {
+      e2$layers <- e2$layers %||% e1$active_layer
+      if (is.null(e2$layers) || any(!e2$layers %in% names(e1$ribbons)))
+        ggchord_stop("Fusion: add a Link or explicitly select a visual layer before scale_for()")
+      e1$scope_scales <- c(e1$scope_scales, list(e2))
+    }
   } else if (inherits(e2, "ggchord_layout_policy")) {
     e1$fusion_policy <- unclass(e2)
   } else if (inherits(e2, c("Scale", "theme", "Guides", "ggplot2::labels"))) {
@@ -362,7 +374,7 @@ ggchord_fusion_subset_ribbons <- function(plot, ids) {
     if (inherits(e2, "Scale") && any(e2$aesthetics %in% c("x", "y")))
       ggchord_stop("Fusion: root scales map visual aesthetics")
     e1$styles <- c(e1$styles, list(e2))
-  } else ggchord_stop("Fusion accepts ribbons, zooms, render policies and visual plot components")
+  } else ggchord_stop("Fusion accepts Link Geoms, Magnify, Fusion layouts, render policies and visual plot components")
   set_last_plot(e1)
   e1
 }
@@ -387,9 +399,12 @@ ggchord_fusion_guide_semantics <- function(built, guide, source) {
   details <- lapply(built$plot$scales$scales, function(scale) {
     kept <- intersect(aesthetics, scale$aesthetics)
     if (!length(kept)) return(NULL)
-    list(aesthetics = kept, type = class(scale)[1L], limits = scale$get_limits(),
+    breaks <- scale$get_breaks()
+    list(aesthetics = sub("^ggchord_scope_[0-9]+_", "", kept),
+      type = if (scale$is_discrete()) "discrete" else class(scale)[1L],
+      limits = scale$get_limits(), mapped_breaks = scale$map(breaks),
       transform = if (!scale$is_discrete()) scale$get_transformation()$name,
-      breaks = scale$get_breaks(), labels = scale$get_labels())
+      breaks = breaks, labels = scale$get_labels(breaks))
   })
   variables <- lapply(built$plot$layers, function(layer) {
     mapping <- layer$mapping
@@ -411,69 +426,112 @@ ggchord_fusion_guide_semantics <- function(built, guide, source) {
   variables <- unique(Filter(Negate(is.null), variables))
   scopes <- Filter(Negate(is.null), details)
   list(title = guide$title, variables = variables, scales = scopes,
-    unresolved = if (!length(variables) || !length(scopes)) source)
+    unresolved = if (!length(variables) || !length(scopes) ||
+      any(vapply(variables, function(v) any(vapply(v$mapping, function(x)
+        length(x$columns) != 1L, logical(1))), logical(1)))) source)
+}
+
+ggchord_fusion_outside_sides <- c("top", "bottom", "left", "right")
+
+ggchord_fusion_guide_positions <- function(built) {
+  default <- built$plot$theme$legend.position %||% "right"
+  if (length(default) != 1L) default <- "inside"
+  vapply(built$plot$guides$params, function(guide) guide$position %||% default, character(1))
+}
+
+ggchord_fusion_hide_guides <- function(built, sides = built$plot$ggchord_fusion_omit_guides) {
+  if (!length(sides)) return(built)
+  guides <- built$plot$guides
+  keep <- !ggchord_fusion_guide_positions(built) %in% sides
+  built$plot$guides <- ggproto(NULL, guides, guides = guides$guides[keep],
+    params = guides$params[keep])
+  built
 }
 
 ggchord_fusion_collect_guides <- function(x, partial = FALSE) {
   boxes <- list()
+  retained <- list()
+  root_theme <- Reduce(`+`, Filter(function(s) inherits(s, "theme"), x$styles), init = theme())
+  theme_names <- grep("^legend[.]", names(root_theme), value = TRUE)
+  theme_names <- setdiff(theme_names, c("legend.position", "legend.position.inside",
+    "legend.justification.inside"))
+  legend_theme <- if (length(theme_names)) do.call(theme, as.list(root_theme)[theme_names]) else theme()
+  collect <- function(built, path) {
+    # The child owns guide training. Root theme settings only style the
+    # collected copy, while Guide-level overrides retain native precedence.
+    changed <- built
+    class(changed) <- setdiff(class(changed), "ggchord_built")
+    child_theme <- changed$plot$theme
+    changed$plot$theme <- child_theme + legend_theme
+    table <- ggplot_gtable(changed)
+    params <- built$plot$guides$params
+    positions <- ggchord_fusion_guide_positions(built)
+    at <- which(grepl("^guide-box-", table$layout$name) &
+      !vapply(table$grobs, inherits, logical(1), "zeroGrob"))
+    sides <- character()
+    for (i in at) {
+      side <- sub("^guide-box-", "", table$layout$name[i])
+      if (!side %in% ggchord_fusion_outside_sides) {
+        retained[[length(retained) + 1L]] <<- list(source = path, side = side, reason = "local_inside")
+        next
+      }
+      box <- table$grobs[[i]]
+      ids <- which(box$layout$name == "guides")
+      candidates <- params[positions == side]
+      if (length(candidates) != length(ids) || !length(ids)) {
+        retained[[length(retained) + 1L]] <<- list(source = path, side = side, reason = "unknown_guide_ownership")
+        next
+      }
+      for (j in seq_along(ids)) {
+        semantics <- ggchord_fusion_guide_semantics(built, candidates[[j]], path)
+        boxes[[length(boxes) + 1L]] <<- list(side = side, grob = box$grobs[[ids[j]]],
+          template = box, source = path, semantics = semantics,
+          position_lock = candidates[[j]]$position)
+      }
+      sides <- c(sides, side)
+    }
+    sides
+  }
+  attempt <- function(expr) tryCatch(expr, error = function(e) {
+    if (!partial) ggchord_rethrow(e)
+    NULL
+  })
   walk <- function(plot, path) {
     if (inherits(plot, "ggchord_fusion")) {
+      if (identical(plot$fusion_guides, "keep")) {
+        retained[[length(retained) + 1L]] <<- list(source = path, reason = "nested_keep")
+        return(plot)
+      }
+      plot$fusion_guides <- "auto"
+      if (length(plot$ribbons))
+        plot$ggchord_fusion_omit_guides <- attempt(collect(ggchord_fusion_build_styles(plot)$built, path))
       for (id in names(plot$panels)) plot$panels[[id]]$plot <-
         walk(plot$panels[[id]]$plot, paste(path, id, sep = "/"))
       return(plot)
     }
-    result <- tryCatch({
-      if (inherits(plot, "ggchord"))
-        plot <- ggchord_render_track_source(ggchord_render_inputs(plot))
-      built <- ggplot_build(plot)
-      list(built = built, table = ggplot_gtable(built))
-    }, error = function(e) {
-      if (!partial) ggchord_rethrow(e)
-      NULL
-    })
-    if (is.null(result)) return(plot)
-    built <- result$built
-    table <- result$table
-    params <- built$plot$guides$params
-    positions <- vapply(params, function(guide)
-      guide$position %||% built$plot$theme$legend.position %||% "right", character(1))
-    at <- which(grepl("^guide-box", table$layout$name) &
-      !vapply(table$grobs, inherits, logical(1), "zeroGrob"))
-    collected <- character()
-    incomplete <- FALSE
-    for (i in at) {
-      side <- sub("^guide-box-", "", table$layout$name[i])
-      if (!side %in% c("top", "bottom", "left", "right")) next
-      box <- table$grobs[[i]]
-      ids <- which(box$layout$name == "guides")
-      candidates <- params[positions == side]
-      distinct <- length(candidates) == length(ids)
-      for (j in seq_along(ids)) {
-        semantics <- if (distinct) ggchord_fusion_guide_semantics(built, candidates[[j]], path) else
-          list(unresolved = path)
-        boxes[[length(boxes) + 1L]] <<- list(side = side, grob = box$grobs[[ids[j]]],
-          template = box, source = path, semantics = semantics)
-      }
-      incomplete <- incomplete || !distinct
-      collected <- union(collected, unlist(lapply(candidates, `[[`, "aesthetic")))
-    }
-    if (!length(at) || (!length(collected) && !incomplete)) return(plot)
-    if (!any(positions %in% "inside"))
-      return(plot + theme(legend.position = "none"))
-    if (!length(collected)) return(plot)
-    plot + do.call(guides, setNames(rep(list("none"), length(collected)), collected))
+    plot$ggchord_fusion_omit_guides <- attempt(collect(ggchord_fusion_build_leaf(plot), path))
+    plot
   }
   for (id in names(x$panels)) x$panels[[id]]$plot <- walk(x$panels[[id]]$plot, id)
-  list(plot = x, boxes = boxes)
+  list(plot = x, boxes = boxes, retained = retained)
 }
 
 # Native guides keep their physical text/key sizes. Only boxes are arranged.
 ggchord_fusion_shared_guides <- function(styles, boxes, x, canvas) {
   if (!length(boxes)) return(styles)
-  hidden <- FALSE
-  for (style in x$styles) if (inherits(style,"theme") && !is.null(style$legend.position))
-    hidden <- identical(style$legend.position,"none")
-  if (hidden) return(styles)
+  position <- NULL
+  for (style in x$styles) if (inherits(style, "theme") && !is.null(style$legend.position))
+    position <- style$legend.position
+  if (identical(position, "none")) return(styles)
+  if (length(position) == 1L && position %in% ggchord_fusion_outside_sides) {
+    moved <- Filter(function(box) !is.null(box$position_lock) && box$side != position, boxes)
+    styles$report$guide_position_overrides <- lapply(moved, function(box)
+      list(source = box$source, guide_position = box$side, composition_position = position))
+    boxes <- lapply(boxes, function(box) {
+      box$side <- position
+      box
+    })
+  }
   unique_boxes <- list(); signatures <- list()
   for (box in boxes) {
     signature <- list(semantics = box$semantics, appearance = ggchord_fusion_guide_signature(box$grob))
@@ -520,32 +578,24 @@ ggchord_fusion_shared_guides <- function(styles, boxes, x, canvas) {
 }
 
 ggchord_fusion_style_layer <- function(layer) {
-  input <- layer$data
-  d <- input[rep(seq_len(nrow(input)), each = 3L), , drop = FALSE]
-  d$.fusion_x <- rep(c(0, 1, 0), nrow(input))
-  d$.fusion_y <- rep(c(0, 0, 1), nrow(input))
-  d$.fusion_row <- rep(seq_len(nrow(input)), each = 3L)
+  d <- layer$data
+  # The carrier's x is a stable relationship row key. It has no source or
+  # display coordinate meaning and never leaves the style build.
+  row_key <- make.unique(c(names(d), ".fusion_row"))[ncol(d) + 1L]
+  d[[row_key]] <- seq_len(nrow(d))
   mapping <- layer$mapping %||% aes()
-  for (role in intersect(c(layer$roles, "group"), names(mapping))) mapping[[role]] <- NULL
-  mapping$x <- aes(x = .fusion_x)$x
-  mapping$y <- aes(y = .fusion_y)$y
-  mapping$group <- aes(group = .fusion_row)$group
-  defaults <- list(fill = "steelblue", colour = NA, alpha = .35, linewidth = .25, linetype = 1)
-  fixed <- layer$fixed
-  if (is.null(fixed$key_glyph)) {
-    route <- layer$route
-    fixed$key_glyph <- function(data, params, size) {
-      params$ribbon_key_route <- route
-      ggchord_ribbon_key(data, params, size)
-    }
-  }
-  for (name in setdiff(names(defaults), c(names(mapping), names(fixed))))
-    fixed[[name]] <- defaults[[name]]
-  carrier_layer <- do.call(ggplot2::geom_polygon, c(list(
-    data = d, mapping = mapping, inherit.aes = FALSE, show.legend = layer$show.legend), fixed))
+  for (role in intersect(layer$roles, names(mapping))) mapping[[role]] <- NULL
+  mapping$x <- aes(x = .data[[row_key]])$x
+  mapping$y <- aes(y = 0)$y
+  params <- c(layer$params, layer$fixed[setdiff(names(layer$fixed), names(layer$params))])
+  geom <- ggproto(NULL, layer$geom, draw_panel = function(...) nullGrob())
+  carrier_layer <- ggplot2::layer(data = d, mapping = mapping, geom = geom,
+    stat = "identity", position = "identity", inherit.aes = FALSE,
+    show.legend = layer$show.legend, params = params)
   carrier_layer$ggchord_layer_id <- layer$id
   carrier_layer$ggchord_params <- list(id = layer$scale_id)
-  carrier_layer$ggchord_type <- "fusion_ribbon"
+  carrier_layer$ggchord_type <- layer$kind
+
   carrier_layer
 }
 
@@ -615,7 +665,7 @@ ggchord_fusion_measure_styles <- function(x, styles) {
     if (!report$status %in% c("feasible", "no_guides")) ggchord_stop(
       "Fusion: cross-panel guides and panel allocations cannot fit the composition under the explicit constraints; enlarge the canvas or revise guide layout")
     built <- joint$built; table <- joint$table %||% ggplot_gtable(built)
-  } else table <- ggplot_gtable(built)
+  } else table <- ggplot_gtable(ggchord_fusion_hide_guides(built, x$ggchord_fusion_omit_guides))
   at <- which(grepl("^guide-box", table$layout$name) & !vapply(table$grobs, inherits, logical(1), "zeroGrob"))
   sides <- sub("guide-box-", "", table$layout$name[at])
   if (any(!sides %in% c("left", "right", "top", "bottom")))
@@ -623,10 +673,10 @@ ggchord_fusion_measure_styles <- function(x, styles) {
   guides <- setNames(table$grobs[at], sides)
   sizes <- matrix(0, 4, 2, dimnames = list(c("left", "right", "top", "bottom"), c("width", "height")))
   for (side in sides) sizes[side, ] <- ggchord_guide_size(guides[[side]])
-  styles <- lapply(seq_along(built$data), function(i) {
+  styles <- lapply(seq_along(x$ribbons), function(i) {
     d <- built$data[[i]]
     for (alias in aliases) if (i %in% alias$selected) d <- ggchord_alias_aes(d, alias$inverse)
-    d[seq.int(1L, length.out = nrow(d) / 3L, by = 3L), , drop = FALSE]
+    d[match(seq_len(nrow(x$ribbons[[i]]$data)), d$x), , drop = FALSE]
   })
   list(data = styles, guides = guides, sizes = sizes, report = report,
     guide = if (length(at) == 1L) guides[[1L]] else nullGrob(),
@@ -644,7 +694,14 @@ ggchord_fusion_guide_budget <- function(canvas, sizes) {
 
 ggchord_fusion_rectangles <- function(x, canvas) {
   layout <- x$fusion_areas
-  areas <- layout$areas
+  ids <- vapply(names(x$panels), function(key) ggchord_fusion_path_ids(key)[1L], character(1))
+  if (inherits(layout, "ggchord_fusion_grid"))
+    layout <- ggchord_fusion_grid_areas(layout, ids, canvas)
+  if (!setequal(ids, layout$areas$panel))
+    ggchord_stop("Fusion: allocate exactly one area to each registered view",
+      "; missing: ", paste(setdiff(ids, layout$areas$panel), collapse = ", "),
+      "; unknown: ", paste(setdiff(layout$areas$panel, ids), collapse = ", "))
+  areas <- layout$areas[match(ids, layout$areas$panel), , drop = FALSE]
   bounds <- as.matrix(areas[c("xmin", "xmax", "ymin", "ymax")])
   if (layout$units != "relative") {
     multiplier <- if (layout$units == "mm") 1 else 25.4
@@ -669,48 +726,89 @@ ggchord_fusion_partition <- function(g, background = FALSE, inherited = FALSE) {
   g
 }
 
-# Resolve entity + instance + fully visible source window before projection.
-ggchord_fusion_endpoint <- function(panels, row, prefix, layer_id, source_row) {
-  entity <- as.character(row[[paste0(prefix,"accver")]])
-  selected_panel <- ggchord_fusion_check_path(
-    row[[paste0(prefix, "panel_path")]][[1L]], "fusion_ribbon()")
-  selected_instance <- row[[paste0(prefix, "instance")]]
-  if (length(selected_instance) && is.na(selected_instance)) selected_instance <- NULL
-  start <- row[[paste0(prefix, "start")]]
-  end <- row[[paste0(prefix, "end")]]
-  strand <- row[[paste0(prefix, "strand")]]
-  if (length(strand) && !is.na(strand)) {
-    if (!strand %in% c("+", "-", ".")) ggchord_stop("fusion_ribbon(): invalid strand")
-    ordered <- sort(c(start, end), decreasing = strand == "-")
-    start <- ordered[1L]
-    end <- ordered[2L]
-  }
-  where <- paste0("Fusion ", layer_id, " row ", source_row, " ", prefix, ": ")
-  ggchord_resolve_panel_interval(panels, entity, start, end, selected_panel, selected_instance, where)
+# Optional roles distinguish an omitted selector from an explicit invalid ID.
+ggchord_fusion_selector <- function(row, name) {
+  value <- row[[name]][[1L]]
+  if (is.null(value) || (is.atomic(value) && length(value) == 1L && is.na(value)))
+    return(NULL)
+  value
 }
 
-# Shared locus resolver: decorative focus regions are not HSP relationships.
+ggchord_fusion_facet <- function(value, where) {
+  if (is.null(value)) return(NULL)
+  if (!is.list(value) || !length(value) || is.null(names(value)) ||
+      anyNA(names(value)) || any(!nzchar(names(value))) || anyDuplicated(names(value)) ||
+      !all(vapply(value, function(x) is.atomic(x) && length(x) == 1L, logical(1))))
+    ggchord_stop(where, "facet selectors must be named lists of facet values")
+  value
+}
+
+ggchord_fusion_facet_match <- function(key, selector) {
+  all(names(selector) %in% names(key)) && all(vapply(names(selector), function(name)
+    identical(as.character(key[[name]]), as.character(selector[[name]])), logical(1)))
+}
+
+ggchord_fusion_endpoint_selectors <- function(row, prefix, where) {
+  path <- ggchord_fusion_selector(row, paste0(prefix, "panel_path"))
+  panel <- if (!is.null(path)) ggchord_fusion_check_path(path, where)
+  instance <- ggchord_fusion_selector(row, paste0(prefix, "instance"))
+  if (!is.null(instance) && (!is.character(instance) || length(instance) != 1L || !nzchar(instance)))
+    ggchord_stop(where, "instance selector must be a nonempty string")
+  facet <- ggchord_fusion_facet(ggchord_fusion_selector(row, paste0(prefix, "facet")), where)
+  list(panel = panel, instance = instance, facet = facet)
+}
+
+ggchord_fusion_endpoint <- function(panels, row, prefix, layer_id, source_row, kind) {
+  where <- paste0("Fusion ", layer_id, " row ", source_row, " ", prefix, ": ")
+  selected <- ggchord_fusion_endpoint_selectors(row, prefix, where)
+  point <- kind == "link"
+  entity <- as.character(row[[paste0(prefix, "accver")]])
+  start <- row[[paste0(prefix, if (point) "pos" else "start")]]
+  end <- if (point) start else row[[paste0(prefix, "end")]]
+  strand <- if (!point) ggchord_link_endpoint_strand(start, end,
+    row[[paste0(prefix, "strand")]], where, paste0(prefix, "strand"))
+  if (identical(strand, "-")) {
+    lower <- min(start, end)
+    start <- max(start, end)
+    end <- lower
+  }
+  resolved <- ggchord_resolve_panel_interval(panels, entity, start, end,
+    selected$panel, selected$instance, where, selected$facet, point)
+  resolved$strand <- strand
+  resolved
+}
+
 ggchord_resolve_panel_interval <- function(panels, entity, start, end,
-    selected_panel, selected_instance, where) {
+    selected_panel, selected_instance, where, selected_facet = NULL, point = FALSE) {
   if (length(entity)!=1 || is.na(entity) || !nzchar(entity) ||
       !is.numeric(start) || !is.numeric(end) || any(!is.finite(c(start,end))) || min(start,end) < 1 ||
       any(c(start,end) != floor(c(start,end)))) ggchord_stop(where, "invalid accession or one-based interval")
   selected <- names(panels)
   if (!is.null(selected_panel)) {
-    if (!selected_panel %in% names(panels)) ggchord_stop(where, "unknown leaf panel '", selected_panel, "'")
+    if (!selected_panel %in% names(panels)) ggchord_stop(where, "unknown leaf panel '", selected_panel, "'; available: ", paste(selected, collapse = ", "))
     selected <- selected_panel
   }
-  candidates <- list()
+  candidates <- available <- list()
   for (id in selected) {
     layout <- panels[[id]]$layout
     if (isTRUE(layout$character)) {
-      candidates <- c(candidates, ggchord_alignment_interval(panels[[id]], id, entity, start, end, selected_instance))
+      if (!length(selected_facet))
+        candidates <- c(candidates, ggchord_alignment_interval(panels[[id]], id,
+          entity, start, end, selected_instance, point = point))
       next
     }
-    if (is.null(layout) || isTRUE(layout$dotplot) || is.null(layout$sequence_reference)) next
+    if (isTRUE(layout$dotplot) || is.null(layout) || is.null(layout$sequence_reference)) {
+      if (!is.null(selected_panel)) ggchord_stop(where,
+        if (isTRUE(layout$dotplot)) "Dotplot requires a separate dual-axis endpoint contract" else
+          "the selected plot has no registered source coordinate provider")
+      next
+    }
     frames <- layout$panel_references %||% list(layout)
     for (facet in seq_along(frames)) {
       frame <- frames[[facet]]
+      facet_at <- match(facet, as.integer(layout$facet_layout$PANEL))
+      facet_key <- if (length(layout$facet_keys))
+        as.list(layout$facet_layout[facet_at, layout$facet_keys, drop = FALSE]) else list()
       keys <- frame$seqs
       if (!length(keys)) next
       instances <- frame$display_instances
@@ -727,30 +825,36 @@ ggchord_resolve_panel_interval <- function(panels, entity, start, end,
         originals[!is.na(tab$source_accver)] <- tab$source_accver[!is.na(tab$source_accver)]
         origins[!is.na(tab$source_origin)] <- tab$source_origin[!is.na(tab$source_origin)]
       }
-      for (at in which(originals == entity)) {
-        if (!is.null(selected_instance) && !identical(instance_ids[at], selected_instance)) next
-        key <- keys[at]
-        origin <- origins[at]
-        length <- unname(frame$sequence_reference$lens[key])
-        if (!is.finite(origin) || !is.finite(length) ||
-            min(start, end) < origin || max(start, end) > origin + length - 1) next
-        candidates[[length(candidates) + 1L]] <- list(panel = id, facet = facet, key = key,
-          instance = instance_ids[at], entity = entity, origin = origin, start = start, end = end,
+      for (j in which(!is.na(originals))) {
+        key <- keys[j]
+        origin <- origins[j]
+        size <- unname(frame$sequence_reference$lens[key])
+        if (!is.finite(origin) || !is.finite(size)) next
+        endpoint <- list(panel = id, facet = facet, facet_key = facet_key, key = key,
+          instance = as.character(instance_ids[j]), entity = originals[j],
+          origin = origin, visible_end = origin + size - 1,
+          reference_length = source$length[at[j]],
+          reference_namespace = panels[[id]]$seq_data[["reference_namespace"]][at[j]],
+          start = start, end = end, point = point,
           unit = frame$sequence_unit %||% "bp")
+        available[[length(available) + 1L]] <- endpoint
+        if (originals[j] == entity && min(start, end) >= origin && max(start, end) <= endpoint$visible_end &&
+            (is.null(selected_instance) || identical(endpoint$instance, selected_instance)) &&
+            ggchord_fusion_facet_match(facet_key, selected_facet))
+          candidates[[length(candidates) + 1L]] <- endpoint
       }
     }
   }
-  if (!length(candidates)) ggchord_stop(where, "no fully visible matching interval/instance")
+  if (!length(candidates)) {
+    matches <- vapply(head(available, 8L), ggchord_fusion_endpoint_label, character(1), panels = panels)
+    ggchord_stop(where, "no fully visible matching endpoint for ", entity, " [", start, ", ", end,
+      "]; candidates: ", paste(matches, collapse = "; "))
+  }
+
   if (length(candidates) > 1L) {
     matches <- vapply(head(candidates, 8L), ggchord_fusion_endpoint_label, character(1),
       panels = panels)
-    pairs <- data.frame(path = vapply(candidates, `[[`, character(1), "panel"),
-      instance = vapply(candidates, `[[`, character(1), "instance"))
-    action <- if (anyDuplicated(pairs)) {
-      "A path and instance can match several facets. Facets cannot be selected explicitly; use a separate Fusion child for the desired facet."
-    } else {
-      "Use the panel path and instance ID to identify one match."
-    }
+    action <- "Specify the panel path, facet values or instance ID to identify one match."
     ggchord_stop(where, "ambiguous endpoint for source '", entity, "' [", start, ", ", end,
       "]. Matching candidates: ", paste(matches, collapse = "; "),
       if (length(candidates) > length(matches)) paste0("; +", length(candidates) - length(matches), " more"),
@@ -763,6 +867,8 @@ ggchord_fusion_endpoint_label <- function(candidate, panels) {
   layout <- panels[[candidate$panel]]$layout
   path <- paste(encodeString(ggchord_fusion_path_ids(candidate$panel), quote = '"'), collapse = "/")
   label <- paste0(path, " instance ", encodeString(candidate$instance, quote = '"'))
+  if (!is.null(candidate$visible_end))
+    label <- paste0(label, " ", candidate$entity, " [", candidate$origin, ", ", candidate$visible_end, "]")
   if (is.null(layout$facet_layout)) return(label)
 
   at <- match(candidate$facet, as.integer(layout$facet_layout$PANEL))
@@ -772,12 +878,20 @@ ggchord_fusion_endpoint_label <- function(candidate, panels) {
     if (length(values)) paste0(names(values), "=", values)), collapse = ", "), ")")
 }
 
+ggchord_fusion_reference_match <- function(q, s, caller) {
+  for (field in c("reference_namespace", "reference_length")) {
+    if (length(q[[field]]) && length(s[[field]]) && isTRUE(q[[field]] != s[[field]]))
+      ggchord_stop(caller, ": conflicting ", field, " for source '", q$entity, "'")
+  }
+}
+
 ggchord_fusion_front <- function(panel, endpoint) {
   if (isTRUE(panel$layout$character)) return(ggchord_alignment_front(panel, endpoint))
   facet <- endpoint$facet %||% 1L
   layout <- panel$layout$panel_references[[facet]] %||% panel$layout
   boundary <- ggchord_interval_front(endpoint$start, endpoint$end) - endpoint$origin + 1
-  pos <- seq(boundary[1L], boundary[2L], length.out = 40)
+  pos <- if (isTRUE(endpoint$point)) endpoint$start - endpoint$origin + 1 else
+    seq(boundary[1L], boundary[2L], length.out = 40)
   frame <- ggchord_panel_backbone_frame(layout, endpoint$key, pos)
   xy <- frame$xy
   normal <- frame$normal
@@ -793,10 +907,28 @@ ggchord_fusion_front <- function(panel, endpoint) {
   normal <- cbind((normal_tip$x-projected$x)*diff(bounds[1:2]),
     (normal_tip$y-projected$y)*diff(bounds[3:4]))
   normal <- normal / sqrt(rowSums(normal^2))
-  data.frame(position_boundary = pos+endpoint$origin-1, local_x=xy[,1],local_y=xy[,2],
+  data.frame(position_boundary = if (isTRUE(endpoint$point)) NA_real_ else pos + endpoint$origin - 1,
+    source_position = if (isTRUE(endpoint$point)) endpoint$start else NA_real_, local_x=xy[,1],local_y=xy[,2],
     x=bounds[1]+projected$x*diff(bounds[1:2]),y=bounds[3]+projected$y*diff(bounds[3:4]),
     normal_x=normal[,1],normal_y=normal[,2],tangent_x=-normal[,2],tangent_y=normal[,1],
     facet_panel = facet)
+}
+
+ggchord_fusion_point_path <- function(q, s, route, curvature) {
+  start <- unlist(q[c("x", "y")], use.names = FALSE)
+  end <- unlist(s[c("x", "y")], use.names = FALSE)
+  toward <- end - start
+  control <- function(front, direction) {
+    normal <- unlist(front[c("normal_x", "normal_y")], use.names = FALSE)
+    if (sum(normal * direction) < 0) -normal else normal
+  }
+  nq <- control(q, toward)
+  ns <- control(s, -toward)
+  distance <- sqrt(sum(toward^2)) * curvature
+  path <- if (route == "straight") rbind(start, end) else
+    bezier_pts(start, end, start + nq * distance, end + ns * distance, n = 60)
+  attr(path, "endpoint_normals") <- rbind(q = nq, s = ns)
+  path
 }
 
 ggchord_fusion_path <- function(q, s, curvature) {

@@ -1,5 +1,5 @@
 {
-  "source_sha256": "dea887f83c14ed9c61672f6210336b1775a89f87a0617c04c6e3ea6836616c13",
+  "source_sha256": "3ca863200ce41ef2267499697d05c520c2151e5ed4814be6263c911b1cf449c7",
   "description": "按绘图问题或函数查阅 API。索引每行对应一篇主题文档，并列出该文档涵盖的函数。",
   "groups": {
     "construct": {
@@ -36,7 +36,8 @@
     },
     "stat": {
       "title": "统计转换",
-      "intro": "在源窗口内计算覆盖度。区间连带的统计入口见下方链接。"
+      "intro": "计算源窗口覆盖度，或汇总跨参考区间关系。",
+      "shortcut_title": "区间连带统计"
     },
     "scale": {
       "title": "映射与作用域",
@@ -60,7 +61,7 @@
     },
     "composition": {
       "title": "多视图组合",
-      "intro": "排列具名面板、连接真实来源区间或标记放大区域。"
+      "intro": "排列视图，连接视图间的实测位点或区间，并添加与源坐标对齐的特征或残基详图。"
     },
     "alignment": {
       "title": "真实字符来源",
@@ -213,7 +214,7 @@
       "details": "每个面板要求恰好一条有效参考。圆图默认使用双圈骨架，并为圆内注释和圈外标注提供专用布局。特征和轨道能否跨过原点，取决于有效序列的拓扑和显示窗口。用 [`layout_sequences()`](layout_sequences.html#api-layout_sequences) 设置半径或角度间隙。需要将参考弧段排在同一环上并绘制连接时，见 [`coord_chord()`](coord_chord.html#api-coord_chord)。",
       "errors": "- 一个面板有零条或多条有效参考。\n\n- 没有环状来源却将倒序端点解释为跨原点。\n\n- 使用不适用的线性布局项或原生 free 分面。",
       "roles": [],
-      "example_setup": "用默认双圈骨架绘制一条环状参考，并添加中心标签。原点留出 12° 间隙。"
+      "example_setup": "沿圆周绘制一条参考。"
     },
     "coord_collinear": {
       "title": "平行参考路径上的共线性视图",
@@ -248,7 +249,7 @@
       "details": "将参考序列画成平行路径。默认 `axis = \"x\"` 表示水平路径，`\"y\"` 表示竖直路径。沿正侧偏移时，水平路径向上、竖直路径向右。用 [`layout_sequences()`](layout_sequences.html#api-layout_sequences) 设置顺序、方向、对齐方式和物理行距。[曲率 `curvature`](layout_sequences.html#parameter-curvature) 可弯曲参考路径，特征、刻度轴和连接端点随路径移动。自动行距会考虑可见特征、标签和引线。分面使用固定标度。",
       "errors": "- axis 非 x/y，ratio 非正有限数。\n\n- 同时提供不适用于线性参考的 radius/angular_gap/inner_radius。\n\n- 缺少参考或使用不兼容的 free 分面。",
       "roles": [],
-      "example_setup": "绘制两条水平参考，反转序列 B，并用 `layout_sequences()` 将两条路径向相反方向弯曲。"
+      "example_setup": "将两条参考序列绘制在水平路径上。"
     },
     "coord_radial_synteny": {
       "title": "径向序列路径上的共线性视图",
@@ -283,7 +284,7 @@
       "details": "将序列投影为径向辐条，连接各辐条的源区间或点。`start_angle` 和 `direction` 定义角度框架。用 [`layout_sequences()`](layout_sequences.html#api-layout_sequences) 设置逐序列方向、[中心开口 `inner_radius`](layout_sequences.html#parameter-inner_radius)和[有符号的曲率 `curvature`](layout_sequences.html#parameter-curvature)。默认开口半径从最长外半径的 0.12 倍起算，按描边及特征净空扩展。特征、刻度轴和连接端点随各自的参考路径移动。分面使用固定标度。",
       "errors": "- 每面板有效 spoke 少于两条。\n\n- 将 radius 当作 spoke 中心半径，或给出无效 inner_radius。\n\n- 使用 joined-window 行或原生 free 画布轴。",
       "roles": [],
-      "example_setup": "在坐标投影中设置起始角，在布局中设置中心开口并弯曲辐条。`fit = \"labels\"` 为注释文字保留空间。"
+      "example_setup": "从 35° 开始绘制第一条径向路径。"
     },
     "coord_sankey": {
       "title": "镜像双列序列关系视图",
@@ -318,7 +319,7 @@
       "details": "绘制两组相对的参考路径。默认 `axis = \"y\"`，在左右两列绘制竖直路径。设为 `\"x\"` 可绘制水平路径。参考可以在两组中同时出现，各显示实例仍保留来源身份。用 [`layout_sequences()`](layout_sequences.html#api-layout_sequences) 设置组内间距 `row_gap`、以 mm 计的[组间距 `column_gap`](layout_sequences.html#parameter-column_gap)，以及[曲率 `curvature`](layout_sequences.html#parameter-curvature)。特征、刻度轴与连接端点跟随弯曲路径。自动间距会为可见注释和引线留出空间。分面使用固定标度。",
       "errors": "- 不明来源或在重复实例间无法唯一确定连接端点。\n\n- 将输入权重自动解释为守恒流量。\n\n- 使用不适用的圆形布局参数。",
       "roles": [],
-      "example_setup": "将竖直路径分成相对的两组，组间距设为 64 mm。组间距和有符号的曲率都在 `layout_sequences()` 中设置。"
+      "example_setup": "将相连的参考排列在相对的列中。"
     },
     "coord_dotplot": {
       "title": "双参考轴 HSP 点图",
@@ -1523,7 +1524,7 @@
         }
       ],
       "value": "一个点连接层；每条路径保留两端源点与 link_id。",
-      "details": "1. curve 的 curvature=0.5 为无量纲弯曲强度；Radial 非相邻连接可用 bulge=0.2 调整离参考的弯曲，属于路由几何。straight 不接受显式 curvature/bulge。shared 使用 corridor_width=2（mm）的共享走廊，仍保留独立路径和成员，不等同 stat_link_bundle。\n\n2. 全图默认不自动排除 self-links 或非相邻链接；要过滤时显式处理 data。布局/Coord 不偷偷改变记录集合。\n\n3. geom_link_line 接受点端点，geom_link_ribbon 接受区间前沿。不能把区间输入静默取中点后当作点连接；需要代表点时用户显式计算。\n\n4. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n对于跨行的共线曲线路由，显式正值 bulge 以最长可见骨架长度的一定比例设置外侧间距。径向外弧绕过中间辐条的端点。",
+      "details": "1. curve 的 curvature=0.5 为无量纲弯曲强度；Radial 非相邻连接可用 bulge=0.2 调整离参考的弯曲，属于路由几何。straight 不接受显式 curvature/bulge。shared 使用 corridor_width=2（mm）的共享走廊，仍保留独立路径和成员，不等同 stat_link_bundle。\n\n2. 全图默认不自动排除 self-links 或非相邻链接；要过滤时显式处理 data。布局/Coord 不偷偷改变记录集合。\n\n3. geom_link_line 接受点端点，geom_link_ribbon 接受区间前沿。不能把区间输入静默取中点后当作点连接；需要代表点时用户显式计算。\n\n4. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n对于跨行的共线曲线路由，显式正值 bulge 以最长可见骨架长度的一定比例设置外侧间距。径向外弧绕过中间辐条的端点。\n\n在 Fusion 根部使用显式关系表。可选的查询端和目标端视图路径、实例及具名分面选择器必须各自对应唯一叶视图。使用恒等 Stat 和 Position，并选择曲线或直线路由。",
       "errors": "- 缺少 qpos/spos；仅提供 HSP 区间却未选择点代表。\n\n- 未知端点参考或位置超界；不兼容 Stat/Position/route。",
       "roles": [
         "两端参考身份；两者都必须在权威参考中存在。",
@@ -1595,7 +1596,7 @@
         }
       ],
       "value": "一个区间关系层，含真实来源前沿、可选统计成员与绘制路径；样式不改变区间端点。",
-      "details": "1. curve 的 curvature=0.5 为无量纲弯曲强度；Radial 非相邻连接可用 bulge=0.2 调整离参考的弯曲，属于路由几何。straight 不接受显式 curvature/bulge。shared 使用 corridor_width=2（mm）的共享走廊，仍保留独立路径和成员，不等同 stat_link_bundle。\n\n2. 全图默认不自动排除 self-links 或非相邻链接；要过滤时显式处理 data。布局/Coord 不偷偷改变记录集合。\n\n3. geom_link_line 接受点端点，geom_link_ribbon 接受区间前沿。不能把区间输入静默取中点后当作点连接；需要代表点时用户显式计算。\n\n4. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n5. solid 的 fill 不自动取 pident。endpoint 两个颜色角色分别对应 q/s 端；共域可用普通 scale_fill_* 的 aesthetics=c(\"fill_from\",\"fill_to\")，需要独立域时显式指定。\n\n6. tip 是绘制装饰，不产生新的源残基或真实比对端点；导出把它与来源前沿分别标记。\n\n7. 聚合关系的导出必须保留来源成员与聚合性质；一个宽带不能被错误解释为整个带内每个碱基均已比对。\n\n对于跨行的共线曲线路由，显式正值 bulge 以最长可见骨架长度的一定比例设置外侧间距。径向外弧绕过中间辐条的端点。\n\n连带间隙和轮廓避障只改变绘制前沿，源区间保留原值。",
+      "details": "1. curve 的 curvature=0.5 为无量纲弯曲强度；Radial 非相邻连接可用 bulge=0.2 调整离参考的弯曲，属于路由几何。straight 不接受显式 curvature/bulge。shared 使用 corridor_width=2（mm）的共享走廊，仍保留独立路径和成员，不等同 stat_link_bundle。\n\n2. 全图默认不自动排除 self-links 或非相邻链接；要过滤时显式处理 data。布局/Coord 不偷偷改变记录集合。\n\n3. geom_link_line 接受点端点，geom_link_ribbon 接受区间前沿。不能把区间输入静默取中点后当作点连接；需要代表点时用户显式计算。\n\n4. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n5. solid 的 fill 不自动取 pident。endpoint 两个颜色角色分别对应 q/s 端；共域可用普通 scale_fill_* 的 aesthetics=c(\"fill_from\",\"fill_to\")，需要独立域时显式指定。\n\n6. tip 是绘制装饰，不产生新的源残基或真实比对端点；导出把它与来源前沿分别标记。\n\n7. 聚合关系的导出必须保留来源成员与聚合性质；一个宽带不能被错误解释为整个带内每个碱基均已比对。\n\n对于跨行的共线曲线路由，显式正值 bulge 以最长可见骨架长度的一定比例设置外侧间距。径向外弧绕过中间辐条的端点。\n\n连带间隙和轮廓避障只改变绘制前沿，源区间保留原值。\n\n在 Fusion 根部使用显式关系表。可选的查询端和目标端视图路径、实例及具名分面选择器必须各自对应唯一叶视图。使用恒等 Stat 和 Position，并选择曲线或直线路由。",
       "errors": "- 缺失或无效区间前沿/来源单位。\n\n- 同时使用 solid fill 与 endpoint 通道；未定义端点颜色域。\n\n- tip_length 在 tip=\"none\" 时显式给定；不兼容路由参数或统计输出。",
       "roles": [
         "两端参考与一基闭区间，源身份和完整前沿必须保留。",
@@ -2803,8 +2804,8 @@
           "description": "视觉标度，或完整轨带的连续 Y 标度。"
         },
         {
-          "format": "字符向量或 NULL",
-          "description": "图层 ID。两个选择器都省略时，添加标度时就近绑定到最近加入的图层或轨带。"
+          "format": "图层 ID 或结构化表",
+          "description": "字符 ID 选择本地图层。Fusion 中可用含 panel_path 和 layer_id 的表跨视图共同训练视觉标度。"
         },
         {
           "format": "字符向量或 NULL",
@@ -2819,7 +2820,7 @@
       "details": "所选映射优先使用分域标度。其他图层仍按美学通道共同训练普通标度。Guide 设置写在分域标度上。自定义 Stat 仍接收 `colour` 等公开美学名称。\n\n作用域决定训练范围。两种离散 colour 和 fill 映射使用同一分类列，且训练后的断点、顺序、标签及 Guide 设置兼容时，基因组图层可以共用一个图例。每个类别的键可以组合两个图元，各自保留映射色板和固定样式。其他独立分域色板可以分别显示图例。如果原生 Guide 已合并，但类别身份无法确认，图元各用一个槽位。\n\n轨带 Y 使用原生连续标度。一次声明可以为多条轨带设置共用数值域，也可用 `by = \"panel\"` 在各分面中分别训练所选轨带的数值域。",
       "errors": "选定的各图层都需要有该标度能够处理的映射。`aes(colour = ...)` 配色用 colour 标度，`aes(fill = ...)` 配色用 fill 标度。目标不存在，或显式作用域在同一图层和通道上重叠时，构建会报错。",
       "roles": [],
-      "example_setup": "第一例为具名基因图层指定 fill 标度。随后两例对比分域和普通 Viridis 色标。两例都只显示一个图例，A、B 各有一个键，键中组合 Viridis 色骨架与独立填色、透明度为 0.5 的基因箭头。最后一例在各样本分面内分别训练信号轨带的 Y 数值域。"
+      "example_setup": "只对具名基因图层应用链方向填充标度。连带保留自己的一致性标度。"
     },
     "scale_fill_residue": {
       "title": "残基字符的普通填充色板快捷式",
@@ -4315,25 +4316,25 @@
       "example_setup": ""
     },
     "ggchord_fusion": {
-      "title": "组合独立图及跨面板关系",
-      "intro": "将具名、可独立构建的图放到同一画布。子图地位相同，布局由单一区域模型指定；根部连接层具有自己的数据与尺度命名空间。",
+      "title": "组合独立视图",
+      "intro": "在同一画布排列保留各自数据坐标的独立图。",
       "arguments": [
         {
-          "format": "named list",
-          "description": "ggchord、已注册字符 ggplot 或嵌套 Fusion。名称为此级 panel ID；必须唯一。普通未注册 ggplot 可作为视觉面板，但不能作为源区间连接端点。"
+          "format": "图形列表",
+          "description": "可用 ggchord、普通 ggplot 或嵌套 Fusion。未命名的视图自动获得稳定 ID。"
         },
         {
-          "format": "Fusion layout",
-          "description": "layout_fusion 或其 grid 快捷式生成的区域布局。"
+          "format": "Fusion 布局或 NULL",
+          "description": "NULL 使用自动网格。用加号添加布局会替换当前声明。"
         },
         {
-          "format": "\"keep\" / \"collect\"",
-          "description": "默认保留各子图 Guide。collect 只汇集语义等价的图例，不合并尺度训练域。"
+          "format": "\"auto\" / \"keep\" / \"collect\"",
+          "description": "auto 允许外层收集。keep 保留本地图例边界。collect 汇集外置图例。"
         }
       ],
-      "value": "可打印、保存、添加 fusion_ribbon/fusion_zoom/根部视觉 Scale、统一导出的组合对象。",
-      "details": "1. 嵌套面板由 panel_path（逐级 ID 向量）定位，不把内部层名提升到父根命名空间。\n\n2. 只有经过核对、变量/单位/范围/变换/breaks/palette 等等价的 Guide 才可合并；同名标题不构成等价。\n\n3. 组合根部没有默认观察表；fusion_ribbon 必须给 data。根部 Scale/scale_for 只作用于根连接/装饰层。\n\n4. 实际端点与标签必须在最终分配的子图物理尺寸下度量。",
-      "errors": "- 面板重名、布局引用不存在面板、无登记源映射的面板被用为源端点。",
+      "value": "可打印且可用 ggsave() 保存的组合图。",
+      "details": "用加号添加网格或矩形布局。实测跨视图关系用根级 Link 图层，共同的源区间用 Magnify 标记。根级视觉标度作用于根级连接。结构化 scale_for() 可共同训练所选子图层。根级 theme 和 labs 管理组合装饰及外置图例。",
+      "errors": "最终构建时每个直接子视图都须分配有效区域。普通 ggplot 可以参与布局，生物学端点须有已登记的源映射。",
       "roles": [],
       "example_setup": ""
     },
@@ -4375,135 +4376,23 @@
         {
           "format": "正数标量 / 向量",
           "description": "行高权重；规则与 widths 相同。"
+        },
+        {
+          "format": "正整数或 NULL",
+          "description": "网格行数。省略时从矩阵设计或视图数推导。"
+        },
+        {
+          "format": "正整数或 NULL",
+          "description": "网格列数。省略时从矩阵设计或视图数推导。"
+        },
+        {
+          "format": "绝对距离",
+          "description": "单元间距，数值按毫米，也可用单个绝对 grid 单位。"
         }
       ],
       "value": "解析后等价于 layout_fusion(areas, units=\"relative\") 的网格布局声明。",
-      "details": "1. 第一个矩阵行在画布上方；转换到区域表时保持这个阅读顺序。\n\n2. 按权重分配整个可用画布；子图 margin 决定内容留白。",
+      "details": "1. 第一个矩阵行在画布上方；转换到区域表时保持这个阅读顺序。\n\n2. 按权重分配整个可用画布；子图 margin 决定内容留白。\n\n最终绘制时解析网格，先扣除物理间距再分配权重。",
       "errors": "- L形/不连续同名区域、权重非正、向量长度不匹配、面板未分配或引用不存在。",
-      "roles": [],
-      "example_setup": ""
-    },
-    "fusion_ribbon": {
-      "title": "绘制有来源证据的跨面板区间关系",
-      "intro": "把明确的源区间关系连接到两个已登记面板。每条记录有两端来源、单位与面板路径，不能以放大装饰代替真实关系。",
-      "arguments": [
-        {
-          "format": "aes / NULL",
-          "description": "视觉映射及明确的数据角色映射。pident、weight 列存在不自动启用任何映射。"
-        },
-        {
-          "format": "规范关系表",
-          "description": "必须提供；含 qpanel_path/spanel_path、qaccver/saccver、qstart/qend/sstart/send，可选 qinstance/sinstance、qstrand/sstrand、link_id。路径可为单级字符串或保存 ID 向量的 list-column。"
-        },
-        {
-          "format": "\"curve\" / \"straight\"",
-          "description": "仅改变既定区间前沿之间的连接几何，不聚合数据。"
-        },
-        {
-          "format": "0–1 数值",
-          "description": "curve 的弯曲程度，默认0.5；straight 下显式非默认值报不适用。"
-        },
-        {
-          "format": "视觉/几何参数",
-          "description": "fill、colour、alpha、linewidth、linetype、lineend、key_glyph；可与对应 Scale 配合。未知参数报错。"
-        },
-        {
-          "format": "logical",
-          "description": "FALSE 对缺失观察给提示；TRUE 移除缺失观察，但不关闭来源/单位检查。"
-        },
-        {
-          "format": "logical / named logical",
-          "description": "是否贡献根部 Guide 键；默认 NA 遵循映射。"
-        },
-        {
-          "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
-        }
-      ],
-      "value": "可添加到 ggchord_fusion 的真实关系层，导出保留 source_members 和两端 panel_path。",
-      "details": "1. 端点有多个合法显示实例时要求 qinstance/sinstance，不能自动取首个。\n\n2. 根层 fill 的 Scale 不影响子图。不同根层需要不同域时，用 scale_for 明确选择其 ID。\n\n3. 字符面板的区间前沿必须通过真实 source/column 注册映射；缺失字符和 gap 不由HSP插值补造。",
-      "errors": "- 缺data、未知面板/参考、区间越界、实例歧义、字符来源不可连续定位。",
-      "roles": [
-        "根对象独立视觉域。",
-        "仅组织绘制记录，不自动束化来源。"
-      ],
-      "example_setup": ""
-    },
-    "fusion_zoom": {
-      "title": "标记区域在另一面板中的展开关系",
-      "intro": "添加放大源区高亮和跨面板连接轮廓。此层是装饰，不是新增HSP，不进入真实关系统计。",
-      "arguments": [
-        {
-          "format": "panel ID / ID路径",
-          "description": "分别为源面板和展开面板；嵌套路径使用字符向量。"
-        },
-        {
-          "format": "区间表",
-          "description": "含 accver、start、end，可选 from_instance、to_instance。引用最初 source 空间；跨原点或不连续段分别显式列行。"
-        },
-        {
-          "format": "logical",
-          "description": "是否同时显示源区高亮，默认TRUE。"
-        },
-        {
-          "format": "颜色",
-          "description": "连接区域的固定填充和边线；不训练生物关系尺度。"
-        },
-        {
-          "format": "0–1 数值",
-          "description": "填充透明度，默认.12。"
-        },
-        {
-          "format": "非负数",
-          "description": "边线宽度，沿用ggplot线宽单位。"
-        },
-        {
-          "format": "string / NULL",
-          "description": "组合根级装饰ID。"
-        },
-        {
-          "format": "character(1)",
-          "description": "默认 `\"interval\"`，直接连接区间。`\"border\"` 用引线连接源区间与目标绘图区朝向源图的一侧。"
-        },
-        {
-          "format": "line type / NULL",
-          "description": "默认 NULL，外框引线使用虚线，区间轮廓使用实线。可显式指定线型。"
-        }
-      ],
-      "value": "Fusion 装饰层；导出标记 component_type=\"decoration\"，并保留被强调源区。",
-      "details": "1. from/to 的参考可以是不同局部坐标表示，但必须可追溯到声明的同一来源。\n\n2. detail 图由调用者明确构建；zoom 不替它裁数据、选择基因或生成残基。",
-      "errors": "- 来源不匹配、区域不在显示窗口内、端点实例不唯一。",
-      "roles": [],
-      "example_setup": ""
-    },
-    "magnify_ggchord": {
-      "title": "组合总览图、细节图与放大标记",
-      "intro": "常用放大展示的高层 recipe；等价展开为两个具名面板、Fusion布局和 fusion_zoom。",
-      "arguments": [
-        {
-          "format": "独立图对象",
-          "description": "均须可单独构建；有来源连接需求的字符图先注册。"
-        },
-        {
-          "format": "源区间表",
-          "description": "与 fusion_zoom 同合同，必要时给明确实例。"
-        },
-        {
-          "format": "Fusion layout / NULL",
-          "description": "NULL 采用左右2:1的 overview/detail 网格；显式布局须使用这两个ID。"
-        },
-        {
-          "format": "\"keep\" / \"collect\"",
-          "description": "交给 ggchord_fusion 的说明组织政策。"
-        },
-        {
-          "format": "zoom参数",
-          "description": "仅接受 fusion_zoom 的 highlight/fill/alpha/colour/linewidth/id/connector/linetype，不隐式传给其他子图。"
-        }
-      ],
-      "value": "一个 ggchord_fusion 组合对象；输入图和科学数据不被原地修改。",
-      "details": "1. 默认展开：ggchord_fusion(list(overview=overview,detail=detail),layout_fusion_grid(... widths=c(2,1))) + fusion_zoom(\"overview\",\"detail\",region,...)。\n\n2. Layout显示放大不隐式改变Stat输入；如需重新统计局部数据，应在构建detail之前明确focus。",
-      "errors": "",
       "roles": [],
       "example_setup": ""
     },
@@ -4618,7 +4507,7 @@
         }
       ],
       "value": "具名结果列表：按 panel_path/layer_id 组织的阶段表、geometry 各类组件、stage_status、measurement、reference、diagnostics、provenance。stage_status 区分 available/unavailable/failed；measurement 在可用时为 estimated 或 measured，缺设备条件的几何标 unavailable 并给原因，不伪造坐标。",
-      "details": "1. width/height 均缺少时，不假定任意画布尺寸；只返回不依赖设备的参考/来源信息，设备相关 geometry 为 unavailable，reason=\"missing_dimensions\"。宽高齐备但 device=NULL 时可估计，必须记录宽高及字体/设备假设并标 estimated；只有完整设备条件且实际构建后才标 measured。\n\n2. 路径、文字、面板区域分别有类型表，不把所有组件塞进一张巨表。\n\n3. 聚合Stat保留source_members；装饰zoom明确标记decoration，不伪装成观察关系。\n\n4. source-only不打开测量设备；已有data callback仅按该层来源合同求值，不为查询另外选择表。\n\n5. 本函数统一替代历史 get_chord_layout/export_ggchord_fusion 的公开角色，不承诺暴露引擎内部缓存。\n\nFusion 导出按面板路径与图层 ID 报告失败连接，保留其他面板和连接。\n\n请求来源阶段时，各图层的 `provenance` 提供可用的 `data_report()` 来源链。各阶段表保留自己的职责。",
+      "details": "1. width/height 均缺少时，不假定任意画布尺寸；只返回不依赖设备的参考/来源信息，设备相关 geometry 为 unavailable，reason=\"missing_dimensions\"。宽高齐备但 device=NULL 时可估计，必须记录宽高及字体/设备假设并标 estimated；只有完整设备条件且实际构建后才标 measured。\n\n2. 路径、文字、面板区域分别有类型表，不把所有组件塞进一张巨表。\n\n3. 聚合Stat保留source_members；装饰zoom明确标记decoration，不伪装成观察关系。\n\n4. source-only不打开测量设备；已有data callback仅按该层来源合同求值，不为查询另外选择表。\n\n5. 本函数统一替代历史 get_chord_layout/export_ggchord_fusion 的公开角色，不承诺暴露引擎内部缓存。\n\nFusion 导出按面板路径与图层 ID 报告失败连接，保留其他面板和连接。\n\n请求来源阶段时，各图层的 `provenance` 提供可用的 `data_report()` 来源链。各阶段表保留自己的职责。\n\nFusion 导出记录 Magnify 的请求层级、实际层级和实绘残基，包括视图路径与源位置。",
       "errors": "- 未知阶段、未知层或路径、设备条件只提供一半、无效尺寸。",
       "roles": [],
       "example_setup": ""
@@ -4666,6 +4555,10 @@
         {
           "format": "正数",
           "description": "栅格设备分辨率，默认300；矢量输出保留记录但不改变源坐标。"
+        },
+        {
+          "format": "具名列表或 NULL",
+          "description": "查询显示位置时按实际分面变量值选择。"
         }
       ],
       "value": "带 source/local/display 位置、panel_path、instance_id、status/reason 的表。显示几何可用时附 estimated/measured 及设备条件；不可用时明确状态和原因。没有有效对应时返回 NA，不吸附到附近碱基。",
@@ -4942,7 +4835,7 @@
       "details": "省略 `id` 时更新最近的轨带。指定 ID 后，可以在添加相应图层的前后声明布局。多次配置按字段合并，`NULL` 保留该字段的已有值。尚无图层的声明不占空间。\n\n轨带默认在正侧，厚 4 mm，前置间隙 1 mm。两侧独立排序，先保留显式序号，再按每条轨带首次加入图层的顺序，依次填入最小可用正整数。序号 1 最靠近参考路径。\n\n添加原生 `scale_y_*()` 可配置最近轨带的数值域。布局、主题和坐标设置不改变这个绑定。用 `scale_for(..., tracks = ids)` 可指定一个或多个具名轨带。",
       "errors": "使用省略 ID 的写法前须先添加轨带，也可以直接提供 ID。同侧两条已有图层的轨带不得使用同一显式序号。",
       "roles": [],
-      "example_setup": "第一例配置自动编号的轨带。第二例为具名折线轨带预留第 2 位，独立添加的点轨带自动填入第 1 位。"
+      "example_setup": "给具名信号轨带设置 8 mm 厚度和 2 mm 间隙。"
     },
     "scale_seq_continuous": {
       "title": "定义线性序列位置的刻度与说明",
@@ -5303,6 +5196,96 @@
       ],
       "roles": [],
       "example_setup": ""
+    },
+    "fusion_magnify_auto": {
+      "title": "从现有序列图派生可编辑的显示窗口",
+      "intro": "派生可编辑的特征窗口或带真实来源的字符视图。",
+      "arguments": [
+        {
+          "format": "ggchord 图或 NULL",
+          "description": "独立构图的源图。加号模式使用 from 和 to。"
+        },
+        {
+          "format": "源区间表",
+          "description": "一基闭区间 accver、start、end，可附两端的实例和分面字段。"
+        },
+        {
+          "format": "Coord",
+          "description": "派生详图的序列路径 Coord。"
+        },
+        {
+          "format": "非负整数",
+          "description": "按源坐标单位扩展，达到源视图边界时截断。"
+        },
+        {
+          "format": "Fusion 布局或 NULL",
+          "description": "独立构图的布局。默认总览与详图相对宽度为 2 和 1。"
+        },
+        {
+          "format": "\"auto\" / \"keep\" / \"collect\"",
+          "description": "独立构图的图例策略。"
+        },
+        {
+          "format": "具名设置",
+          "description": "连接方式、高亮、填色、描边色、透明度、线宽、线型及装饰 ID。"
+        },
+        {
+          "format": "函数或 NULL",
+          "description": "可选编辑函数，保留源窗口或字符登记。Auto 中若源图为序列路径，使用编辑函数会选择 Feature。"
+        },
+        {
+          "format": "视图 ID 路径",
+          "description": "加到 Fusion 时指定源与目标路径。Auto 按 to 新建直接子视图。"
+        },
+        {
+          "format": "\"auto\" / \"feature\" / \"residue\"",
+          "description": "Auto 在真实字符适合实测面板时选择残基视图。Feature 始终使用序列窗口。Residue 需要已登记的真实字符。"
+        }
+      ],
+      "value": "Fusion 组合图或加号模式的放大声明。",
+      "details": "Auto 保留源观测和父图的视觉域。引导线可连接区间前沿或详图边框。\n\nResidue 使用已登记的字符图或真实无缺口参考串。参考不能区分 DNA 和 RNA 时需指定字母表。已有比对的缺口保留原列，源位置为空。跨环形原点请在两侧分别声明有序区间。",
+      "errors": "复杂的分面特征图使用 Manual。显式 Residue 需要可支持的字母表及可映射到源坐标的真实字符。缺少字符或空间不足时 Auto 回退到 Feature。",
+      "roles": [],
+      "example_setup": ""
+    },
+    "fusion_magnify_manual": {
+      "title": "在两幅已准备的视图中标记共同的源区间",
+      "intro": "在两幅已准备的视图中标记共同的源区间。",
+      "arguments": [
+        {
+          "format": "ggchord 图或 NULL",
+          "description": "独立构图的源图。加号模式使用 from 和 to。"
+        },
+        {
+          "format": "图形或 NULL",
+          "description": "独立构图时已准备好的详图。"
+        },
+        {
+          "format": "源区间表",
+          "description": "一基闭区间 accver、start、end，可附两端的实例和分面字段。"
+        },
+        {
+          "format": "Fusion 布局或 NULL",
+          "description": "独立构图的布局。默认总览与详图相对宽度为 2 和 1。"
+        },
+        {
+          "format": "\"auto\" / \"keep\" / \"collect\"",
+          "description": "独立构图的图例策略。"
+        },
+        {
+          "format": "具名设置",
+          "description": "连接方式、高亮、填色、描边色、透明度、线宽、线型及装饰 ID。"
+        },
+        {
+          "format": "视图 ID 路径",
+          "description": "加到 Fusion 时指定源与目标路径。Auto 按 to 新建直接子视图。"
+        }
+      ],
+      "value": "Fusion 组合图或加号模式的放大声明。",
+      "details": "两端须展示同一声明源区间。已登记的字符视图可作为详图。",
+      "errors": "未知视图、有歧义的端点或单位冲突会报错。",
+      "roles": [],
+      "example_setup": ""
     }
   },
   "families": {
@@ -5353,8 +5336,6 @@
     "read_vcf": "变异文件",
     "ggchord_fusion": "组合图与局部放大",
     "layout_fusion": "Fusion 面板布局",
-    "fusion_ribbon": "跨面板连带",
-    "fusion_zoom": "跨视图标记放大区间",
     "register_ggchord_alignment": "比对注册与位置查询",
     "view_ggchord": "绘图尺寸与预览",
     "export_ggchord_layout": "布局导出与检查",
@@ -5363,7 +5344,8 @@
     "track_limits": "定量轨带数值范围",
     "scales_ggchord": "启用传统 ggchord 配色",
     "pal_ggchord": "ggchord 分类配色",
-    "scale_colour_ggchord": "ggchord 分类线色标度"
+    "scale_colour_ggchord": "ggchord 分类线色标度",
+    "fusion_magnify_auto": "按源区间放大"
   },
   "articles": {
     "geom_seq": {
@@ -5382,8 +5364,8 @@
       "example_intro": "以下示例共用两条用于演示的参考序列。",
       "examples": {
         "geom_seq": {
-          "title": "单线与填色带",
-          "description": "先在骨架层登记参考并绘制单线，再在图级登记参考，为每条序列绘制不同厚度的填色带。"
+          "title": "将参考绘制成带",
+          "description": "带厚以毫米设置。"
         },
         "geom_seq_arrow": {
           "title": "用箭头表示显示方向",
@@ -5427,8 +5409,8 @@
       "example_intro": "用一条 2,200 bp 的合成序列对照九种区间形状。主图编号与图例一一对应。每个区间等长，且都在正链。最后一图展示位点棒棒糖和交错切口。",
       "examples": {
         "geom_feature": {
-          "title": "对照全部区间形状，并绘制位点与切口",
-          "description": "前两张图使用相同的输入、形状映射和视觉样式。共线图从左向右读，圆图从顶部起沿顺时针读。"
+          "title": "按区间绘制注释",
+          "description": "把类型映射到填充，并把区间画成方块。"
         },
         "geom_gene": {
           "title": "按链放置基因箭头",
@@ -5443,16 +5425,16 @@
           "description": "先画较宽的半透明区域，再在其上叠加序列骨架。"
         },
         "geom_site": {
-          "title": "对照全部位点形状",
-          "description": "每个图符使用记录的位点。棒棒糖从锚点向外伸出。"
+          "title": "标记序列位点",
+          "description": "用刻线标记位点。"
         },
         "geom_restriction_site": {
-          "title": "对照全部切口形状",
-          "description": "每个切口都给出两条链的边界。图例示意两个边界上的图符。"
+          "title": "绘制双链切口",
+          "description": "给出上链与下链的切割边界。"
         },
         "shape_feature": {
-          "title": "配置通用原型",
-          "description": "对照箭头和端帽的尺寸，再将同一份方块或棒棒糖规格用于多种定位数据。"
+          "title": "修改箭头轮廓",
+          "description": "用 head_length 修改箭头头部的长度。"
         }
       }
     },
@@ -5473,12 +5455,12 @@
       "example_intro": "给固定标签画引导线，让位点文字避让，并用同一组基因比较两种排版。",
       "examples": {
         "geom_feature_label": {
-          "title": "标记区间和位点",
-          "description": "用直线连接固定基因文字，再用同一入口为位点文字选择避让排版。"
+          "title": "按图层 ID 绑定标签",
+          "description": "用 anchor_layer 指定标签对应的基因图层。"
         },
         "geom_gene_label": {
-          "title": "比较固定和避让排版",
-          "description": "两种布局使用同一个拥挤基因层和相同字号。"
+          "title": "绘制避让基因标签",
+          "description": "对靠近的基因应用标签避让布局。"
         },
         "geom_primer_label": {
           "title": "标注引物的 3′ 端",
@@ -5509,8 +5491,8 @@
       "example_intro": "先绘制原始区间，再按汇总成员数量或计算出的密度着色。",
       "examples": {
         "geom_link_ribbon": {
-          "title": "绘制原始区间连带",
-          "description": "以源区间作为连带端点，按百分比一致性映射填色。"
+          "title": "绘制实测区间连带",
+          "description": "将一致性百分比映射到填充。"
         },
         "stat_link_bundle": {
           "title": "按双端分箱汇总连接",
@@ -5548,12 +5530,12 @@
           "description": "映射源位置和测量值。"
         },
         "geom_track_line": {
-          "title": "按源坐标顺序连接采样点",
-          "description": "用顺序打乱的输入表，折线仍按源位置递增连接。"
+          "title": "按源位置连接观测",
+          "description": "输入顺序打乱后，线仍按源位置连接。"
         },
         "geom_track_path": {
-          "title": "按输入顺序连接采样点",
-          "description": "使用同一张顺序打乱的表，并依照表内顺序连接。"
+          "title": "沿输入顺序连接观测",
+          "description": "路径保留输入顺序。"
         },
         "geom_track_step": {
           "title": "绘制阶梯变化",
@@ -5598,25 +5580,174 @@
         }
       }
     },
-    "ggchord_fusion": {
-      "intro": "用 `ggchord_fusion()` 组合具名图形。要将总览和细节配对并标出源区间，可用 `magnify_ggchord()`，它构造双面板 Fusion 并添加 [`fusion_zoom()`](fusion_zoom.html#api-fusion_zoom)。",
+    "fusion_magnify_auto": {
+      "intro": "用 Auto 派生特征或残基详图。用 Manual 关联已经准备好的独立视图。",
+      "roles": "两种模式共用一基闭源区间，并可指定实例。",
+      "details": "连接标记对应两个视图中从 1 起算的同一闭合源区间。Auto 在来源可见范围内扩展详图窗口，高亮仍落在请求区间。特征详图保留父图生效的视觉标度和源统计结果。完整可见的 HSP 保留源端点。仅部分可见的 HSP 会省略，并在布局导出中记录。Manual 的两幅预备视图都须完整显示请求区间，来源身份和坐标单位须相容。\n\n用 `level = \"feature\"` 显示注释窗口，或用 `level = \"residue\"` 从保存的参考序列或已登记的字符图显示真实 DNA、RNA 或氨基酸残基。Residue 要求字符可映射到源坐标。现有字符无法区分 DNA 和 RNA 时，请显式指定参考序列的字母表。已登记比对保留实测字符所在的列和缺口。跨环形原点时，请在两侧分别给出区间。设 `level = \"auto\"` 时，依据最终设备上的面板空间和字形测量决定能否显示字符。对于序列来源，缺少字符或空间不足时使用特征详图。布局导出会记录所选层级。\n\n给现有 Fusion 添加下一级时，将 `from` 设为已登记的视图路径，将 `to` 设为新的直接子视图 ID。新详图还可作为下一级的来源。Manual 也可用 `from` 和 `to` 连接两个已登记视图。",
       "arguments": {
-        "layout": "使用 [`layout_fusion()`](layout_fusion.html#api-layout_fusion) 或 [`layout_fusion_grid()`](layout_fusion.html#api-layout_fusion_grid) 声明布局。通用构造函数默认使用自动网格。放大快捷入口默认将 `overview` 和 `detail` 排在同一行，相对宽度为 2 和 1。",
-        "guides": "两个入口都默认用 `\"keep\"` 保留图例。设置 `\"collect\"` 可以收集合并兼容的图例。"
+        "detail": "Auto 接收编辑函数。Manual 在独立构图时接收已准备的图。",
+        "guides": "独立构图时 Auto 默认收集，Manual 默认本地保留。"
       },
-      "roles": "通用构造函数接收独立视图的具名列表。放大入口直接接收两个视图，并接收由 `accver`、`start` 和 `end` 确定的源区间。可用放大入口的 `...` 设置支持的连接线和高亮样式。",
-      "details": "两个入口都返回 Fusion 组合。布局和放大标记作用于显示视图，并保留底层源数据。要按所选区间重新计算统计，请先用所需数据构造细节图。",
-      "example_intro": "先用两个图形构建简单组合，再用一段指定的源区间将总览与细节配对。",
+      "example_intro": "先比较自动生成的窗口与手工准备的窗口，再看真实碱基的放大。",
       "examples": {
-        "ggchord_fusion": {
-          "title": "组合具名面板",
-          "description": "用自动布局排列独立视图。"
+        "fusion_magnify_auto": {
+          "title": "自动派生窗口和残基",
+          "description": "第一个调用在所选区间两侧各加 80 bp。第二个调用放大已登记比对中的 8 个真实碱基。"
         },
-        "magnify_ggchord": {
-          "title": "标记从总览到细节的放大关系",
-          "description": "构建局部视图，并在总览中标出与之对应的源区间。"
+        "fusion_magnify_manual": {
+          "title": "关联已准备的窗口",
+          "description": "先用显示窗口准备详图，再把两幅图中同一个源区间关联起来。"
         }
       }
+    },
+    "layer_id": {
+      "intro": "为图层指定身份，或让标签自动查找绑定的图层。",
+      "details": "用 `layer_id()` 标记已有 ggplot2 图层。ggchord 图层构造器用 `id` 指定名称，用 `auto_id()` 声明自动分配。给标签的 `anchor_layer` 传入 `auto_anchor()`，可解析同一图中的相容图层。",
+      "value": "返回图层，或供 ggchord 图层及标签消费的声明。"
+    },
+    "facet_null": {
+      "intro": "用 ggplot2 原生分面把观测拆成多个面板。",
+      "details": "`facet_null()` 使用单面板，`facet_wrap()` 将同组面板折行排列，`facet_grid()` 交叉排列行列变量。每个 ggchord 面板应有其坐标系所需的参考数据。",
+      "value": "返回原生 ggplot2 分面声明。"
+    },
+    "layout_sequences": {
+      "intro": "在序列路径坐标系中排列参考与显示窗口。",
+      "details": "用 `layout_sequences()` 选择显示实例，并配置当前坐标系支持的布局参数。`suggest_sequence_layout()` 按观测关系推导顺序及方向，同时返回证据，供检查后应用。",
+      "value": "返回序列布局，或包含布局和证据的建议。"
+    },
+    "geom_residue": {
+      "intro": "在笛卡尔面板绘制比对字符、色块，或同时绘制两者。",
+      "details": "`geom_residue()` 可明确选择表现形式和字符溢出规则。`geom_residue_text()` 与 `geom_residue_tile()` 分别选择一种形式。固定纵横比可获得方形色块，`scale_fill_residue()` 提供字母表配色。缺口保留比对列，源位置为空。",
+      "value": "返回比对字符单元图层。"
+    },
+    "layout_label_fixed": {
+      "intro": "按给定偏移放置标签，或调整位置以缓解碰撞。",
+      "details": "需要用锚点、偏移和方向控制标签位置时使用 `layout_label_fixed()`，标签拥挤时使用 `layout_label_repel()`。将布局传给相容的标签图层，再按实际输出尺寸查看。",
+      "value": "返回标签布局声明。"
+    },
+    "position_offset": {
+      "intro": "调整序列图元相对于参考路径的位置。",
+      "details": "`position_offset()` 直接设置偏移，`position_strand()` 按链方向选择偏移，`position_feature_stack()` 分层摆放重叠特征。源观测坐标保持原值。",
+      "value": "返回供相容 ggchord 图层使用的位置调整。"
+    },
+    "scale_colour_sequence": {
+      "intro": "为参考标识、链方向、特征类型或比对一致性应用配色。",
+      "details": "`scale_colour_sequence()` 将参考标识映射到颜色。填充标度将链方向和特征类型作为分类映射，将比对一致性百分比作为连续量映射。先在 `aes()` 中声明数据映射，再添加对应标度。",
+      "value": "返回相应数据角色的 ggplot2 标度。"
+    },
+    "guide_seq_axis": {
+      "intro": "在参考路径上放置坐标轴，或在轨带旁放置数值轴。",
+      "details": "在 `scale_seq_continuous()` 上设 `guide_seq_axis()` 控制位置刻度，在轨带数值标度上设 `guide_track_axis()` 控制数值刻度。可选择显示轴的参考行。",
+      "value": "返回供相应标度使用的轴引导。"
+    },
+    "theme_ggchord": {
+      "intro": "用主题预设设置 ggchord 图的外观。",
+      "details": "基础、简洁、深色、出版和质粒主题各自提供一组外观设置。构建图层后添加预设，可用 `theme()` 单独调整元素。",
+      "value": "返回 ggplot2 主题。"
+    },
+    "as_ggchord_seq": {
+      "intro": "将参考、特征、关系或比对字符转换为 ggchord 数据。",
+      "details": "按输入角色选择入口。参考登记标识及长度，特征记录参考及区间或位点，关系记录两端，比对保留字符所在列。提供可靠来源时，比对列可回查源位置。",
+      "value": "返回采用 ggchord 字段约定的相应数据表。"
+    },
+    "validate_ggchord_data": {
+      "intro": "验证数据合同，按声明清理可修复输入，并查看来源追踪。",
+      "details": "`validate_ggchord_data()` 验证一个角色或一组数据。`validate_ggchord_hierarchy()` 检查参考层级，`clean_ggchord_data()` 应用指定的修复，`data_report()` 查询问题、变化或来源链。",
+      "value": "返回验证报告、清理后的对象，或已有对象的报告。"
+    },
+    "filter_ggchord_links": {
+      "intro": "筛选、去重、合并或派生关系记录。",
+      "details": "用筛选应用显式阈值，用去重清理重复记录。合并处理邻近且相容的区间，聚合按两端分箱。`link_ggchord_clusters()` 按已声明的特征成员关系及参考配对派生连接。",
+      "value": "返回关系表，包含各项操作对应的结果字段及来源。"
+    },
+    "find_ggchord_loci": {
+      "intro": "按注释目标查找邻域，聚焦观测数据，或生成多个显示窗口。",
+      "details": "`find_ggchord_loci()` 按具名目标找区间。`focus_ggchord_data()` 聚焦数据集合，`focus_ggchord_track()` 聚焦轨道观测。`segment_ggchord_data()` 生成相互对应的多窗数据及布局。",
+      "value": "返回区间表、聚焦后的观测，或分段数据与布局。"
+    },
+    "primer_catalog": {
+      "intro": "查阅引物定义，或在参考序列中搜索结合位置。",
+      "details": "`primer_catalog()` 选取引物记录，`find_primer_bindings()` 在输入序列中搜索。搜索依赖拓扑或匹配条件时，明确填写相应参数。",
+      "value": "返回引物目录记录，或具有源坐标的结合观测。"
+    },
+    "find_restriction_sites": {
+      "intro": "查找酶切识别位点，并筛选需要保留的观测。",
+      "details": "`find_restriction_sites()` 从序列字符生成观测，`filter_restriction_sites()` 筛选已有结果。识别位置和各链切割边界使用各自的字段。",
+      "value": "返回含源位置及已知切割边界的酶切位点观测。"
+    },
+    "build_ggchord_cds": {
+      "intro": "构建编码坐标模型，并翻译相应源序列。",
+      "details": "从有序 CDS 片段建立模型。翻译使用模型和真实源字符，遵循链方向、相位及所设遗传密码。",
+      "value": "返回编码坐标模型，或带源映射残基的翻译结果。"
+    },
+    "project_ggchord_features": {
+      "intro": "通过编码坐标模型投影特征区间或成对端点。",
+      "details": "每条观测只有一个参考端时用 `project_ggchord_features()`，有两个关系端点时用 `project_ggchord_links()`。提供 CDS 模型，跨编码拼接点时保留投影后的实际片段。",
+      "value": "返回带来源映射和片段信息的投影特征或关系。"
+    },
+    "read_fasta_lengths": {
+      "intro": "从 FASTA 读取参考长度或比对字符。",
+      "details": "`read_fasta_lengths()` 读取参考表，可保留序列字符。`read_aligned_fasta()` 返回含缺口的比对单元，可声明字母表及来源映射。",
+      "value": "返回参考记录或比对单元表。"
+    },
+    "read_bed": {
+      "intro": "读取区间观测、成对区间或数值轨带。",
+      "details": "BED 表示单区间，BEDPE 表示区间对，bedGraph 和 BigWig 表示区间上的数值。各格式有各自的原始坐标约定，导入后从结果读取统一坐标。",
+      "value": "返回带源坐标的特征、关系或轨道表。"
+    },
+    "read_blast": {
+      "intro": "导入比对软件输出，保留连接来源和可取得的比对字符。",
+      "details": "按原始格式选择读取器。BLAST 与 PAF 提供端点记录，chain 和 delta 描述含缺口的比对块。MAF 文件若有明确字符，可读取字符比对。各读取器的可选解码依赖见参数与示例。",
+      "value": "返回关系记录或数据集合，原始格式提供字符时可取得比对字符。"
+    },
+    "read_genbank": {
+      "intro": "导入生物学注释及其关系。",
+      "details": "GenBank 与 GFF3 提供参考注释。注释特征之间的连接可用关系读取器，蛋白或特征签名可用签名读取器。参考 ID 和可选依赖按各格式的参数说明设置。",
+      "value": "返回注释行，或含特征、参考或关系的数据集合。"
+    },
+    "register_ggchord_alignment": {
+      "intro": "为字符图登记来源，或直接在字符表中查询坐标。",
+      "details": "`register_ggchord_alignment()` 把字符与来源的对应关系附到图上。`map_alignment_position()` 用字符表查询比对列与源位置。缺口单元没有源位置。",
+      "value": "返回已登记的图或坐标对应表。"
+    },
+    "view_ggchord": {
+      "intro": "按输出尺寸预览图形，并控制允许的渲染调整。",
+      "details": "`view_ggchord()` 按设备或预览尺寸测量图形，用 `render_policy()` 设置该尺寸下允许调整的布局项。复核最终出图时沿用同一物理尺寸。",
+      "value": "返回预览和测量结果，或渲染策略声明。"
+    },
+    "export_ggchord_layout": {
+      "intro": "查看源位置、各导出阶段和设备相关几何。",
+      "details": "`export_ggchord_layout()` 导出来源、映射、统计或几何表，`map_ggchord_position()` 查询位置，`diagnose_ggchord()` 检查诊断。需要实测几何时，同时提供物理尺寸和输出设备。",
+      "value": "返回阶段及来源表、位置结果或诊断记录。"
+    },
+    "layout_track": {
+      "intro": "将图层组织进轨带，并沿参考路径排布轨带。",
+      "details": "`add_track()` 将多个图层登记到同一轨带。`layout_track()` 配置已分配的轨带，也可按名称先声明布局。数值轴和数值域由轨带标度配置。",
+      "value": "返回轨带图层声明或轨带布局声明。"
+    },
+    "pal_ggchord": {
+      "intro": "取得 ggchord 的预设颜色向量，用于分类、残基符号或连续映射。",
+      "details": "| 用途 | 函数 | 结果 |\n| --- | --- | --- |\n| 通用分类 | `pal_ggchord()` | 每个所需类别一个颜色。 |\n| 具名分类 | `pal_sequence()`、`pal_strand()`、`pal_feature_type()`、`pal_plasmid()` | 按标识、链方向或特征类型命名的颜色。 |\n| 连续数值 | `pal_pident()`、`pal_link_pident()`、`pal_signal()` | 供连带一致性、点连接一致性或数值信号使用的有序颜色节点。 |\n| 残基符号 | `pal_residue()` | 按 DNA、RNA 或氨基酸字母表符号命名的颜色，含缺口。 |\n\n具名分类配色可传给手动标度的 `values`，有序颜色节点可传给渐变标度的 `colours`。",
+      "value": "返回颜色值字符向量。具名分类和残基配色保留查找键。",
+      "examples": {
+        "pal_sequence": {
+          "title": "按序列标识取色",
+          "description": ""
+        },
+        "pal_pident": {
+          "title": "取得连续配色节点",
+          "description": ""
+        },
+        "pal_residue": {
+          "title": "按 DNA 符号取色",
+          "description": ""
+        }
+      }
+    },
+    "scale_colour_ggchord": {
+      "intro": "用 ggplot2 原生标度应用 ggchord 预设配色。",
+      "details": "按 `aes()` 的映射选择轮廓颜色或填充通道。分类标度使用离散配色或特征类型配色，点连接一致性百分比及数值信号使用连续渐变。",
+      "value": "返回 ggplot2 标度。"
     }
   }
 }

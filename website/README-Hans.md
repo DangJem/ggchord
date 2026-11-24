@@ -44,6 +44,8 @@ python3 tools/sync-website-languages.py --reviewed-content home.json /tmp/home-r
 
 API 参考说明本地源码的公开接口及其分类。先编辑 `website/reference-manual/en.json` 中的英语正文，再校对 `website/reference-manual/zh.json` 中的对应译文，并在汉语文件中登记已校对英语源的 SHA-256。共用的 `structure.json` 保存调用形式、参数与角色名称、示例和关联链接。两种语言共用代码和锚点。原生分面页面链接到 ggplot2 官方文档。
 
+每个多成员函数族共用一篇文章，集中列出调用形式和参数，并说明各入口适用的情境。`structure.json` 中的 `featured_examples` 指定优先展示的示例。其余成员的脚本留在同一示例区，仍可通过链接直达。示例只保留说明结果所需的数据和调用。共用输入用 `example_fixtures` 按准备顺序明确声明。页面代码、下载和实跑结果源自同一份脚本。
+
 运行下列命令可独立核对和构建 API 参考章节。
 
 ```sh

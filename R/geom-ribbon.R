@@ -24,6 +24,14 @@
 #' @param avoid_strength A number from 0 to 1 controlling how far the rounded
 #'   transitions extend. With `avoid = "smooth"`, 0 follows contours most closely
 #'   and 1 gives wider transitions. The minimum clearance applies at every strength.
+#' @details On a Fusion root, provide a relationship data frame and use
+#'   `qpanel_path` and `spanel_path`, `qinstance` and `sinstance`, and
+#'   `qfacet` and `sfacet` as optional endpoint roles in the data or in `aes()`.
+#'   Facets are named lists of facet values. Paths can be single IDs or list
+#'   columns of character vectors. Omitted selectors must resolve uniquely.
+#'   Fusion uses identity Stat and Position, straight or curved routes, and
+#'   native visual scales. Endpoints are projected on the actual backbone
+#'   without an additional gap or obstacle routing.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Source references are `qaccver` and `saccver`. Point links consume `qpos` and `spos`. Interval links and alignment segments consume closed interval endpoints on both references. Supply reliable `qstrand` and `sstrand` or explicit relative direction when the geometry requires it.
 #' Ribbons retain same-reference and non-neighbouring relationships. A
@@ -67,6 +75,8 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL, stat = "identity",
     if (is.null(call[["fill_mode"]])) call[["fill_mode"]] <- "solid"
     return(eval(call, parent.frame()))
   }
+  fusion_controls <- c(if (!missing(gap)) "gap", if (!missing(avoid)) "avoid",
+    if (!missing(avoid_strength)) "avoid_strength", if (!missing(fill_mode) && fill_mode != "solid") "fill_mode")
   ggchord_check_argument_names(sys.call(), sys.function(), dots = "fill")
   caller <- "geom_link_ribbon()"
   fill_mode <- ggchord_match_arg(fill_mode, c("solid", "endpoint"))
@@ -119,6 +129,8 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL, stat = "identity",
   layer <- ggchord_capture_layer_input(layer, data, mapping,
     c("qaccver", "qstart", "qend", "saccver", "sstart", "send",
       "qstrand", "sstrand", "direction"))
+  layer$ggchord_params$fusion_controls <- union(fusion_controls,
+    intersect(c("tip", "tip_length"), names(list(...))))
   if (!is.null(special$stat)) layer <- ggchord_apply_ribbon_stat(layer, special)
   layer
 }

@@ -1,5 +1,5 @@
 {
-  "source_sha256": "4417bfddb21c7499de0c08a32e5d1a724de9b675a3e2d202b7fe0463b197cfe0",
+  "source_sha256": "fcc89de34eff6397ff95fff5c98c526f7e8922f467d222f392c7dd1eee758c20",
   "blocks": {
     "0": {
       "source_sha256": "8d23103772c0ba0289cdc1584503ebd625d3252c8d898ec758dfb5ae902df91d",
@@ -22,9 +22,9 @@
       "translation": "## 读图 {#reading}\n"
     },
     "7": {
-      "source_sha256": "8bbc56e635fa38776485d6f18cdab026a98ac9f0d3b650824d670397c8c7c1bf",
+      "source_sha256": "a18511c976a01147f4caffc6726bc970f2242066ccfc5090dd796798b472b4b7",
       "status": "reviewed",
-      "translation": "先读 A（弦图）、B（共线性）和 C（径向）。跨面板带连接对应区间。D 中的框标出 E 放大的窗口；D 到 E、E 到 F 的虚线指向详图的外框。F 用带描边的方格显示来源碱基，原始坐标标在方格下方。面板内比对的一致性色标与跨面板的对应关系图例分别说明各自的连接。\n"
+      "translation": "先读 A（弦图）、B（共线性）和 C（径向）。跨面板带连接对应区间。D 中的框标出 E 放大的窗口。两个 `fusion_magnify_manual()` 组件分别从 D 连到 E、从 E 连到 F，虚线指向详图外框。F 用带描边的方格显示来源碱基，原始坐标标在方格下方。面板内比对的一致性色标与跨面板的对应关系图例分别说明各自的连接。\n"
     },
     "9": {
       "source_sha256": "de1eb696f2ab1c739faa9f8ef7b26fc480da4593cffdb8c750e451460f700193",

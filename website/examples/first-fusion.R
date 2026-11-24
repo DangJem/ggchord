@@ -7,8 +7,7 @@ reference <- seq_data_example |>
   filter(accver %in% ids)
 hit <- ribbon_data_example |>
   filter(qaccver == ids[1], saccver == ids[2]) |>
-  slice_head(n = 1) |>
-  mutate(qpanel_path = "overview", spanel_path = "detail")
+  slice_head(n = 1)
 
 overview <- ggchord(filter(reference, accver == ids[1])) +
   geom_seq(geometry = "double", thickness = 1.3) +
@@ -31,4 +30,8 @@ detail <- ggchord(reference) +
   theme_ggchord_minimal()
 
 ggchord_fusion(list(overview = overview, detail = detail)) +
-  fusion_ribbon(data = hit, fill = "#269B82", alpha = 0.55)
+  layout_fusion_grid(ncol = 2, gap = 3) +
+  geom_link_ribbon(
+    aes(qpanel_path = "overview", spanel_path = "detail"),
+    data = hit, fill = "#269B82", alpha = 0.55
+  )

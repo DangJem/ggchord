@@ -9,7 +9,11 @@ scale_for(scale, layers = NULL, tracks = NULL, by = "shared")
 \arguments{
 \item{scale}{A ggplot2 visual scale or a continuous track Y scale.}
 
-\item{layers, tracks}{Layer IDs or track IDs. Supply at most one selector.}
+\item{layers}{Layer IDs, or a table with list column \code{panel_path} and
+character column \code{layer_id} in a Fusion. An empty path selects root Links.
+Structured selectors jointly train a visual scale across selected views.}
+
+\item{tracks}{Track IDs. Supply at most one of \code{layers} and \code{tracks}.}
 
 \item{by}{Train a shared domain or one domain per facet panel. The latter
 applies to track Y scales.}

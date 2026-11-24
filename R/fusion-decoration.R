@@ -33,6 +33,13 @@ ggchord_build_fusion <- function(x, on_error = NULL) {
   previous <- .ggchord_render_state$composite_fusion
   .ggchord_render_state$composite_fusion <- TRUE
   on.exit(.ggchord_render_state$composite_fusion <- previous)
+  if (!isTRUE(previous)) {
+    restore <- last_plot()
+    on.exit(set_last_plot(restore), add = TRUE)
+    x <- ggchord_fusion_prepare_sources(x, on_error)
+    x <- ggchord_fusion_train_scales(x, on_error)
+    x <- ggchord_fusion_auto_scales(x, on_error)
+  }
   result <- ggchord_build_decorated_fusion(x, on_error)
   if (!isTRUE(previous) && ggchord_legend_crowded(result$grob)) ggchord_legend_warning()
   result

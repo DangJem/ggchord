@@ -41,10 +41,15 @@ lineage from \code{\link[=data_report]{data_report()}}.
 Export the source, mapped, statistical or rendered stages of a plot
 }
 \details{
-Fusion export records failed panels by path and failed ribbons by
-path and layer ID. It retains the stages and geometry of other panels and
-ribbons. Ribbon tips are returned as decoration geometry separately from
-the source fronts.
+Fusion export records failed views by path and failed root
+components by path and layer ID. Successful siblings retain their data.
+Root Links retain source row identity, resolved facets and instances, and
+measured path coordinates in millimetres. Magnify is a decoration, with
+source correspondence and effective Auto windows in \code{geometry$zoom_regions}.
+Its statistic stage is not applicable. Composition geometry also reports
+guide layout and jointly trained visual scale domains. Character views
+include observed cells and their view paths in \code{geometry$residue_cells}.
+Auto records its requested and measured display levels in \code{geometry$zoom_regions}.
 \code{measurement$status} describes the device used for measurement. With the
 geometry stage, \code{geometry$metrics} reports each panel's measurement status,
 geometry metric status, convergence and number of refinement passes. A

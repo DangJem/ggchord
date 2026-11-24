@@ -92,7 +92,7 @@ def independent_examples(text, localize, preview):
             lines = source[key].splitlines()
             part = '\n'.join(lines[record['start'] - 1:record['end']])
             last_is_plot = record['output'] in plot_objects or record['output'] in {
-                'ggchord', 'ggplot', 'ggchord_fusion', 'magnify_ggchord',
+                'ggchord', 'ggplot', 'ggchord_fusion', 'fusion_magnify_auto', 'fusion_magnify_manual',
                 'make_flagship_fusion', 'view_ggchord', 'ggsave'
             }
             if record['assigned']:

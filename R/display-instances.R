@@ -2,6 +2,27 @@
 # unique private keys, while public data and scales retain biological IDs.
 ggchord_instance_param <- function(value, instances) {
   if (is.null(value) || is.unit(value)) return(value)
+  parent <- attr(instances, "magnify_reference")
+  if (!is.null(parent)) {
+    if (is.list(value) && all(names(value) %in% c("source", "instance"))) {
+      at <- match(instances$source_instance_id, names(value$instance))
+      local <- value$instance[at]
+      names(local) <- instances$instance_id
+      local <- local[!is.na(at)]
+      value <- list(source = value$source[intersect(names(value$source), instances$accver)],
+        instance = local)
+    } else if (length(names(value)) && any(names(value) %in%
+        c(parent$instance_id, parent$accver))) {
+      at <- match(instances$source_instance_id, names(value))
+      remaining <- is.na(at)
+      at[remaining] <- match(instances$accver[remaining], names(value))
+      value <- value[at[!is.na(at)]]
+      names(value) <- instances$instance_id[!is.na(at)]
+    } else if (is.null(names(value)) && length(value) > 1L && length(value) == nrow(parent)) {
+      value <- value[match(instances$source_instance_id, parent$instance_id)]
+      names(value) <- instances$instance_id
+    }
+  }
   if (is.list(value) && all(names(value) %in% c("source", "instance"))) {
     source <- value$source
     local <- value$instance
@@ -52,8 +73,10 @@ ggchord_instance_expand <- function(input, instances, reference = FALSE, locatio
     at <- which(instances$accver == as.character(input$accver[i]))
     selected <- input$instance_id[i] %||% input$display_instance_id[i]
     if (!is.null(selected) && !is.na(selected)) {
-      at <- at[instances$instance_id[at] == selected]
-      if (!length(at)) ggchord_stop("No display instance matches input row ", i)
+      parent <- instances$source_instance_id %||% instances$instance_id
+      at <- at[instances$instance_id[at] == selected | parent[at] == selected]
+      if (!length(at) && is.null(instances$source_instance_id))
+        ggchord_stop("No display instance matches input row ", i)
     }
     if (check_window && "window_start" %in% names(instances)) {
       low <- if (interval) input$start[i] else input$pos[i] %||% input$x[i]
@@ -101,19 +124,23 @@ ggchord_instance_expand <- function(input, instances, reference = FALSE, locatio
   list(data = out, rows = rows)
 }
 
-ggchord_route_instances <- function(input, instances, between, layer_id, mirrored = FALSE, source_rows = seq_len(nrow(input))) {
+ggchord_route_instances <- function(input, instances, between, layer_id, mirrored = FALSE,
+    source_rows = seq_len(nrow(input)), exact_windows = FALSE) {
   if (is.null(input)) return(list(data = NULL, report = data.frame()))
   ggchord_require_columns(input, c("qaccver", "saccver"), "instance routing")
+  parent <- instances$source_instance_id %||% instances$instance_id
   if (!is.null(between)) {
     if (length(between) != 2L || anyNA(between)) ggchord_stop("between needs exactly two display instances")
     if (is.numeric(between)) {
-      if (any(between != floor(between)) || any(!between %in% instances$declared_order)) ggchord_stop("Unknown between index")
-      between <- instances$instance_id[match(between, instances$declared_order)]
+      ordered <- attr(instances, "magnify_reference")$instance_id %||% instances$instance_id
+      if (any(between != floor(between)) || any(!between %in% seq_along(ordered)))
+        ggchord_stop("Unknown between index")
+      between <- ordered[between]
     }
-    if (any(!between %in% instances$instance_id) || anyDuplicated(between)) ggchord_stop("between names unknown or repeated display instances")
+    if ((!exact_windows && any(!between %in% instances$instance_id)) || anyDuplicated(between)) ggchord_stop("between names unknown or repeated display instances")
   }
   report <- list(); out <- input
-  omitted <- logical(nrow(input))
+  omitted <- rep(NA_character_, nrow(input))
   out$qaccver <- as.character(out$qaccver); out$saccver <- as.character(out$saccver)
   for (i in seq_len(nrow(input))) {
     q <- which(instances$accver == as.character(input$qaccver[i]))
@@ -130,17 +157,34 @@ ggchord_route_instances <- function(input, instances, between, layer_id, mirrore
       s <- endpoint(s, "s")
     }
     if (!is.null(input$qinstance) && !is.na(input$qinstance[i]))
-      q <- q[instances$instance_id[q] == input$qinstance[i]]
+      q <- q[instances$instance_id[q] == input$qinstance[i] | parent[q] == input$qinstance[i]]
     if (!is.null(input$sinstance) && !is.na(input$sinstance[i]))
-      s <- s[instances$instance_id[s] == input$sinstance[i]]
+      s <- s[instances$instance_id[s] == input$sinstance[i] | parent[s] == input$sinstance[i]]
     candidates <- expand.grid(q = q, s = s)
     if (!is.null(between)) candidates <- candidates[
-      instances$instance_id[candidates$q] %in% between & instances$instance_id[candidates$s] %in% between, , drop = FALSE]
+      (instances$instance_id[candidates$q] %in% between | parent[candidates$q] %in% between) &
+      (instances$instance_id[candidates$s] %in% between | parent[candidates$s] %in% between), , drop = FALSE]
     if (!is.null(between) && input$qaccver[i] == input$saccver[i])
-      candidates <- candidates[instances$instance_id[candidates$q] == between[1], , drop=FALSE]
+      candidates <- candidates[instances$instance_id[candidates$q] == between[1] |
+        parent[candidates$q] == between[1], , drop = FALSE]
+    if (exact_windows && nrow(candidates) && all(c("qstart", "qend", "sstart", "send") %in% names(input))) {
+      full <- function(at, side) {
+        ends <- c(input[[paste0(side, "start")]][i], input[[paste0(side, "end")]][i])
+        min(ends) >= instances$window_start[at] & max(ends) <= instances$window_end[at]
+      }
+      candidates <- candidates[which(full(candidates$q, "q") & full(candidates$s, "s")), , drop = FALSE]
+      if (!nrow(candidates)) {
+        omitted[i] <- "partial_hsp_no_exact_mapping"
+        next
+      }
+    }
+    if (exact_windows && !nrow(candidates)) {
+      omitted[i] <- "endpoint_not_displayed"
+      next
+    }
     if (!nrow(candidates) && "window_start" %in% names(instances) &&
         is.null(between) && is.null(input$qinstance) && is.null(input$sinstance)) {
-      omitted[i] <- TRUE
+      omitted[i] <- "endpoint_not_displayed"
       next
     }
     if (nrow(candidates) != 1L) ggchord_stop("HSP row ", i,
@@ -157,7 +201,7 @@ ggchord_route_instances <- function(input, instances, between, layer_id, mirrore
       }
     }
     stable <- "source_hsp_id" %in% names(input)
-    source_id <- if (stable) as.character(input$source_hsp_id[i]) else paste0(layer_id, ":source:", i)
+    source_id <- if (stable) as.character(input$source_hsp_id[i]) else paste0(layer_id, ":source:", source_rows[i])
     if (is.na(source_id) || !nzchar(source_id)) ggchord_stop("source_hsp_id must be nonempty when supplied")
     report[[i]] <- data.frame(layer_id = layer_id, input_row = source_rows[i],
       source_hsp_id = source_id, source_scope = if (stable) "declared" else "layer",
@@ -166,7 +210,12 @@ ggchord_route_instances <- function(input, instances, between, layer_id, mirrore
       q_instance = instances$instance_id[qi], s_instance = instances$instance_id[si],
       repeated_display = FALSE, stringsAsFactors = FALSE)
   }
-  list(data = out[!omitted, , drop = FALSE], rows = which(!omitted),
+  keep <- is.na(omitted)
+  dropped <- which(!keep)
+  list(data = out[keep, , drop = FALSE], rows = which(keep),
+    omissions = data.frame(layer_id = rep(layer_id, length(dropped)),
+      input_row = source_rows[dropped], reason = omitted[dropped],
+      qaccver = as.character(input$qaccver[dropped]), saccver = as.character(input$saccver[dropped])),
     report = ggchord_rbind_fill(report) %||% data.frame())
 }
 
@@ -255,6 +304,11 @@ ggchord_prepare_instances <- function(plot, seqs) {
   side <- if (mirrored) rep(c("left", "right"), each = length(ids) / 2L) else rep(NA_character_, length(ids))
   instances <- data.frame(instance_id = ids, accver = refs,
     declared_order = seq_along(ids), key = ids, side = side, stringsAsFactors = FALSE)
+  derivation <- plot$ggchord$magnify_instances
+  if (!is.null(derivation)) {
+    instances$source_instance_id <- derivation$pred[match(instances$instance_id, derivation$instance_id)]
+    attr(instances, "magnify_reference") <- plot$ggchord$magnify_reference
+  }
   original <- plot$ggchord$data
   virtual <- seqs[match(instances$accver, seqs$accver), , drop = FALSE]
   if (!is.null(windows)) {
@@ -310,7 +364,10 @@ ggchord_prepare_instances <- function(plot, seqs) {
           retain(key(input$qaccver,input$saccver) %in% key(p$pairs$qaccver,p$pairs$saccver),"pair_not_selected")
         }
       }
-      routed <- ggchord_route_instances(input, instances, p$between, layer$ggchord_layer_id, mirrored,input_rows)
+      routed <- ggchord_route_instances(input, instances, p$between, layer$ggchord_layer_id,
+        mirrored, input_rows, exact_windows = !is.null(derivation))
+      if (!is.null(derivation) && NROW(routed$omissions))
+        omissions[[length(omissions) + 1L]] <- routed$omissions
       input <- routed$data
       if (!is.null(routed$rows)) input_rows <- input_rows[routed$rows]
       p$visual_source <- ggchord_visual_rows(p$visual_source, input_rows)
@@ -366,7 +423,7 @@ ggchord_prepare_instances <- function(plot, seqs) {
     p$reference_ids <- NULL  # validated before replacing accessions with instance keys
     p$reference <- NULL
     layer$ggchord_input_transform <- NULL
-    p$source_stat <- NULL
+    p["source_stat"] <- list(NULL)
     for (role in intersect(layer$ggchord_role_aes, names(layer$ggchord_input_mapping)))
       layer$ggchord_input_mapping[[role]] <- new_quosure(sym(role), emptyenv())
     for (field in intersect(names(p), numeric_fields)) p[[field]] <- ggchord_instance_param(p[[field]], instances)

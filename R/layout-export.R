@@ -11,10 +11,15 @@
 #'   and provenance information, diagnostics and measurement conditions.
 #'   When the source stage is requested, provenance includes available
 #'   lineage from [data_report()].
-#' @details Fusion export records failed panels by path and failed ribbons by
-#' path and layer ID. It retains the stages and geometry of other panels and
-#' ribbons. Ribbon tips are returned as decoration geometry separately from
-#' the source fronts.
+#' @details Fusion export records failed views by path and failed root
+#' components by path and layer ID. Successful siblings retain their data.
+#' Root Links retain source row identity, resolved facets and instances, and
+#' measured path coordinates in millimetres. Magnify is a decoration, with
+#' source correspondence and effective Auto windows in `geometry$zoom_regions`.
+#' Its statistic stage is not applicable. Composition geometry also reports
+#' guide layout and jointly trained visual scale domains. Character views
+#' include observed cells and their view paths in `geometry$residue_cells`.
+#' Auto records its requested and measured display levels in `geometry$zoom_regions`.
 #' `measurement$status` describes the device used for measurement. With the
 #' geometry stage, `geometry$metrics` reports each panel's measurement status,
 #' geometry metric status, convergence and number of refinement passes. A
@@ -84,7 +89,9 @@ export_ggchord_layout <- function(plot, layers = NULL, stages = "geometry",
   diagnostic <- data.frame()
   results <- NULL
   geometry <- list(layers = list(), panels = data.frame(), fronts = data.frame(),
-    paths = data.frame(), text = data.frame(), zoom_regions = data.frame(), zoom_paths = data.frame())
+    paths = data.frame(), text = data.frame(), connections = data.frame(),
+    zoom_regions = data.frame(), zoom_paths = data.frame(), residue_cells = data.frame(),
+    composition = NULL)
   if ("source" %in% stages)
     for (entry in entries) ggchord_output_capture_source(entry)
   if (need_build) {
@@ -108,8 +115,9 @@ export_ggchord_layout <- function(plot, layers = NULL, stages = "geometry",
     if (!is.null(results$fusion)) {
       fusion <- results$fusion$export
       for (field in intersect(names(geometry), names(fusion))) geometry[[field]] <- fusion[[field]]
+      geometry$composition <- fusion$metadata
       if (!is.null(selections)) {
-        for (field in c("fronts", "paths", "zoom_regions", "zoom_paths")) {
+        for (field in c("connections", "fronts", "paths", "zoom_regions", "zoom_paths")) {
           d <- geometry[[field]]
           if (!nrow(d)) next
           keep <- vapply(seq_len(nrow(d)), function(row)
@@ -309,15 +317,14 @@ ggchord_output_prepare <- function(plot, path, stages, catalogue) {
         c(path, ggchord_fusion_path_ids(key)), stages, catalogue)
     for (layer in plot$ribbons) {
       capture <- fresh_capture()
-      record(layer$id, "fusion_ribbon", capture, local({ value <- layer$data; function() value }))
+      record(layer$id, paste0("fusion_", layer$kind), capture, local({ value <- layer$data; function() value }))
       plot$ribbons[[layer$id]]$capture <- capture
     }
     for (layer in plot$zooms) {
       capture <- fresh_capture()
-      source <- layer$region
-      source$component_type <- rep("decoration", nrow(source))
-      source$from_panel_path <- rep(list(layer$from), nrow(source))
-      source$to_panel_path <- rep(list(layer$to), nrow(source))
+      source <- ggchord_magnify_source(layer)
+      if (identical(layer$mode, "auto")) capture$mapped <- source
+      capture$not_applicable <- "statistic"
       record(layer$id, "fusion_zoom", capture, local({ value <- source; function() value }))
       plot$zooms[[layer$id]]$capture <- capture
     }
@@ -465,8 +472,8 @@ ggchord_output_composition_key <- function(path) {
 ggchord_output_attach_geometry <- function(entries, results) {
   for (entry in entries) {
     capture <- entry$capture
-    if (entry$type %in% c("fusion_ribbon", "fusion_zoom")) {
-      tables <- if (entry$type == "fusion_ribbon") c("connections", "fronts", "paths") else
+    if (entry$type %in% c("fusion_ribbon", "fusion_link", "fusion_zoom")) {
+      tables <- if (entry$type != "fusion_zoom") c("connections", "fronts", "paths") else
         c("zoom_regions", "zoom_paths")
       key <- ggchord_output_composition_key(entry$panel_path)
       capture$geometry <- setNames(lapply(tables, function(table) {
@@ -485,6 +492,10 @@ ggchord_output_attach_geometry <- function(entries, results) {
     built <- leaf$built
     ids <- vapply(built$plot$layers, function(layer) layer$ggchord_layer_id %||% "", character(1))
     hit <- which(ids == entry$layer_id)
+    if (!length(hit) && isTRUE(leaf$layout$character)) {
+      capture$geometry_unavailable <- "view_selected_residue"
+      next
+    }
     if (length(hit)) {
       capture$text <- ggchord_rbind_fill(lapply(hit, function(i) {
         d <- built$data[[i]]
@@ -583,6 +594,11 @@ ggchord_output_stage_status <- function(entry, stages, request, build_failure) {
     capture[[paste0(stage, "_error")]] %||% if (is.null(capture[[stage]]) && stage != "source") build_failure
   }
   rows <- lapply(stages, function(stage) {
+    if (stage %in% capture$not_applicable)
+      return(data.frame(stage = stage, status = "not_applicable", reason = "decoration"))
+    unavailable <- capture[[paste0(stage, "_unavailable")]]
+    if (!is.null(unavailable))
+      return(data.frame(stage = stage, status = "unavailable", reason = unavailable))
     problem <- issue(stage)
     if (identical(problem, "missing_dimensions"))
       return(data.frame(stage = stage, status = "unavailable", reason = problem))

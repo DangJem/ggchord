@@ -116,19 +116,14 @@ ggchord(ref) +
 
 ## Combine views of a source interval {#fusion-start}
 
-Fusion arranges independent plots by name. A zoom layer marks that two panels display the same source interval. Use fusion_ribbon() to show an observed relationship with explicit source endpoints.
+Fusion arranges independent plots by view ID. Use `geom_link_ribbon()` or `geom_link_line()` for observed relationships. Auto magnification derives a display window from the original observations. Use Manual when a detail plot is already prepared. Use `level = "feature"` for an annotation window or `level = "residue"` for true characters. The default measures the available panel before choosing. Explicit residue detail requires a reference with characters or a registered character plot.
 
 ```{r workflow-7}
 ref <- data.frame(accver = "A", length = 1000)
 region <- data.frame(accver = "A", start = 200, end = 500)
 
 overview <- ggchord(ref) + geom_seq() + coord_circular()
-detail <- ggchord(ref) + geom_seq() +
-  layout_sequences(windows = transform(region, instance_id = "detail")) +
-  coord_collinear()
-
-combined <- ggchord_fusion(list(overview = overview, detail = detail)) +
-  fusion_zoom("overview", "detail", region)
+combined <- fusion_magnify_auto(overview, region, expand = 50)
 combined
 ```
 

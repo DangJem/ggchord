@@ -67,6 +67,15 @@ A ggplot2 layer for addition to a plot.
 Draw interval-to-interval links
 }
 \details{
+On a Fusion root, provide a relationship data frame and use
+\code{qpanel_path} and \code{spanel_path}, \code{qinstance} and \code{sinstance}, and
+\code{qfacet} and \code{sfacet} as optional endpoint roles in the data or in \code{aes()}.
+Facets are named lists of facet values. Paths can be single IDs or list
+columns of character vectors. Omitted selectors must resolve uniquely.
+Fusion uses identity Stat and Position, straight or curved routes, and
+native visual scales. Endpoints are projected on the actual backbone
+without an additional gap or obstacle routing.
+
 Source references are \code{qaccver} and \code{saccver}. Point links consume \code{qpos} and \code{spos}. Interval links and alignment segments consume closed interval endpoints on both references. Supply reliable \code{qstrand} and \code{sstrand} or explicit relative direction when the geometry requires it.
 Ribbons retain same-reference and non-neighbouring relationships. A
 same-row linear ribbon needs a curved route. A shared route retains

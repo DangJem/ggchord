@@ -1071,5 +1071,20 @@
     "parameter-inherit.aes": "reference/geom_feature_label.html#geom_site_label-parameter-inherit.aes",
     "arg-id": "reference/geom_feature_label.html#geom_site_label-arg-id",
     "parameter-id": "reference/geom_feature_label.html#geom_site_label-parameter-id"
+  },
+  "reference/fusion_ribbon.html": {
+    "": "reference/geom_link_ribbon.html#api-geom_link_ribbon",
+    "api-fusion_ribbon": "reference/geom_link_ribbon.html#api-geom_link_ribbon",
+    "ref-examples": "reference/geom_link_ribbon.html#example-geom_link_ribbon"
+  },
+  "reference/fusion_zoom.html": {
+    "": "reference/fusion_magnify_auto.html#api-fusion_magnify_manual",
+    "api-fusion_zoom": "reference/fusion_magnify_auto.html#api-fusion_magnify_manual",
+    "ref-examples": "reference/fusion_magnify_auto.html#fusion_magnify_manual-ref-examples"
+  },
+  "reference/magnify_ggchord.html": {
+    "": "reference/fusion_magnify_auto.html#api-fusion_magnify_manual",
+    "api-magnify_ggchord": "reference/fusion_magnify_auto.html#api-fusion_magnify_manual",
+    "ref-examples": "reference/fusion_magnify_auto.html#fusion_magnify_manual-ref-examples"
   }
 }

@@ -6,6 +6,9 @@
 
 | 原调用或设置 | v0.50.0 替代写法 |
 | --- | --- |
+| `fusion_ribbon(mapping, data, ...)` | 在 Fusion 根部使用 `geom_link_ribbon(mapping, data, ...)`。通过映射或关系表提供 `qpanel_path` 和 `spanel_path`。 |
+| `fusion_zoom(from, to, region, ...)` | 使用 `fusion_magnify_manual(from = from, to = to, region = region, ...)` 连接两个已登记的叶视图。 |
+| `magnify_ggchord(overview, detail, region)` | 两图均已准备时使用 `fusion_magnify_manual(overview, detail, region)`。需要派生详图时使用 `fusion_magnify_auto(overview, region)`。 |
 | `shape = "primer_arc"` 或形状标度值 `"primer_arc"` | 在图层、`shape_feature()` 或标度中改用 `"arrow_arc"`。`geom_primer()` 默认使用改名后的形状。旧名称在 v0.50.0 移除。 |
 | `shape = "compact_arrow"`、`"promoter_arrow"` 或 `"primer_arrow"` | 用 `shape = shape_feature("arrow", head_length = 1)` 绘制短头箭头。映射形状时，把同一规格作为 `scale_shape_manual()` 的映射值。旧名称在 v0.50.0 移除。 |
 | `head_style = "shouldered"`、`"flush"` 或 `"triangle"` | 分别使用 `shape = "arrow"`、`"arrow_flush"` 或 `"arrow_triangle"`。显式 `geom_gene(shape = "arrow")` 现在使用带肩箭头。如需沿用旧轮廓，请用 `"arrow_flush"`。 |

@@ -65,7 +65,7 @@ The original 32 HSPs use colour for reported identity and line width for reporte
 
 <a href="man/figures/flagfusion.png"><img src="man/figures/flagfusion.png" alt="Six panels connect genome comparisons to an enlarged nucleotide alignment" width="460"></a>
 
-Three views of the same relationships lead into a source interval, an alignment window and a detail showing the individual bases.
+Three views of the same relationships lead into a source interval, an alignment window and a detail showing individual bases. Use Auto Magnify to derive a detail window, or use Manual Magnify to connect a prepared character view.
 
 [Complete example](examples/make_readme_plots.R)
 

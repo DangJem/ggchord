@@ -385,7 +385,10 @@ ggchord_infer_visual_scales <- function(plot, layout, scales) {
 #' that share a guide without a verified category use separate slots within it.
 #'
 #' @param scale A ggplot2 visual scale or a continuous track Y scale.
-#' @param layers,tracks Layer IDs or track IDs. Supply at most one selector.
+#' @param layers Layer IDs, or a table with list column `panel_path` and
+#'   character column `layer_id` in a Fusion. An empty path selects root Links.
+#'   Structured selectors jointly train a visual scale across selected views.
+#' @param tracks Track IDs. Supply at most one of `layers` and `tracks`.
 #' @param by Train a shared domain or one domain per facet panel. The latter
 #'   applies to track Y scales.
 #' @return A scale declaration for a ggchord plot or a Fusion root.
@@ -433,7 +436,9 @@ scale_for <- function(scale, layers = NULL, tracks = NULL, by = "shared") {
     ggchord_stop("scale_for(): supply a ggplot2 scale, for example scale_for(scale_fill_discrete(), layers = 'a')")
   if (!is.null(layers) && !is.null(tracks))
     ggchord_stop("scale_for(): supply either layers or tracks")
-  if (!is.null(layers)) ggchord_id_vector(layers, "layers")
+  if (is.data.frame(layers)) {
+    ggchord_output_selection(layers, "scale_for()")
+  } else if (!is.null(layers)) ggchord_id_vector(layers, "layers")
   if (!is.null(tracks)) ggchord_id_vector(tracks, "tracks")
   by <- ggchord_match_choice(by, c("shared", "panel"), "by")
   y <- "y" %in% scale$aesthetics

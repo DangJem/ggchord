@@ -64,12 +64,24 @@ ggchord_fusion_nested_export <- function(value, parent, offset) {
       paste0(parent, "/", data$composition_id))
     data
   }
+  if (!is.null(parent)) {
+    prefix_path <- ggchord_fusion_path_ids(parent)
+    value$metadata$shared_scales <- lapply(value$metadata$shared_scales, function(scale) {
+      scale$panel_path <- c(prefix_path, scale$panel_path)
+      scale$targets <- lapply(scale$targets, function(target) {
+        target$panel_path <- c(prefix_path, target$panel_path)
+        target
+      })
+      scale
+    })
+  }
   value$connections <- scope(prepend(prefix(value$connections, c("qpanel", "spanel")),
     c("qpanel_path", "spanel_path")))
   for (name in c("fronts", "paths", "zoom_paths")) {
     value[[name]] <- ggchord_fusion_translate_table(value[[name]], offset, c("x", "xend"), c("y", "yend"))
     value[[name]] <- scope(prefix(value[[name]], "panel_id"))
   }
+  value$residue_cells <- prepend(prefix(value$residue_cells, "panel_id"), "panel_path")
   value$zoom_regions <- scope(prepend(value$zoom_regions, c("from_panel_path", "to_panel_path")))
   value$overlaps <- prefix(ggchord_fusion_translate_table(value$overlaps, offset,
     c("xmin", "xmax"), c("ymin", "ymax")), c("under", "over"))
