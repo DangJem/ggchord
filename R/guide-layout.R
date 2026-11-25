@@ -132,12 +132,26 @@ ggchord_guide_joint_layout <- function(built, source, evaluate = NULL, positions
   if (!is.null(positions)) candidates <- lapply(candidates, function(items)
     Filter(function(item) item$position %in% positions, items))
   if (any(lengths(candidates)==0L)) return(list(built=built,report=list(status="unmeasurable_guide")))
-  score <- function(choices) {
+  # Keep all finalist drawing hooks for guides that supply their own layout.
+  native_guides <- all(vapply(candidates, function(items) items[[1L]]$known, logical(1)))
+  # The same candidate can occupy a side alone in many joint layouts.
+  # Its packaged size is specific to this theme, viewport and search.
+  single_sizes <- if (native_guides && length(guides) > 1L)
+    lapply(candidates, function(items) vector("list", length(items)))
+  score <- function(choices, index) {
     sizes <- matrix(0,4,2,dimnames=list(c("left","right","top","bottom"),c("width","height")))
+    sides <- vapply(choices, `[[`, character(1), "position")
     for (side in rownames(sizes)) {
-      group <- Filter(function(x) x$position==side,choices)
-      if (length(group)) sizes[side,] <- ggchord_guide_size(collection$package_box(
-        lapply(group,`[[`,"grob"),side,theme))
+      rows <- which(sides == side)
+      if (!length(rows)) next
+      single <- length(rows) == 1L && !is.null(single_sizes)
+      size <- if (single) single_sizes[[rows]][[index[rows]]]
+      if (is.null(size)) {
+        size <- ggchord_guide_size(collection$package_box(
+          lapply(choices[rows], `[[`, "grob"), side, theme))
+        if (single) single_sizes[[rows]][[index[rows]]] <<- size
+      }
+      sizes[side, ] <- size
     }
     remaining <- canvas-c(sum(sizes[c("left","right"),"width"]),sum(sizes[c("top","bottom"),"height"]))
     overflow <- sum(pmax(sizes[,1]/canvas[1]-1,0))+sum(pmax(sizes[,2]/canvas[2]-1,0))+
@@ -155,13 +169,18 @@ ggchord_guide_joint_layout <- function(built, source, evaluate = NULL, positions
     next_beam <- list()
     for (state in beam) for (j in seq_along(candidates[[i]])) {
       chosen <- c(state$choices,list(candidates[[i]][[j]]))
-      evaluation <- score(chosen)
-      next_beam[[length(next_beam)+1L]] <- list(choices=chosen,index=c(state$index,j),score=evaluation$score)
+      index <- c(state$index, j)
+      evaluation <- score(chosen, index)
+      next_beam[[length(next_beam)+1L]] <- list(choices=chosen,index=index,score=evaluation$score)
     }
     ordering <- order(vapply(next_beam,`[[`,numeric(1),"score"))
     beam <- next_beam[head(ordering,16L)]
   }
-  finalists <- lapply(head(beam,4L),function(state) {
+  winner <- NULL
+  for (state in head(beam, 4L)) {
+    # The beam is sorted. Measurement can only add a penalty, and ties
+    # belong to the earlier state, as in which.min().
+    if (native_guides && !is.null(winner) && state$score >= winner$score) break
     trial <- built
     trial$plot$guides <- ggproto(NULL,collection)
     trial$plot$guides$guides <- guides
@@ -169,12 +188,14 @@ ggchord_guide_joint_layout <- function(built, source, evaluate = NULL, positions
     table <- ggchord_base_gtable(trial)
     bounds <- ggchord_guide_bounds(table,canvas)
     panel <- ggchord_panel_context(table,trial)
-    evaluation <- score(state$choices)
+    evaluation <- score(state$choices, state$index)
     feasible <- evaluation$budget_ok && !any(bounds$overflow) && identical(panel$status,"measured")
-    list(built=trial,table=table,choices=state$choices,index=state$index,bounds=bounds,
-      feasible=feasible,score=state$score+if(feasible) 0 else 1e6)
-  })
-  winner <- finalists[[which.min(vapply(finalists,`[[`,numeric(1),"score"))]]
+    final_score <- state$score + if (feasible) 0 else 1e6
+    if (is.null(winner) || final_score < winner$score) {
+      winner <- list(built=trial,table=table,choices=state$choices,index=state$index,
+        bounds=bounds,feasible=feasible,score=final_score)
+    }
+  }
   rows <- lapply(seq_along(winner$choices),function(i) {
     choice <- winner$choices[[i]]; p <- choice$params
     discrete <- choice$known && !inherits(guides[[i]], "GuideColourbar")

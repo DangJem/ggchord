@@ -1,5 +1,9 @@
 # ggchord 0.50.0 (development)
 
+- `render_policy(mode = "adaptive")` reuses the measured size of a native
+  legend placed alone on one side while comparing multi-legend layouts.
+  It stops rendering finalists once later layouts cannot improve the result.
+
 - Point tracks project observations in batches on each reference. Dense
   circular maps batch collision checks for perimeter labels. Fusion compares
   legend artwork only for guides with matching placement and meaning.
