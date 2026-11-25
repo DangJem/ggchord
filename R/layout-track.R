@@ -425,7 +425,15 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
         group = group, source_row = rep_len(source, nrow(xy)), accver = unname(seq),
         track_id = id, label = NA_character_, .component = component, stringsAsFactors = FALSE)
     }
-    if (!is.null(p$native_geom) && p$track_kind != "tile") {
+    if (identical(p$native_geom, "point")) {
+      heights <- mapped
+      if (!is.null(ggchord_track_y_scale(plot, id)) || !is.null(shared[[id]])) {
+        # A user scale callback can depend on how many values it receives.
+        heights <- vapply(d$track_value, function(value)
+          ggchord_track_fraction(sc, suppressWarnings(sc$transform(value))), numeric(1))
+      }
+      geometry <- list(ggchord_track_points(d, p, layout, at_value, heights))
+    } else if (!is.null(p$native_geom) && p$track_kind != "tile") {
       draw_data <- d
       draw_rows <- seq_len(nrow(d))
       if (p$track_kind == "bar" && p$bounds == "clip") {

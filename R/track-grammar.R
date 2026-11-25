@@ -1253,6 +1253,29 @@ ggchord_track_bin_stat <- function(stat) {
     })
 }
 
+# Project all points on a backbone together, writing their coordinates back
+# in input order so overplotting, group IDs and source rows stay aligned.
+ggchord_track_points <- function(d, p, layout, at_value, heights) {
+  rows <- unname(which(is.finite(d$pos) & is.finite(heights)))
+  if (!length(rows)) return(ggchord_empty_track_geometry())
+  heights <- heights[rows]
+  if (any(heights < 0 | heights > 1))
+    ggchord_stop("Track values extend outside their physical band")
+  pos <- d$pos[rows]
+  accver <- d$accver[rows]
+  sequence_length <- unname(layout$sequence_reference$lens[accver])
+  if (any(pos < 0 | pos > sequence_length)) {
+    if (p$bounds == "error")
+      ggchord_stop("Track source geometry outside sequence boundaries; set bounds='clip' or adjust width")
+    pos <- pmax(0, pmin(pos, sequence_length))
+  }
+  xy <- matrix(NA_real_, nrow = length(rows), ncol = 2L)
+  for (at in split(seq_along(rows), accver))
+    xy[at, ] <- at_value(pos[at], accver[at[1L]], heights[at])
+  data.frame(x = xy[, 1L], y = xy[, 2L], group = seq_along(rows), source_row = rows,
+    accver = accver, track_id = p$track_id, label = NA_character_, .component = "track_point")
+}
+
 ggchord_track_native_geometry <- function(d, p, layout, sc, at_value, draw_rows) {
   pieces <- list(); group <- 0L
   map_value <- function(x) ggchord_track_fraction(sc, suppressWarnings(sc$transform(x)))
@@ -1334,8 +1357,9 @@ ggchord_track_native_geometry <- function(d, p, layout, sc, at_value, draw_rows)
       }
     }
   } else for (i in draw_rows) {
-    if (geom %in% c("point", "text")) add(d$pos[i], d$track_value[i], i,
-      if (geom == "point") "track_point" else "track_text") else if (geom %in% c("bar", "col", "rect", "tile")) {
+    if (geom == "text") {
+      add(d$pos[i], d$track_value[i], i, "track_text")
+    } else if (geom %in% c("bar", "col", "rect", "tile")) {
       n <- if (isTRUE(layout$collinear)) 2L else 32L
       pos <- seq(d$start[i], d$end[i], length.out = n)
       add(c(pos, rev(pos)), c(rep(d$track_ymin[i],n),rep(d$track_ymax[i],n)), i, "track_poly")

@@ -238,24 +238,45 @@ ggchord_perimeter_pair_blocked <- function(a, b, gap) {
     ggchord_perimeter_line_hits_box(bx, by, sx, sy, a)
 }
 
-# Test the original 101 ordered heights as vectors, retaining the first legal
-# slot. Compare only with obstacles already fixed at this point in the search.
+# Keep only the numeric geometry used for collision checks when a staircase
+# appends its next fixed obstacle.
+ggchord_perimeter_obstacles <- function(tasks, rows) {
+  tasks[rows, c("root_x", "root_y", "route_x", "route_y", "edge_x", "edge_y",
+    "target_x", "target_y", "w", "h"), drop = FALSE]
+}
+
+# All the trial heights share the same horizontal extent. Only obstacles
+# whose leader or label box enters that extent need the exact pair test.
+ggchord_perimeter_free_heights <- function(trial, gap, obstacles) {
+  left <- min(trial$root_x, trial$route_x, trial$edge_x,
+    trial$target_x - trial$w / 2, na.rm = TRUE)
+  right <- max(trial$root_x, trial$route_x, trial$edge_x,
+    trial$target_x + trial$w / 2, na.rm = TRUE)
+  margin <- gap + sqrt(.Machine$double.eps) * max(1, abs(left), abs(right))
+  near <- pmax(obstacles$root_x, obstacles$route_x, obstacles$edge_x,
+    obstacles$target_x + obstacles$w / 2, na.rm = TRUE) >= left - margin &
+    pmin(obstacles$root_x, obstacles$route_x, obstacles$edge_x,
+      obstacles$target_x - obstacles$w / 2, na.rm = TRUE) <= right + margin
+  fixed <- which(near)
+  n <- length(trial$edge_y)
+  if (!length(fixed)) return(rep(TRUE, n))
+  trial$edge_y <- rep(trial$edge_y, each = length(fixed))
+  trial$target_y <- rep(trial$target_y, each = length(fixed))
+  other <- lapply(obstacles, `[`, rep(fixed, times = n))
+  blocked <- ggchord_perimeter_pair_blocked(trial, other, gap)
+  colSums(matrix(blocked, nrow = length(fixed))) == 0
+}
+
 ggchord_perimeter_first_step <- function(row, x, start_y, step, direction, gap, obstacles) {
+  row$edge_x <- x
+  row$target_x <- x + direction * row$w / 2
   trial <- as.list(row)
-  trial$edge_x <- x
-  trial$target_x <- x + direction * row$w / 2
   trial$edge_y <- start_y + (0:100) * step
   trial$target_y <- trial$edge_y + row$h / 2
-  for (other in obstacles) {
-    free <- !ggchord_perimeter_pair_blocked(trial, other, gap)
-    if (!any(free)) return(NULL)
-    trial$edge_y <- trial$edge_y[free]
-    trial$target_y <- trial$target_y[free]
-  }
-  row$edge_x <- x
-  row$target_x <- trial$target_x
-  row$edge_y <- trial$edge_y[1L]
-  row$target_y <- trial$target_y[1L]
+  free <- which(ggchord_perimeter_free_heights(trial, gap, obstacles))
+  if (!length(free)) return(NULL)
+  row$edge_y <- trial$edge_y[free[1L]]
+  row$target_y <- trial$target_y[free[1L]]
   row
 }
 
@@ -279,7 +300,7 @@ ggchord_perimeter_top_steps <- function(tasks, rows, side_rows,
   )
   base <- max(backbone_outer + .13,
     max(tasks$root_y[rows], na.rm = TRUE) + .07)
-  side <- lapply(side_rows, function(j) as.list(tasks[j, , drop = FALSE]))
+  obstacles <- ggchord_perimeter_obstacles(tasks, side_rows)
   placed <- list()
   fan_gap <- min(gap, .004)
   for (k in seq_along(rows)) {
@@ -290,8 +311,9 @@ ggchord_perimeter_top_steps <- function(tasks, rows, side_rows,
     } else base
     step <- max(.009, .15 * tasks$h[row])
     found <- ggchord_perimeter_first_step(tasks[row, , drop = FALSE], x[k],
-      start_y, step, -1, fan_gap, c(side, placed))
+      start_y, step, -1, fan_gap, obstacles)
     if (is.null(found)) return(NULL)
+    obstacles <- rbind(obstacles, found[names(obstacles)])
     placed[[k]] <- found
   }
   list(rows = rows, selected = placed)
@@ -315,8 +337,9 @@ ggchord_perimeter_top_staircase <- function(tasks, rows, side_rows,
   base <- max(backbone_outer + .13,
     max(tasks$route_y[rows]) + .06)
   fan_gap <- min(gap, .004)
-  side <- lapply(side_rows, function(j) as.list(tasks[j, , drop = FALSE]))
+  side <- ggchord_perimeter_obstacles(tasks, side_rows)
   solve_split <- function(split) {
+    obstacles <- side
     branches <- list(rows[seq_len(split)],
       rev(rows[seq.int(split + 1L, length(rows))]))
     placed <- list()
@@ -338,8 +361,9 @@ ggchord_perimeter_top_staircase <- function(tasks, rows, side_rows,
           previous$target_y + previous$h / 2 + fan_gap
         step <- max(.009, .15 * tasks$h[row])
         found <- ggchord_perimeter_first_step(tasks[row, , drop = FALSE], x[k],
-          start_y, step, direction, fan_gap, c(side, placed))
+          start_y, step, direction, fan_gap, obstacles)
         if (is.null(found)) return(NULL)
+        obstacles <- rbind(obstacles, found[names(obstacles)])
         placed[[length(placed) + 1L]] <- found
         selected_rows <- c(selected_rows, row)
         previous <- found
@@ -394,21 +418,18 @@ ggchord_perimeter_top_fan <- function(tasks, rows, side_rows,
   level_count <- length(levels)
   fan_gap <- min(gap, .004)
   best <- NULL
-  side_tasks <- lapply(side_rows, function(j) as.list(tasks[j, , drop = FALSE]))
+  obstacles <- ggchord_perimeter_obstacles(tasks, side_rows)
   for (base_offset in c(0, step, 2 * step)) {
     candidates <- lapply(seq_len(n), function(k) {
       candidate <- as.list(tasks[rows[k], , drop = FALSE])
       candidate$target_x <- candidate$edge_x <- x[k]
       candidate$edge_y <- base + base_offset + levels * step
       candidate$target_y <- candidate$edge_y + candidate$h / 2
-      lapply(candidate, rep_len, length.out = level_count)
+      candidate
     })
-    allowed <- lapply(candidates, function(options) {
-      free <- rep(TRUE, level_count)
-      for (side in side_tasks)
-        free <- free & !ggchord_perimeter_pair_blocked(options, side, fan_gap)
-      free
-    })
+    allowed <- lapply(candidates, ggchord_perimeter_free_heights, gap = fan_gap,
+      obstacles = obstacles)
+    candidates <- lapply(candidates, lapply, rep_len, length.out = level_count)
     blocked <- vector("list", n)
     for (k in seq_len(n)) {
       blocked[[k]] <- vector("list", k - 1L)

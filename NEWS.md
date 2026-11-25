@@ -1,5 +1,10 @@
 # ggchord 0.50.0 (development)
 
+- Point tracks project observations in batches on each reference. Dense
+  circular maps batch collision checks for perimeter labels. Fusion compares
+  legend artwork only for guides with matching placement and meaning.
+  Long runs of adjacent alignments use less memory in `merge_ggchord_links()`.
+
 - Fusion resolves grid or rectangular layouts after all views have been
   registered. Add a layout with `+` and use `geom_link_line()` or
   `geom_link_ribbon()` for relationships across views. Endpoint selectors

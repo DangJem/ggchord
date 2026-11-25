@@ -532,16 +532,22 @@ ggchord_fusion_shared_guides <- function(styles, boxes, x, canvas) {
       box
     })
   }
-  unique_boxes <- list(); signatures <- list()
-  for (box in boxes) {
-    signature <- list(semantics = box$semantics, appearance = ggchord_fusion_guide_signature(box$grob))
-    duplicate <- which(vapply(seq_along(signatures), function(i)
-      identical(unique_boxes[[i]]$side,box$side) && identical(signatures[[i]],signature), logical(1)))
-    if (!length(duplicate)) {
-      unique_boxes[[length(unique_boxes)+1L]] <- box
-      signatures[[length(signatures)+1L]] <- signature
-    }
+  # Only same-side guides with the same meaning need a graphical comparison.
+  signatures <- vector("list", length(boxes))
+  appearance <- function(i) {
+    if (is.null(signatures[[i]]))
+      signatures[[i]] <<- ggchord_fusion_guide_signature(boxes[[i]]$grob)
+    signatures[[i]]
   }
+  keep <- integer()
+  for (i in seq_along(boxes)) {
+    duplicate <- any(vapply(keep, function(j)
+      identical(boxes[[j]]$side, boxes[[i]]$side) &&
+        identical(boxes[[j]]$semantics, boxes[[i]]$semantics) &&
+        identical(appearance(j), appearance(i)), logical(1)))
+    if (!duplicate) keep <- c(keep, i)
+  }
+  unique_boxes <- boxes[keep]
   for (side in unique(vapply(unique_boxes,`[[`,"","side"))) {
     items <- Filter(function(b) b$side==side,unique_boxes)
     native <- styles$guides[[side]]

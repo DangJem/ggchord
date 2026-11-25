@@ -356,29 +356,34 @@ merge_ggchord_links <- function(data, max_gap = 0, max_pident_difference = NULL,
   direction <- ggchord_link_orientation(links, caller)
   groups <- split(seq_len(nrow(links)), ggchord_link_pair_group(links, direction, grouping))
   compatible <- lapply(groups, function(rows) {
-    if (direction[rows[1L]] == "unknown") return(as.list(rows))
+    if (length(rows) == 1L || direction[rows[1L]] == "unknown") return(as.list(rows))
     reverse <- direction[rows[1L]] == "opposite"
-    qlo <- links$qstart; qhi <- links$qend
-    slo <- if (reverse) -links$send else links$sstart
-    shi <- if (reverse) -links$sstart else links$send
-    rows <- rows[order(qlo[rows], slo[rows], qhi[rows], shi[rows])]
-    result <- list()
-    active <- rows[1L]
-    for (j in rows[-1L]) {
-      last <- tail(active, 1L)
-      progresses <- slo[j] >= slo[last] && shi[j] >= shi[last] && qhi[j] >= qhi[last]
-      gaps_ok <- qlo[j] <= qhi[last] + max_gap[["q"]] + 1 &&
-        slo[j] <= shi[last] + max_gap[["s"]] + 1
-      ids_ok <- is.null(max_pident_difference) ||
-        diff(range(links$pident[c(active, j)])) <= max_pident_difference
-      if (progresses && gaps_ok && ids_ok) {
-        active <- c(active, j)
-      } else {
-        result[[length(result) + 1L]] <- active
-        active <- j
+    qlo <- links$qstart[rows]
+    qhi <- links$qend[rows]
+    slo <- if (reverse) -links$send[rows] else links$sstart[rows]
+    shi <- if (reverse) -links$sstart[rows] else links$send[rows]
+    ordered <- order(qlo, slo, qhi, shi)
+    last <- ordered[-length(ordered)]
+    current <- ordered[-1L]
+    progresses <- slo[current] >= slo[last] & shi[current] >= shi[last] & qhi[current] >= qhi[last]
+    gaps_ok <- qlo[current] <= qhi[last] + max_gap[["q"]] + 1 &
+      slo[current] <= shi[last] + max_gap[["s"]] + 1
+    starts <- c(TRUE, !(progresses & gaps_ok))
+    rows <- rows[ordered]
+    # Coordinates compare adjacent records. Identity spans the entire active run.
+    if (!is.null(max_pident_difference)) {
+      pident <- links$pident[rows]
+      low <- high <- pident[1L]
+      for (i in seq.int(2L, length(rows))) {
+        if (!starts[i]) {
+          low <- min(low, pident[i])
+          high <- max(high, pident[i])
+          starts[i] <- high - low > max_pident_difference
+        }
+        if (starts[i]) low <- high <- pident[i]
       }
     }
-    c(result, list(active))
+    unname(split(rows, cumsum(starts)))
   })
   compatible <- unlist(compatible, recursive = FALSE)
   compatible <- compatible[order(vapply(compatible, min, integer(1)))]
